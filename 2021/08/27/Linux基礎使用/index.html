@@ -1,0 +1,1438 @@
+<!DOCTYPE html>
+<html lang="en">
+    <!-- title -->
+
+
+    
+
+<!-- keywords -->
+
+
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="author" content="吳振榮(WU,ZHEN-RONG)">
+    <meta name="renderer" content="webkit">
+    <meta name="copyright" content="吳振榮(WU,ZHEN-RONG)">
+    
+        <meta name="keywords" content="hexo,hexo-theme,hexo-blog">
+    
+    <meta name="description" content="">
+    <meta name="description" content="Linuxlinux基礎用法第一個輸入大多為命令(command)，後面家的通常為跟著這個命令的參數，參數都是用空格分開，不管加多少空格，terminal都會認為只加了一個空格。在最一開此使，@前面是用戶名，在@後面是計算機名 @ at在computer:後第一個字元(Home Directory):為所在文件夾的名字computer:後第二個字元(Prompt):提示符uname uname :">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Linux基礎使用">
+<meta property="og:url" content="https://maxwutw.github.io/2021/08/27/Linux%E5%9F%BA%E7%A4%8E%E4%BD%BF%E7%94%A8/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="Linuxlinux基礎用法第一個輸入大多為命令(command)，後面家的通常為跟著這個命令的參數，參數都是用空格分開，不管加多少空格，terminal都會認為只加了一個空格。在最一開此使，@前面是用戶名，在@後面是計算機名 @ at在computer:後第一個字元(Home Directory):為所在文件夾的名字computer:後第二個字元(Prompt):提示符uname uname :">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2021-08-27T11:27:52.000Z">
+<meta property="article:modified_time" content="2022-06-24T04:18:42.922Z">
+<meta property="article:author" content="吳振榮(WU,ZHEN-RONG)">
+<meta property="article:tag" content="Linux">
+<meta name="twitter:card" content="summary">
+    <meta http-equiv="Cache-control" content="no-cache">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <link rel="icon" href="/null">
+    
+    <title>Linux基礎使用 · Max Coding Blog</title>
+    <!-- /*! loadCSS. [c]2017 Filament Group, Inc. MIT License */
+/* This file is meant as a standalone workflow for
+- testing support for link[rel=preload]
+- enabling async CSS loading in browsers that do not support rel=preload
+- applying rel preload css once loaded, whether supported or not.
+*/ -->
+<script>
+    (function (w) {
+        'use strict'
+        // rel=preload support test
+        if (!w.loadCSS) {
+            w.loadCSS = function () {}
+        }
+        // define on the loadCSS obj
+        var rp = (loadCSS.relpreload = {})
+        // rel=preload feature support test
+        // runs once and returns a function for compat purposes
+        rp.support = (function () {
+            var ret
+            try {
+                ret = w.document.createElement('link').relList.supports('preload')
+            } catch (e) {
+                ret = false
+            }
+            return function () {
+                return ret
+            }
+        })()
+
+        // if preload isn't supported, get an asynchronous load by using a non-matching media attribute
+        // then change that media back to its intended value on load
+        rp.bindMediaToggle = function (link) {
+            // remember existing media attr for ultimate state, or default to 'all'
+            var finalMedia = link.media || 'all'
+
+            function enableStylesheet() {
+                link.media = finalMedia
+            }
+
+            // bind load handlers to enable media
+            if (link.addEventListener) {
+                link.addEventListener('load', enableStylesheet)
+            } else if (link.attachEvent) {
+                link.attachEvent('onload', enableStylesheet)
+            }
+
+            // Set rel and non-applicable media type to start an async request
+            // note: timeout allows this to happen async to let rendering continue in IE
+            setTimeout(function () {
+                link.rel = 'stylesheet'
+                link.media = 'only x'
+            })
+            // also enable media after 3 seconds,
+            // which will catch very old browsers (android 2.x, old firefox) that don't support onload on link
+            setTimeout(enableStylesheet, 3000)
+        }
+
+        // loop through link elements in DOM
+        rp.poly = function () {
+            // double check this to prevent external calls from running
+            if (rp.support()) {
+                return
+            }
+            var links = w.document.getElementsByTagName('link')
+            for (var i = 0; i < links.length; i++) {
+                var link = links[i]
+                // qualify links to those with rel=preload and as=style attrs
+                if (
+                    link.rel === 'preload' &&
+                    link.getAttribute('as') === 'style' &&
+                    !link.getAttribute('data-loadcss')
+                ) {
+                    // prevent rerunning on link
+                    link.setAttribute('data-loadcss', true)
+                    // bind listeners to toggle media back
+                    rp.bindMediaToggle(link)
+                }
+            }
+        }
+
+        // if unsupported, run the polyfill
+        if (!rp.support()) {
+            // run once at least
+            rp.poly()
+
+            // rerun poly on an interval until onload
+            var run = w.setInterval(rp.poly, 500)
+            if (w.addEventListener) {
+                w.addEventListener('load', function () {
+                    rp.poly()
+                    w.clearInterval(run)
+                })
+            } else if (w.attachEvent) {
+                w.attachEvent('onload', function () {
+                    rp.poly()
+                    w.clearInterval(run)
+                })
+            }
+        }
+
+        // commonjs
+        if (typeof exports !== 'undefined') {
+            exports.loadCSS = loadCSS
+        } else {
+            w.loadCSS = loadCSS
+        }
+    })(typeof global !== 'undefined' ? global : this)
+</script>
+
+    <style type="text/css">
+    @font-face {
+        font-family: 'Oswald-Regular';
+        src: url("/font/Oswald-Regular.ttf");
+    }
+
+    body {
+        margin: 0;
+    }
+
+    header,
+    footer,
+    .back-top,
+    .sidebar,
+    .container,
+    .site-intro-meta,
+    .toc-wrapper {
+        display: none;
+    }
+
+    .site-intro {
+        position: relative;
+        z-index: 3;
+        width: 100%;
+        /* height: 50vh; */
+        overflow: hidden;
+    }
+
+    .site-intro-placeholder {
+        position: absolute;
+        z-index: -2;
+        top: 0;
+        left: 0;
+        width: calc(100% + 300px);
+        height: 100%;
+        background: repeating-linear-gradient(-45deg, #444 0, #444 80px, #333 80px, #333 160px);
+        background-position: center center;
+        transform: translate3d(-226px, 0, 0);
+        animation: gradient-move 2.5s ease-out 0s infinite;
+    }
+
+    @keyframes gradient-move {
+        0% {
+            transform: translate3d(-226px, 0, 0);
+        }
+        100% {
+            transform: translate3d(0, 0, 0);
+        }
+    }
+</style>
+
+    <link rel="preload" href="/css/style.css?v=20211217" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="preload" href="/css/dark.css?v=20211217" as="style">
+    <link rel="stylesheet" href="/css/dark.css">
+    <link rel="stylesheet" href="/css/mobile.css?v=20211217" media="(max-width: 960px)">
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js" as="script">
+    <link rel="preload" href="/scripts/main.js?v=20211217" as="script">
+    <link rel="preload" href="/scripts/dark.js?v=20211217" as="script">
+    <link rel="preload" href="/font/Oswald-Regular.ttf" as="font" crossorigin>
+    <link rel="preload" href="https://at.alicdn.com/t/font_327081_1dta1rlogw17zaor.woff" as="font" crossorigin>
+    <!-- algolia -->
+    
+    <!-- 百度统计  -->
+    
+    <!-- 谷歌统计  -->
+    
+<meta name="generator" content="Hexo 6.2.0"><link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+</head>
+
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+    <script type="text/javascript">
+        if (typeof window.$ == undefined) {
+            console.warn('jquery load from jsdelivr failed, will load local script')
+            document.write('<script src="/lib/jquery.min.js" />')
+        }
+    </script>
+    
+        <body class="post-body">
+    
+        <!-- header -->
+        <header class="header header-mobile">
+    <!-- top read progress line -->
+    <div class="header-element">
+        <div class="read-progress"></div>
+    </div>
+    <!-- sidebar menu button -->
+    <div class="header-element">
+        
+            <div class="header-sidebar-menu">
+        
+            
+                <div style="padding-left: 1px;">&#xe775;</div>
+            
+        </div>
+    </div>
+    <!-- header actions -->
+    <div class="header-actions">
+        <!-- theme mode switch button -->
+        <span class="header-theme-btn header-element">
+            <i class="fas fa-adjust"></i>
+        </span>
+        <!-- back to home page text -->
+        <span class="home-link header-element">
+            <a href=/>Max Coding Blog</a>
+        </span>
+    </div>
+    <!-- toggle banner for post layout -->
+    
+        
+            <div class="banner">
+        
+            <div class="blog-title header-element">
+                <a href="/">Max Coding Blog</a>
+            </div>
+            <div class="post-title header-element">
+                <a href="#" class="post-name">Linux基礎使用</a>
+            </div>
+        </div>
+    
+</header>
+
+        <!-- fixed footer -->
+        <footer class="footer-fixed">
+    <!-- back to top button -->
+    <div class="footer-fixed-element">
+        
+            <div class="back-top back-top-hidden">
+        
+        
+            <div>&#xe639;</div>
+        
+        </div>
+    </div>
+</footer>
+
+        <!-- wrapper -->
+        <div class="wrapper">
+            <div class="site-intro" style="
+
+
+
+
+
+
+
+    height:50vh;
+
+">
+    
+    <!-- 主页  -->
+    
+        
+    <!-- 404页  -->
+            
+    <div class="site-intro-placeholder"></div>
+    <div class="site-intro-img" style="background-image: url(/intro/arc_bg.jpg)"></div>
+    <div class="site-intro-meta">
+        <!-- 标题  -->
+        <h1 class="intro-title">
+            <!-- 主页  -->
+            
+                Linux基礎使用
+            <!-- 404 -->
+            
+        </h1>
+        <!-- 副标题 -->
+        <p class="intro-subtitle">
+            <!-- 主页副标题  -->
+            
+                
+            <!-- 404 -->
+            
+        </p>
+        <!-- 文章页 meta -->
+        
+            <div class="post-intros">
+                <!-- 文章页标签  -->
+                
+                    <div class= post-intro-tags >
+    
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="Linux">Linux</a>
+    
+</div>
+
+                
+                
+                    <div class="post-intro-read">
+                        <span>Word count: <span class="post-count word-count">3.1k</span>Reading time: <span class="post-count reading-time">12 min</span></span>
+                    </div>
+                
+                <div class="post-intro-meta">
+                    <!-- 撰写日期 -->
+                    <span class="iconfont-archer post-intro-calander">&#xe676;</span>
+                    <span class="post-intro-time">2021/08/27</span>
+                    <!-- busuanzi -->
+                    
+                        <span id="busuanzi_container_page_pv" class="busuanzi-pv">
+                            <span class="iconfont-archer post-intro-busuanzi">&#xe602;</span>
+                            <span id="busuanzi_value_page_pv"></span>
+                        </span>
+                    
+                    <!-- 文章分享 -->
+                    <span class="share-wrapper">
+                        <span class="iconfont-archer share-icon">&#xe71d;</span>
+                        <span class="share-text">Share</span>
+                        <ul class="share-list">
+                            <li class="iconfont-archer share-qr" data-type="qr">&#xe75b;
+                                <div class="share-qrcode"></div>
+                            </li>
+                            <li class="iconfont-archer" data-type="weibo">&#xe619;</li>
+                            <li class="iconfont-archer" data-type="qzone">&#xe62e;</li>
+                            <li class="iconfont-archer" data-type="twitter">&#xe634;</li>
+                            <li class="iconfont-archer" data-type="facebook">&#xe67a;</li>
+                        </ul>
+                    </span>
+                </div>
+            </div>
+        
+    </div>
+</div>
+
+            <script>
+  // get user agent
+  function getBrowserVersions() {
+    var u = window.navigator.userAgent
+    return {
+      userAgent: u,
+      trident: u.indexOf('Trident') > -1, //IE内核
+      presto: u.indexOf('Presto') > -1, //opera内核
+      webKit: u.indexOf('AppleWebKit') > -1, //苹果、谷歌内核
+      gecko: u.indexOf('Gecko') > -1 && u.indexOf('KHTML') == -1, //火狐内核
+      mobile: !!u.match(/AppleWebKit.*Mobile.*/), //是否为移动终端
+      ios: !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/), //ios终端
+      android: u.indexOf('Android') > -1 || u.indexOf('Linux') > -1, //android终端或者uc浏览器
+      iPhone: u.indexOf('iPhone') > -1 || u.indexOf('Mac') > -1, //是否为iPhone或者安卓QQ浏览器
+      iPad: u.indexOf('iPad') > -1, //是否为iPad
+      webApp: u.indexOf('Safari') == -1, //是否为web应用程序，没有头部与底部
+      weixin: u.indexOf('MicroMessenger') == -1, //是否为微信浏览器
+      uc: u.indexOf('UCBrowser') > -1, //是否为android下的UC浏览器
+    }
+  }
+  var browser = {
+    versions: getBrowserVersions(),
+  }
+  console.log('userAgent: ' + browser.versions.userAgent)
+
+  // callback
+  function fontLoaded() {
+    console.log('font loaded')
+    if (document.getElementsByClassName('site-intro-meta')) {
+      document
+        .getElementsByClassName('intro-title')[0]
+        .classList.add('intro-fade-in')
+      document
+        .getElementsByClassName('intro-subtitle')[0]
+        .classList.add('intro-fade-in')
+      var postIntros = document.getElementsByClassName('post-intros')[0]
+      if (postIntros) {
+        postIntros.classList.add('post-fade-in')
+      }
+    }
+  }
+
+  // UC不支持跨域，所以直接显示
+  function asyncCb() {
+    if (browser.versions.uc) {
+      console.log('UCBrowser')
+      fontLoaded()
+    } else {
+      WebFont.load({
+        custom: {
+          families: ['Oswald-Regular'],
+        },
+        loading: function () {
+          // 所有字体开始加载
+          // console.log('font loading');
+        },
+        active: function () {
+          // 所有字体已渲染
+          fontLoaded()
+        },
+        inactive: function () {
+          // 字体预加载失败，无效字体或浏览器不支持加载
+          console.log('inactive: timeout')
+          fontLoaded()
+        },
+        timeout: 5000, // Set the timeout to two seconds
+      })
+    }
+  }
+
+  function asyncErr() {
+    console.warn('script load from CDN failed, will load local script')
+  }
+
+  // load webfont-loader async, and add callback function
+  function async(u, cb, err) {
+    var d = document,
+      t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0]
+    o.src = u
+    if (cb) {
+      o.addEventListener(
+        'load',
+        function (e) {
+          cb(null, e)
+        },
+        false
+      )
+    }
+    if (err) {
+      o.addEventListener(
+        'error',
+        function (e) {
+          err(null, e)
+        },
+        false
+      )
+    }
+    s.parentNode.insertBefore(o, s)
+  }
+
+  var asyncLoadWithFallBack = function (arr, success, reject) {
+    var currReject = function () {
+      reject()
+      arr.shift()
+      if (arr.length) async(arr[0], success, currReject)
+    }
+
+    async(arr[0], success, currReject)
+  }
+
+  asyncLoadWithFallBack(
+    [
+      'https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js',
+      'https://cdn.bootcss.com/webfont/1.6.28/webfontloader.js',
+      "/lib/webfontloader.min.js",
+    ],
+    asyncCb,
+    asyncErr
+  )
+</script>
+
+            <img class="loading" src="/assets/loading.svg" style="display: block; margin: 6rem auto 0 auto; width: 6rem; height: 6rem;" />
+            <div class="container container-unloaded">
+                <main class="main post-page">
+    <article class="article-entry">
+        <h1 id="Linux"><a href="#Linux" class="headerlink" title="Linux"></a>Linux</h1><h2 id="linux基礎用法"><a href="#linux基礎用法" class="headerlink" title="linux基礎用法"></a>linux基礎用法</h2><p>第一個輸入大多為命令(command)，後面家的通常為跟著這個命令的參數，參數都是用空格分開，不管加多少空格，terminal都會認為只加了一個空格。在最一開此使，@前面是用戶名，在@後面是計算機名</p>
+<h3 id="at在"><a href="#at在" class="headerlink" title="@ at在"></a>@ at在</h3><h3 id="computer-後第一個字元-Home-Directory-為所在文件夾的名字"><a href="#computer-後第一個字元-Home-Directory-為所在文件夾的名字" class="headerlink" title="computer:後第一個字元(Home Directory):為所在文件夾的名字"></a>computer:後第一個字元(Home Directory):為所在文件夾的名字</h3><h3 id="computer-後第二個字元-Prompt-提示符"><a href="#computer-後第二個字元-Prompt-提示符" class="headerlink" title="computer:後第二個字元(Prompt):提示符"></a>computer:後第二個字元(Prompt):提示符</h3><h3 id="uname"><a href="#uname" class="headerlink" title="uname"></a>uname</h3><ol>
+<li><span style = "color:green">uname</span> :會印出內核名字。</li>
+<li><span style = "color:red">uname -a &#x3D;&#x3D; uname –all</span>:會印出系統的所有的資訊，會忽略未知的處理器與未知的硬件平台。</li>
+<li><span style = "color:red">uname -s &#x3D;&#x3D; uname –kernel-name</span>:會印出顯示於網路上的主機名稱。</li>
+<li><span style = "color:red">uname -r &#x3D;&#x3D; uname –kernel-release</span>:會印出內核的版本。</li>
+<li><span style = "color:red">uname -v &#x3D;&#x3D; uname –kernel-version</span>:會印出內核運行於哪個linux上，和實際發行的日期。</li>
+<li><span style = "color:red">uname -m &#x3D;&#x3D; uname –machine</span>:會印出電腦類型：x86_64(為64位元架構，如為32位元會如：x86_32)</li>
+<li><span style = "color:red">uname -p &#x3D;&#x3D; uname –processor</span>:會印出處理器類型：x86_64(為64位元架構，如為32位元會如：x86_32)</li>
+<li><span style = "color:red">uname -i &#x3D;&#x3D; uname –hardware-platform</span>:會印出硬件平台類型：x86_64(硬件平台包括如CPU、儲存裝置、主機板等等硬體)</li>
+<li><span style = "color:red">uname -o &#x3D;&#x3D; uname –operating-system</span>:會印出操作系統名稱：GNU&#x2F;Linux(作業系統，如windows)</li>
+<li><span style = "color:red">uname -h &#x3D;&#x3D; uname –help</span>:會印出這個指令的幫助，與各個參數的功能</li>
+<li><span style = "color:red">uname –version</span> :會印出這個指令(uname)的版本與其他訊息(包括聲明、授權等等)</li>
+</ol>
+<h3 id="ctrl-c-強制中斷某一支程式。"><a href="#ctrl-c-強制中斷某一支程式。" class="headerlink" title="ctrl+c :強制中斷某一支程式。"></a>ctrl+c :強制中斷某一支程式。</h3><h3 id="exit-離開系統。"><a href="#exit-離開系統。" class="headerlink" title="exit :離開系統。"></a>exit :離開系統。</h3><h3 id="cal-看月曆-。"><a href="#cal-看月曆-。" class="headerlink" title="cal :看月曆 。"></a>cal :看月曆 。</h3><h3 id="cal-年份-看某年的年曆。"><a href="#cal-年份-看某年的年曆。" class="headerlink" title="cal :年份 :看某年的年曆。"></a>cal :年份 :看某年的年曆。</h3><h3 id="cal-年份-月份-看某年某月的月曆。"><a href="#cal-年份-月份-看某年某月的月曆。" class="headerlink" title="cal :年份 月份 :看某年某月的月曆。"></a>cal :年份 月份 :看某年某月的月曆。</h3><h3 id="bc-計算機-此情況不能用小數-。"><a href="#bc-計算機-此情況不能用小數-。" class="headerlink" title="bc :計算機(此情況不能用小數)。"></a>bc :計算機(此情況不能用小數)。</h3><h4 id="scale-x3D-小數位數。"><a href="#scale-x3D-小數位數。" class="headerlink" title="scale &#x3D; 小數位數。"></a>scale &#x3D; 小數位數。</h4><h4 id="quit-退出bc。"><a href="#quit-退出bc。" class="headerlink" title="quit :退出bc。"></a>quit :退出bc。</h4><h3 id="file-查看文件訊息。"><a href="#file-查看文件訊息。" class="headerlink" title="file :查看文件訊息。"></a>file :查看文件訊息。</h3><h3 id="pwd-Print-Working-Directory-取得目前的路徑"><a href="#pwd-Print-Working-Directory-取得目前的路徑" class="headerlink" title="pwd(Print Working Directory) 取得目前的路徑"></a>pwd(Print Working Directory) 取得目前的路徑</h3><h3 id="ls-list-取得當前資料夾與檔案名稱"><a href="#ls-list-取得當前資料夾與檔案名稱" class="headerlink" title="ls(list) 取得當前資料夾與檔案名稱"></a>ls(list) 取得當前資料夾與檔案名稱</h3><h4 id="ls-l"><a href="#ls-l" class="headerlink" title="ls -l:"></a>ls -l:</h4><p>顯示出的資料的第一個區塊為顯示使用者權限，排除第一個字元<span style = "color:red">(第一個字元如果是dash(-)，此檔案即為文件，如果是d，則為目錄)</span>，剩下字元為三個三個一組，共三組，第一組是user，第二組是group，第三組是other。順序必為rwx，r(read),w(write),x(execute)，若有權限則會顯示出該字元，若沒有權限則會顯示’-‘(dash)，而這三組的權限分別為第一個是文件所有者的權限、第二個為用戶組的權限，第三組為其他人的權限。</p>
+<h3 id="chmod-change-mode"><a href="#chmod-change-mode" class="headerlink" title="chmod(change mode)"></a>chmod(change mode)</h3><p>如果你想要更換權限，可以使用這個命令，command:chmod u+r t.py，用法是第一個加入chmod指令，第二個是輸入你想更改權限的對象，user是u，group是g，other是o，接著+後面是加上你要給予的權力，注意如果是要刪除某項權力，就加上-減號，接著加上以下就是給予的權力，r(read),w(write),x(execute)，最後加上檔案名稱。</p>
+<h3 id="直接執行檔案-x2F-file-py"><a href="#直接執行檔案-x2F-file-py" class="headerlink" title="直接執行檔案 .&#x2F;file.py"></a>直接執行檔案 .&#x2F;file.py</h3><p>如果要直接執行某個檔案時可以直接使用這個指令，假設有一個檔案叫做test.py，然後我們想要執行他，所以輸入:.&#x2F;test.py，此時會發現出錯了，原因是你要在test.py的第一行加入一段指令，代表說這份文件要通過什麼來運行，而這邊我輸入#!&#x2F;usr&#x2F;bin&#x2F;python3，之後再輸入:.&#x2F;test.py，即完成。</p>
+<h3 id="linux有一個特性，就是所有東西都是一個文件。"><a href="#linux有一個特性，就是所有東西都是一個文件。" class="headerlink" title="linux有一個特性，就是所有東西都是一個文件。"></a>linux有一個特性，就是所有東西都是一個文件。</h3><h3 id="linux大小寫必須區分，在linux中大小寫是不一樣的東西。"><a href="#linux大小寫必須區分，在linux中大小寫是不一樣的東西。" class="headerlink" title="linux大小寫必須區分，在linux中大小寫是不一樣的東西。"></a>linux大小寫必須區分，在linux中大小寫是不一樣的東西。</h3><h3 id="在terminal中可使用TAB鍵來補齊一些物件或檔名-善用TAB鍵-。"><a href="#在terminal中可使用TAB鍵來補齊一些物件或檔名-善用TAB鍵-。" class="headerlink" title="在terminal中可使用TAB鍵來補齊一些物件或檔名(善用TAB鍵)。"></a>在terminal中可使用TAB鍵來補齊一些物件或檔名(善用TAB鍵)。</h3><h3 id="lscpu-查詢-CPU-規格。"><a href="#lscpu-查詢-CPU-規格。" class="headerlink" title="lscpu :查詢 CPU 規格。"></a>lscpu :查詢 CPU 規格。</h3><h3 id="x2F-根目錄。"><a href="#x2F-根目錄。" class="headerlink" title="&#x2F; :根目錄。"></a>&#x2F; :根目錄。</h3><h4 id="bin-放置執行文件。"><a href="#bin-放置執行文件。" class="headerlink" title="bin :放置執行文件。"></a>bin :放置執行文件。</h4><h4 id="boot-放置開機會運用到的文件。"><a href="#boot-放置開機會運用到的文件。" class="headerlink" title="boot :放置開機會運用到的文件。"></a>boot :放置開機會運用到的文件。</h4><h4 id="dev-接口設備都會存取在dev中。"><a href="#dev-接口設備都會存取在dev中。" class="headerlink" title="dev :接口設備都會存取在dev中。"></a>dev :接口設備都會存取在dev中。</h4><h4 id="etc-系統主要配置文件，例如用戶的帳號密碼、服務的起始文件。"><a href="#etc-系統主要配置文件，例如用戶的帳號密碼、服務的起始文件。" class="headerlink" title="etc :系統主要配置文件，例如用戶的帳號密碼、服務的起始文件。"></a>etc :系統主要配置文件，例如用戶的帳號密碼、服務的起始文件。</h4><h4 id="home-主文件夾的位置。"><a href="#home-主文件夾的位置。" class="headerlink" title="home :主文件夾的位置。"></a>home :主文件夾的位置。</h4><h4 id="lib-開機時會用到的主函式庫。"><a href="#lib-開機時會用到的主函式庫。" class="headerlink" title="lib :開機時會用到的主函式庫。"></a>lib :開機時會用到的主函式庫。</h4><h4 id="media-放置可以刪除的設備。"><a href="#media-放置可以刪除的設備。" class="headerlink" title="media :放置可以刪除的設備。"></a>media :放置可以刪除的設備。</h4><h4 id="opt-第三方程式的放置目錄。"><a href="#opt-第三方程式的放置目錄。" class="headerlink" title="opt :第三方程式的放置目錄。"></a>opt :第三方程式的放置目錄。</h4><h4 id="root-系統管理員的主文件夾。"><a href="#root-系統管理員的主文件夾。" class="headerlink" title="root :系統管理員的主文件夾。"></a>root :系統管理員的主文件夾。</h4><h4 id="sbin-放置一些只有系統管理員才可以執行的執行命令。"><a href="#sbin-放置一些只有系統管理員才可以執行的執行命令。" class="headerlink" title="sbin :放置一些只有系統管理員才可以執行的執行命令。"></a>sbin :放置一些只有系統管理員才可以執行的執行命令。</h4><h4 id="srv-服務取用數據的目錄。"><a href="#srv-服務取用數據的目錄。" class="headerlink" title="srv :服務取用數據的目錄。"></a>srv :服務取用數據的目錄。</h4><h4 id="tmp-放置一些臨時的文件，需定時清理。"><a href="#tmp-放置一些臨時的文件，需定時清理。" class="headerlink" title="tmp :放置一些臨時的文件，需定時清理。"></a>tmp :放置一些臨時的文件，需定時清理。</h4><h4 id="usr-unix操作系統的支援-不是user-，可放置一些系統默認程式。"><a href="#usr-unix操作系統的支援-不是user-，可放置一些系統默認程式。" class="headerlink" title="usr :unix操作系統的支援(不是user!!!!!)，可放置一些系統默認程式。"></a>usr :unix操作系統的支援(不是user!!!!!)，可放置一些系統默認程式。</h4><h4 id="var-放置快取"><a href="#var-放置快取" class="headerlink" title="var :放置快取"></a>var :放置快取</h4><h3 id="cd-Change-Directory-切換目錄。"><a href="#cd-Change-Directory-切換目錄。" class="headerlink" title="cd(Change Directory) :切換目錄。"></a>cd(Change Directory) :切換目錄。</h3><h4 id="絕對路徑-是由根目錄也就是最前面的那一個目錄開始向下輸入的-要加-x2F-，不管在哪裡，只要有絕對路徑都可以去。"><a href="#絕對路徑-是由根目錄也就是最前面的那一個目錄開始向下輸入的-要加-x2F-，不管在哪裡，只要有絕對路徑都可以去。" class="headerlink" title="絕對路徑 :是由根目錄也就是最前面的那一個目錄開始向下輸入的(要加&#x2F;)，不管在哪裡，只要有絕對路徑都可以去。"></a>絕對路徑 :是由根目錄也就是最前面的那一個目錄開始向下輸入的(要加&#x2F;)，不管在哪裡，只要有絕對路徑都可以去。</h4><h4 id="相對路徑-相對於當前工作目錄-pwd-，不是從根目錄開始。"><a href="#相對路徑-相對於當前工作目錄-pwd-，不是從根目錄開始。" class="headerlink" title="相對路徑 :相對於當前工作目錄(pwd)，不是從根目錄開始。"></a>相對路徑 :相對於當前工作目錄(pwd)，不是從根目錄開始。</h4><h4 id="cd-當前目錄。"><a href="#cd-當前目錄。" class="headerlink" title="cd . :當前目錄。"></a>cd . :當前目錄。</h4><h4 id="cd-該目錄的上一層目錄。"><a href="#cd-該目錄的上一層目錄。" class="headerlink" title="cd .. :該目錄的上一層目錄。"></a>cd .. :該目錄的上一層目錄。</h4><h3 id="man-manual-page-指令查詢"><a href="#man-manual-page-指令查詢" class="headerlink" title="man(manual page) :指令查詢"></a>man(manual page) :指令查詢</h3><h3 id="mkdir-創造路徑"><a href="#mkdir-創造路徑" class="headerlink" title="mkdir :創造路徑"></a>mkdir :創造路徑</h3><h4 id="創造多層目錄"><a href="#創造多層目錄" class="headerlink" title="創造多層目錄:"></a>創造多層目錄:</h4><h5 id="p-可以幫你把上一層目錄也創建好-如果上一層目錄不存在的話-。"><a href="#p-可以幫你把上一層目錄也創建好-如果上一層目錄不存在的話-。" class="headerlink" title="-p :可以幫你把上一層目錄也創建好(如果上一層目錄不存在的話)。"></a>-p :可以幫你把上一層目錄也創建好(如果上一層目錄不存在的話)。</h5><h5 id="pv-v的功能可以幫你顯示他正在執行甚麼。"><a href="#pv-v的功能可以幫你顯示他正在執行甚麼。" class="headerlink" title="-pv :v的功能可以幫你顯示他正在執行甚麼。"></a>-pv :v的功能可以幫你顯示他正在執行甚麼。</h5><h3 id="rmdir-刪除目錄。"><a href="#rmdir-刪除目錄。" class="headerlink" title="rmdir :刪除目錄。"></a>rmdir :刪除目錄。</h3><h4 id="p-可一次刪除多個目錄"><a href="#p-可一次刪除多個目錄" class="headerlink" title="-p :可一次刪除多個目錄"></a>-p :可一次刪除多個目錄</h4><h3 id="touch-創建空文件，主要功能為修改文件，如果該文件不存在，則會創造一個空文件。"><a href="#touch-創建空文件，主要功能為修改文件，如果該文件不存在，則會創造一個空文件。" class="headerlink" title="touch :創建空文件，主要功能為修改文件，如果該文件不存在，則會創造一個空文件。"></a>touch :創建空文件，主要功能為修改文件，如果該文件不存在，則會創造一個空文件。</h3><h4 id="a-修改訪問時間。"><a href="#a-修改訪問時間。" class="headerlink" title="-a :修改訪問時間。"></a>-a :修改訪問時間。</h4><h4 id="c-修改文件時間，若不存在則不創建新文件。"><a href="#c-修改文件時間，若不存在則不創建新文件。" class="headerlink" title="-c :修改文件時間，若不存在則不創建新文件。"></a>-c :修改文件時間，若不存在則不創建新文件。</h4><h4 id="d-使用指定日期，而不是當前日期。"><a href="#d-使用指定日期，而不是當前日期。" class="headerlink" title="-d :使用指定日期，而不是當前日期。"></a>-d :使用指定日期，而不是當前日期。</h4><h4 id="m-僅修改mtime。"><a href="#m-僅修改mtime。" class="headerlink" title="-m :僅修改mtime。"></a>-m :僅修改mtime。</h4><h4 id="t-使用指定的時間而不是當前的時間。"><a href="#t-使用指定的時間而不是當前的時間。" class="headerlink" title="-t :使用指定的時間而不是當前的時間。"></a>-t :使用指定的時間而不是當前的時間。</h4><h3 id="cp-複製，用法-cp-a-b-，將a複製給b。"><a href="#cp-複製，用法-cp-a-b-，將a複製給b。" class="headerlink" title="cp :複製，用法 cp a b ，將a複製給b。"></a>cp :複製，用法 cp a b ，將a複製給b。</h3><h3 id="echo發送文字"><a href="#echo發送文字" class="headerlink" title="echo發送文字:"></a>echo發送文字:</h3><p>用法 echo “word”。而且會換行。</p>
+<h4 id="將文字輸入進一個檔案裡"><a href="#將文字輸入進一個檔案裡" class="headerlink" title="將文字輸入進一個檔案裡:"></a>將文字輸入進一個檔案裡:</h4><p>用法 echo “word” &gt; data.txt。<br>如果是用 &gt; 寫入的話會將原本的覆蓋，所以要使用 &gt;&gt; 才能延續檔案原本的資料 echo “word” &gt;&gt; data.txt。</p>
+<h3 id="cat-concatenate-顯示出檔案裡的文字"><a href="#cat-concatenate-顯示出檔案裡的文字" class="headerlink" title="cat(concatenate)顯示出檔案裡的文字"></a>cat(concatenate)顯示出檔案裡的文字</h3><p>用法 cat data.txt</p>
+<h4 id="cat-合併資料輸出"><a href="#cat-合併資料輸出" class="headerlink" title="cat 合併資料輸出"></a>cat 合併資料輸出</h4><p>用法 cat first.txt second.txt</p>
+<h4 id="將兩個檔案合併出一個新的檔案"><a href="#將兩個檔案合併出一個新的檔案" class="headerlink" title="將兩個檔案合併出一個新的檔案"></a>將兩個檔案合併出一個新的檔案</h4><p>方法 cat first.txt second.txt &gt;&gt; third.txt，要加 &gt;&gt; 。<br>若要合併更多檔案，就以此類推</p>
+<h3 id="用printf輸出"><a href="#用printf輸出" class="headerlink" title="用printf輸出"></a>用printf輸出</h3><p>用echo和printf的最大差別是echo會換行而printf不會換行。<br>也可以使用printf輸入一個檔案，和echo一樣</p>
+<h3 id="vim文字編輯器"><a href="#vim文字編輯器" class="headerlink" title="vim文字編輯器"></a>vim文字編輯器</h3><p>vi和vim.tiny和vim這三個功能極為相似，不同的地方是有些功能比較多，通常在linux中vim要另外裝。<br>此處使用vim.tiny，要進行文字編輯的方法:vim.tiny data.txt，按enter鍵後再按 i 即可進行編輯，當編輯完之後想要結束編輯，先按Esc，再按 : ，接著如果想要將剛剛編輯的資料寫進去，則按w，如果想直接退出，按q，如果進行編輯後不想儲存，就輸入q!即可強制退出。若想退出又要寫入，就按wq。</p>
+<h3 id="下載vim"><a href="#下載vim" class="headerlink" title="下載vim"></a>下載vim</h3><p>首先到ubuntu商店下載vim，接著去terminal輸出apt-get，apt-get會去網站上找有關你要下載的套件，但是如果apt-get沒有更新，他上去找的網站還是舊的，此時要把你的apt-get更新，因此輸入apt-get update，但此時又會出現錯誤，因為update此動作為較高階的動作，所以以目前的狀態是沒有權限執行的，所以要在apt-get前加sudo，此時作業系統會嘗試以超級使用者的方式幫你去做執行，所以輸入完sudo apt-get update即可完成網站的更新，更新完之後輸入sudo apt-get install vim，即可進行安裝，如果要移除，就輸入sudo apt-get remove vim</p>
+<h3 id="whereis"><a href="#whereis" class="headerlink" title="whereis"></a>whereis</h3><p>查看東西在哪裡，會顯示所有相關的路徑。<br>whereis name</p>
+<h3 id="which"><a href="#which" class="headerlink" title="which"></a>which</h3><p>會明確跟你說東西的實際路徑。</p>
+<h3 id="查看物品的實際位置"><a href="#查看物品的實際位置" class="headerlink" title="查看物品的實際位置"></a>查看物品的實際位置</h3><p>以vim為例<br>方法 : ls -al &#x2F;usr&#x2F;bin&#x2F;vim<br>接著會顯示一個箭頭 -&gt;會指向一個地方，這就是軟連結，會指向更精確的地方，可以再繼續使用那個位置尋找更精確的位置。</p>
+<h3 id="vim"><a href="#vim" class="headerlink" title="vim"></a>vim</h3><p>基本用法和vim.tiny一致，接著為vim的一些基礎指令。<br>:set nu   在每一行前面加數字編號。<br>輸入 dd 即可快速刪去該行。<br>輸入d2d可以快速刪除兩行<br>在前面加 &#x2F; 後面加你想搜尋的文字。<br>按u可以undo<br>按ctrl+r是redo</p>
+<h2 id="linux-ssh"><a href="#linux-ssh" class="headerlink" title="linux ssh"></a>linux ssh</h2><p>首先要再其中一台linux上獲取ip位置(稍後要給其他電腦做連接)，首先先下載net-tools(稍後要使用的ifconfig是其中一部分)，接著輸入ifconfig，然後往下滑可以找到你的ip位置，或者輸入ip addr show，也可以看到你的ip位置。接著在另一台電腦輸入:ssh username@ip，username是你linux的名稱，ip是你的ip位置。<br><span style = "color:red">mac 用戶:</span><br>如果是mac用戶且同時想要利用ssh在自己的mac上看到matplotlib的結果，要先安裝XQuartz，安裝完後在terminal裡輸入的不再是ssh user@ip 了，是要改輸入<span style = "color:red">ssh -X user@ip</span>，這樣才能看到matplotlib的效果。</p>
+<h3 id="linux查詢gpu型號"><a href="#linux查詢gpu型號" class="headerlink" title="linux查詢gpu型號"></a>linux查詢gpu型號</h3><p>輸入  lspci | grep -i nvidia ，會顯示出幾行文字，例如：<br>01:00.0 VGA compatible controller: NVIDIA Corporation Device 1e84 (rev a1)<br>01:00.1 Audio device: NVIDIA Corporation Device 10f8 (rev a1)<br>01:00.2 USB controller: NVIDIA Corporation Device 1ad8 (rev a1)<br>01:00.3 Serial bus controller [0c80]: NVIDIA Corporation Device 1ad9 (rev a1)<br>然後看第一行的最後面 1e84 ，這個就是型號，但我們還是看不出來實際的型號，所以去這個網站上輸入你的型號：<a target="_blank" rel="noopener" href="http://pci-ids.ucw.cz/mods/PC/10de?action=help?help=pci">http://pci-ids.ucw.cz/mods/PC/10de?action=help?help=pci</a><br>可以查到這張gpu是GeForce RTX 2070 Super。</p>
+<h3 id="查看ubuntu版本"><a href="#查看ubuntu版本" class="headerlink" title="查看ubuntu版本"></a>查看ubuntu版本</h3><p>cat &#x2F;etc&#x2F;issue</p>
+<h3 id="更改檔案名稱"><a href="#更改檔案名稱" class="headerlink" title="更改檔案名稱"></a>更改檔案名稱</h3><p>mv 原檔案名稱 更改的名稱</p>
+<h3 id="查看目錄裡資料的數量"><a href="#查看目錄裡資料的數量" class="headerlink" title="查看目錄裡資料的數量"></a>查看目錄裡資料的數量</h3><ol>
+<li>ls -l|grep “^-“| wc -l   ，   find .&#x2F; -type f | wc -l: 查看當前目錄的所有資料數量（<span style = "color:red">不包括</span>子目錄資料數量）。</li>
+<li>ls -lR|grep “^-“| wc -l : 查看當前目錄的所有資料數量（<span style = "color:red">包括</span>子目錄資料數量）。</li>
+<li>ls -l|grep “^d”| wc -l : 查看當前目錄的所有資料夾目錄個數（<span style = "color:red">包括</span>子資料夾目錄個數）。</li>
+</ol>
+<h2 id="tmux"><a href="#tmux" class="headerlink" title="tmux"></a>tmux</h2><ol>
+<li>tmux:進入tmux。</li>
+<li>tmux attach:進入預設第一個Session。</li>
+<li>tmux new -s “tmp”:新增、進入一個名為tmp的Session。</li>
+<li>tmux ls:列出所有的Session。</li>
+<li>tmux detach:暫時離開目前的Session。</li>
+<li><code>Ctrl</code>+<code>D</code>:關閉&#x2F;結束目前的Session。</li>
+<li>tmux kill-session -t “tmp”:關閉、結束名稱維tmp的Session。</li>
+</ol>
+<h3 id="Panes分割視窗"><a href="#Panes分割視窗" class="headerlink" title="Panes分割視窗"></a>Panes分割視窗</h3><ol>
+<li><code>Ctrl</code>+<code>b</code>+<code>%</code>:垂直分割視窗。</li>
+<li><code>Ctrl</code>+<code>b</code>+<code>&quot;</code>:水平分割視窗。</li>
+<li><code>Ctrl</code>+<code>b</code>+<code>o</code>:輪流切換pane。</li>
+<li><code>Ctrl</code>+<code>b</code>+<code>方向鍵</code>:切換指定方向的pane。</li>
+<li><code>Ctrl</code>+<code>b</code>+<code>空白鍵</code>:切換佈局。</li>
+<li><code>Ctrl</code>+<code>b</code>+<code>!</code>:將目前的pane抽出來，並獨立建立一個window視窗。</li>
+<li><code>Ctrl</code>+<code>b</code>+<code>x</code>:關閉目前的pane。</li>
+</ol>
+<h3 id="Windows視窗"><a href="#Windows視窗" class="headerlink" title="Windows視窗"></a>Windows視窗</h3><ol>
+<li><code>Ctrl</code>+<code>b</code>+<code>c</code>:建立新的window視窗。</li>
+<li><code>Ctrl</code>+<code>b</code>+<code>w</code>:以視覺化選單切換window視窗。</li>
+<li><code>Ctrl</code>+<code>b</code>+<code>n</code>:切換至下一個window視窗。</li>
+<li><code>Ctrl</code>+<code>b</code>+<code>p</code>:切換至上喔個window視窗。</li>
+<li><code>Ctrl</code>+<code>b</code>+<code>數字鍵</code>:切換至指定的window視窗。</li>
+<li><code>Ctrl</code>+<code>b</code>+<code>&amp;</code>:關閉目前的window視窗。</li>
+</ol>
+<h3 id="Session"><a href="#Session" class="headerlink" title="Session"></a>Session</h3><ol>
+<li><code>Ctrl</code>+<code>b</code>+<code>$</code>:重新命名目前的Session。</li>
+<li><code>Ctrl</code>+<code>b</code>+<code>d</code>:離開tmux環境。</li>
+<li><code>Ctrl</code>+<code>b</code>+<code>s</code>:視覺化選單切換Session。</li>
+<li><code>Ctrl</code>+<code>b</code>+<code>L</code>:切換上一個使用過的Session。</li>
+<li><code>Ctrl</code>+<code>b</code>+<code>(</code>:切換上一個Session。</li>
+<li><code>Ctrl</code>+<code>b</code>+<code>)</code>:切換下一個Session。</li>
+<li>想回去特定的Session: <code>tmux attach -t &quot;session name&quot;</code><span style="color:red">(請忽略雙引號)</span></li>
+<li>修改Session名稱:<code>tmux rename-session -t &quot;origin seesion name&quot; &quot;new name&quot;</code> <span style="color:red">(請忽略雙引號)</span></li>
+<li>刪除某一個Session: <code>tmux kill-session -t 0</code> 或是 <code>tmux kill-session -t &lt;session_name&gt;</code></li>
+<li>刪除所有Session: <code>tmux kill-session -a</code></li>
+<li>快捷鍵：<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">快捷鍵/視窗管理</span><br><span class="line">C-b ? Help</span><br><span class="line">C-b c 新增視窗</span><br><span class="line">C-b， 視窗命名</span><br><span class="line">C-b w 視窗列表</span><br><span class="line">C-b f 尋找視窗</span><br><span class="line">C-b &amp; 刪除視窗</span><br><span class="line">C-b % 垂直分割區塊</span><br><span class="line">C-b “ 水平分割區塊</span><br><span class="line">C-b &lt;方向鍵&gt;</span><br><span class="line">C-b p 上一個視窗</span><br><span class="line">C-b n 下一個視窗</span><br><span class="line">C-b &lt;number&gt; 依照編號直接切換（編號顯示於狀態列）</span><br><span class="line">C-b d 離開 session</span><br><span class="line">C-b x 關閉 Pane</span><br><span class="line">C-d   關閉 Pane</span><br><span class="line">C-b z 讓一個 Pane 變成全螢幕，在輸入一次則回到剛剛的尺寸</span><br></pre></td></tr></table></figure></li>
+</ol>
+<h5 id="by-中和高中-吳振榮"><a href="#by-中和高中-吳振榮" class="headerlink" title="by 中和高中 吳振榮"></a>by 中和高中 吳振榮</h5>
+    </article>
+    <!-- license -->
+    
+        <div class="license-wrapper">
+            <p>Author：<a href="https://maxwutw.github.io">吳振榮(WU,ZHEN-RONG)</a>
+            <p>Link：<a href="https://maxwutw.github.io/2021/08/27/Linux%E5%9F%BA%E7%A4%8E%E4%BD%BF%E7%94%A8/">https://maxwutw.github.io/2021/08/27/Linux%E5%9F%BA%E7%A4%8E%E4%BD%BF%E7%94%A8/</a>
+            <p>Publish date：<a href="https://maxwutw.github.io/2021/08/27/Linux%E5%9F%BA%E7%A4%8E%E4%BD%BF%E7%94%A8/">August 27th 2021, 7:27:52 pm</a>
+            <p>Update date：<a href="https://maxwutw.github.io/2021/08/27/Linux%E5%9F%BA%E7%A4%8E%E4%BD%BF%E7%94%A8/">June 24th 2022, 12:18:42 pm</a>
+            <p>License：本文採用<a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc/4.0/">知識共享署名-非商業性使用 4.0 國際許可協議</a>進行許可</p>
+        </div>
+    
+    <!-- paginator -->
+    <ul class="post-paginator">
+        <li class="next">
+            
+                <div class="nextSlogan">Next Post</div>
+                <a href="/2021/08/27/APCS%E5%AF%A6%E4%BD%9C%E9%A1%8C/" title="APCS實作題">
+                    <div class="nextTitle">APCS實作題</div>
+                </a>
+            
+        </li>
+        <li class="previous">
+            
+                <div class="prevSlogan">Previous Post</div>
+                <a href="/2021/08/27/Matplotlib/" title="Matplotlib">
+                    <div class="prevTitle">Matplotlib</div>
+                </a>
+            
+        </li>
+    </ul>
+    <!-- comment -->
+    
+        <div class="post-comment">
+            <!-- 来必力 City 版安装代码 -->
+
+
+            
+
+            
+
+            
+
+            <!-- utteranc评论 -->
+
+
+            <!-- partial('_partial/comment/changyan') -->
+            <!--PC版-->
+
+
+            
+            
+
+            
+
+        </div>
+    
+    <!-- timeliness note -->
+    <!-- idea from: https://hexo.fluid-dev.com/posts/hexo-injector/#%E6%96%87%E7%AB%A0%E6%97%B6%E6%95%88%E6%80%A7%E6%8F%90%E7%A4%BA -->
+    
+    <!-- Mathjax -->
+    
+</main>
+
+                <!-- profile -->
+                
+            </div>
+            <footer class="footer footer-unloaded">
+    <!-- social  -->
+    
+        <div class="social">
+            
+    
+        
+            
+                <a href="mailto:WuMax13@gmail.com" class="iconfont-archer email" title=email ></a>
+            
+        
+    
+        
+            
+                <a href="https://github.com/MaxWutw" class="iconfont-archer github" target="_blank" title=github></a>
+            
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+            
+                <a href="https://www.facebook.com/profile.php?id=100020738000412" class="iconfont-archer facebook" target="_blank" title=facebook></a>
+            
+        
+    
+        
+    
+        
+            
+                <a href="https://www.instagram.com/_wuzhenlong/" class="iconfont-archer instagram" target="_blank" title=instagram></a>
+            
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+
+
+        </div>
+    
+    <!-- powered by Hexo  -->
+    <div class="copyright">
+        <span id="hexo-power">Powered by <a href="https://hexo.io/" target="_blank">Hexo</a></span><span class="iconfont-archer power">&#xe635;</span><span id="theme-info">theme <a href="https://github.com/fi3ework/hexo-theme-archer" target="_blank">Archer</a></span>
+    </div>
+    <!-- website approve for Chinese user -->
+    
+    <!-- 不蒜子  -->
+    
+        <div class="busuanzi-container">
+            
+             
+                <span id="busuanzi_container_site_pv">PV: <span id="busuanzi_value_site_pv"></span> :)</span>
+            
+        </div>
+    	
+</footer>
+
+        </div>
+        <!-- toc -->
+        
+            <div class="toc-wrapper toc-wrapper-loding" style=
+
+
+
+
+
+
+
+    top:50vh;
+
+>
+                <div class="toc-catalog">
+                    <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
+                </div>
+                <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Linux"><span class="toc-number">1.</span> <span class="toc-text">Linux</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#linux%E5%9F%BA%E7%A4%8E%E7%94%A8%E6%B3%95"><span class="toc-number">1.1.</span> <span class="toc-text">linux基礎用法</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#at%E5%9C%A8"><span class="toc-number">1.1.1.</span> <span class="toc-text">@ at在</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#computer-%E5%BE%8C%E7%AC%AC%E4%B8%80%E5%80%8B%E5%AD%97%E5%85%83-Home-Directory-%E7%82%BA%E6%89%80%E5%9C%A8%E6%96%87%E4%BB%B6%E5%A4%BE%E7%9A%84%E5%90%8D%E5%AD%97"><span class="toc-number">1.1.2.</span> <span class="toc-text">computer:後第一個字元(Home Directory):為所在文件夾的名字</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#computer-%E5%BE%8C%E7%AC%AC%E4%BA%8C%E5%80%8B%E5%AD%97%E5%85%83-Prompt-%E6%8F%90%E7%A4%BA%E7%AC%A6"><span class="toc-number">1.1.3.</span> <span class="toc-text">computer:後第二個字元(Prompt):提示符</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#uname"><span class="toc-number">1.1.4.</span> <span class="toc-text">uname</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ctrl-c-%E5%BC%B7%E5%88%B6%E4%B8%AD%E6%96%B7%E6%9F%90%E4%B8%80%E6%94%AF%E7%A8%8B%E5%BC%8F%E3%80%82"><span class="toc-number">1.1.5.</span> <span class="toc-text">ctrl+c :強制中斷某一支程式。</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#exit-%E9%9B%A2%E9%96%8B%E7%B3%BB%E7%B5%B1%E3%80%82"><span class="toc-number">1.1.6.</span> <span class="toc-text">exit :離開系統。</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#cal-%E7%9C%8B%E6%9C%88%E6%9B%86-%E3%80%82"><span class="toc-number">1.1.7.</span> <span class="toc-text">cal :看月曆 。</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#cal-%E5%B9%B4%E4%BB%BD-%E7%9C%8B%E6%9F%90%E5%B9%B4%E7%9A%84%E5%B9%B4%E6%9B%86%E3%80%82"><span class="toc-number">1.1.8.</span> <span class="toc-text">cal :年份 :看某年的年曆。</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#cal-%E5%B9%B4%E4%BB%BD-%E6%9C%88%E4%BB%BD-%E7%9C%8B%E6%9F%90%E5%B9%B4%E6%9F%90%E6%9C%88%E7%9A%84%E6%9C%88%E6%9B%86%E3%80%82"><span class="toc-number">1.1.9.</span> <span class="toc-text">cal :年份 月份 :看某年某月的月曆。</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#bc-%E8%A8%88%E7%AE%97%E6%A9%9F-%E6%AD%A4%E6%83%85%E6%B3%81%E4%B8%8D%E8%83%BD%E7%94%A8%E5%B0%8F%E6%95%B8-%E3%80%82"><span class="toc-number">1.1.10.</span> <span class="toc-text">bc :計算機(此情況不能用小數)。</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#scale-x3D-%E5%B0%8F%E6%95%B8%E4%BD%8D%E6%95%B8%E3%80%82"><span class="toc-number">1.1.10.1.</span> <span class="toc-text">scale &#x3D; 小數位數。</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#quit-%E9%80%80%E5%87%BAbc%E3%80%82"><span class="toc-number">1.1.10.2.</span> <span class="toc-text">quit :退出bc。</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#file-%E6%9F%A5%E7%9C%8B%E6%96%87%E4%BB%B6%E8%A8%8A%E6%81%AF%E3%80%82"><span class="toc-number">1.1.11.</span> <span class="toc-text">file :查看文件訊息。</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#pwd-Print-Working-Directory-%E5%8F%96%E5%BE%97%E7%9B%AE%E5%89%8D%E7%9A%84%E8%B7%AF%E5%BE%91"><span class="toc-number">1.1.12.</span> <span class="toc-text">pwd(Print Working Directory) 取得目前的路徑</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ls-list-%E5%8F%96%E5%BE%97%E7%95%B6%E5%89%8D%E8%B3%87%E6%96%99%E5%A4%BE%E8%88%87%E6%AA%94%E6%A1%88%E5%90%8D%E7%A8%B1"><span class="toc-number">1.1.13.</span> <span class="toc-text">ls(list) 取得當前資料夾與檔案名稱</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#ls-l"><span class="toc-number">1.1.13.1.</span> <span class="toc-text">ls -l:</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#chmod-change-mode"><span class="toc-number">1.1.14.</span> <span class="toc-text">chmod(change mode)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%9B%B4%E6%8E%A5%E5%9F%B7%E8%A1%8C%E6%AA%94%E6%A1%88-x2F-file-py"><span class="toc-number">1.1.15.</span> <span class="toc-text">直接執行檔案 .&#x2F;file.py</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#linux%E6%9C%89%E4%B8%80%E5%80%8B%E7%89%B9%E6%80%A7%EF%BC%8C%E5%B0%B1%E6%98%AF%E6%89%80%E6%9C%89%E6%9D%B1%E8%A5%BF%E9%83%BD%E6%98%AF%E4%B8%80%E5%80%8B%E6%96%87%E4%BB%B6%E3%80%82"><span class="toc-number">1.1.16.</span> <span class="toc-text">linux有一個特性，就是所有東西都是一個文件。</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#linux%E5%A4%A7%E5%B0%8F%E5%AF%AB%E5%BF%85%E9%A0%88%E5%8D%80%E5%88%86%EF%BC%8C%E5%9C%A8linux%E4%B8%AD%E5%A4%A7%E5%B0%8F%E5%AF%AB%E6%98%AF%E4%B8%8D%E4%B8%80%E6%A8%A3%E7%9A%84%E6%9D%B1%E8%A5%BF%E3%80%82"><span class="toc-number">1.1.17.</span> <span class="toc-text">linux大小寫必須區分，在linux中大小寫是不一樣的東西。</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9C%A8terminal%E4%B8%AD%E5%8F%AF%E4%BD%BF%E7%94%A8TAB%E9%8D%B5%E4%BE%86%E8%A3%9C%E9%BD%8A%E4%B8%80%E4%BA%9B%E7%89%A9%E4%BB%B6%E6%88%96%E6%AA%94%E5%90%8D-%E5%96%84%E7%94%A8TAB%E9%8D%B5-%E3%80%82"><span class="toc-number">1.1.18.</span> <span class="toc-text">在terminal中可使用TAB鍵來補齊一些物件或檔名(善用TAB鍵)。</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#lscpu-%E6%9F%A5%E8%A9%A2-CPU-%E8%A6%8F%E6%A0%BC%E3%80%82"><span class="toc-number">1.1.19.</span> <span class="toc-text">lscpu :查詢 CPU 規格。</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#x2F-%E6%A0%B9%E7%9B%AE%E9%8C%84%E3%80%82"><span class="toc-number">1.1.20.</span> <span class="toc-text">&#x2F; :根目錄。</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#bin-%E6%94%BE%E7%BD%AE%E5%9F%B7%E8%A1%8C%E6%96%87%E4%BB%B6%E3%80%82"><span class="toc-number">1.1.20.1.</span> <span class="toc-text">bin :放置執行文件。</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#boot-%E6%94%BE%E7%BD%AE%E9%96%8B%E6%A9%9F%E6%9C%83%E9%81%8B%E7%94%A8%E5%88%B0%E7%9A%84%E6%96%87%E4%BB%B6%E3%80%82"><span class="toc-number">1.1.20.2.</span> <span class="toc-text">boot :放置開機會運用到的文件。</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#dev-%E6%8E%A5%E5%8F%A3%E8%A8%AD%E5%82%99%E9%83%BD%E6%9C%83%E5%AD%98%E5%8F%96%E5%9C%A8dev%E4%B8%AD%E3%80%82"><span class="toc-number">1.1.20.3.</span> <span class="toc-text">dev :接口設備都會存取在dev中。</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#etc-%E7%B3%BB%E7%B5%B1%E4%B8%BB%E8%A6%81%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6%EF%BC%8C%E4%BE%8B%E5%A6%82%E7%94%A8%E6%88%B6%E7%9A%84%E5%B8%B3%E8%99%9F%E5%AF%86%E7%A2%BC%E3%80%81%E6%9C%8D%E5%8B%99%E7%9A%84%E8%B5%B7%E5%A7%8B%E6%96%87%E4%BB%B6%E3%80%82"><span class="toc-number">1.1.20.4.</span> <span class="toc-text">etc :系統主要配置文件，例如用戶的帳號密碼、服務的起始文件。</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#home-%E4%B8%BB%E6%96%87%E4%BB%B6%E5%A4%BE%E7%9A%84%E4%BD%8D%E7%BD%AE%E3%80%82"><span class="toc-number">1.1.20.5.</span> <span class="toc-text">home :主文件夾的位置。</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#lib-%E9%96%8B%E6%A9%9F%E6%99%82%E6%9C%83%E7%94%A8%E5%88%B0%E7%9A%84%E4%B8%BB%E5%87%BD%E5%BC%8F%E5%BA%AB%E3%80%82"><span class="toc-number">1.1.20.6.</span> <span class="toc-text">lib :開機時會用到的主函式庫。</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#media-%E6%94%BE%E7%BD%AE%E5%8F%AF%E4%BB%A5%E5%88%AA%E9%99%A4%E7%9A%84%E8%A8%AD%E5%82%99%E3%80%82"><span class="toc-number">1.1.20.7.</span> <span class="toc-text">media :放置可以刪除的設備。</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#opt-%E7%AC%AC%E4%B8%89%E6%96%B9%E7%A8%8B%E5%BC%8F%E7%9A%84%E6%94%BE%E7%BD%AE%E7%9B%AE%E9%8C%84%E3%80%82"><span class="toc-number">1.1.20.8.</span> <span class="toc-text">opt :第三方程式的放置目錄。</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#root-%E7%B3%BB%E7%B5%B1%E7%AE%A1%E7%90%86%E5%93%A1%E7%9A%84%E4%B8%BB%E6%96%87%E4%BB%B6%E5%A4%BE%E3%80%82"><span class="toc-number">1.1.20.9.</span> <span class="toc-text">root :系統管理員的主文件夾。</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#sbin-%E6%94%BE%E7%BD%AE%E4%B8%80%E4%BA%9B%E5%8F%AA%E6%9C%89%E7%B3%BB%E7%B5%B1%E7%AE%A1%E7%90%86%E5%93%A1%E6%89%8D%E5%8F%AF%E4%BB%A5%E5%9F%B7%E8%A1%8C%E7%9A%84%E5%9F%B7%E8%A1%8C%E5%91%BD%E4%BB%A4%E3%80%82"><span class="toc-number">1.1.20.10.</span> <span class="toc-text">sbin :放置一些只有系統管理員才可以執行的執行命令。</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#srv-%E6%9C%8D%E5%8B%99%E5%8F%96%E7%94%A8%E6%95%B8%E6%93%9A%E7%9A%84%E7%9B%AE%E9%8C%84%E3%80%82"><span class="toc-number">1.1.20.11.</span> <span class="toc-text">srv :服務取用數據的目錄。</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#tmp-%E6%94%BE%E7%BD%AE%E4%B8%80%E4%BA%9B%E8%87%A8%E6%99%82%E7%9A%84%E6%96%87%E4%BB%B6%EF%BC%8C%E9%9C%80%E5%AE%9A%E6%99%82%E6%B8%85%E7%90%86%E3%80%82"><span class="toc-number">1.1.20.12.</span> <span class="toc-text">tmp :放置一些臨時的文件，需定時清理。</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#usr-unix%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%B5%B1%E7%9A%84%E6%94%AF%E6%8F%B4-%E4%B8%8D%E6%98%AFuser-%EF%BC%8C%E5%8F%AF%E6%94%BE%E7%BD%AE%E4%B8%80%E4%BA%9B%E7%B3%BB%E7%B5%B1%E9%BB%98%E8%AA%8D%E7%A8%8B%E5%BC%8F%E3%80%82"><span class="toc-number">1.1.20.13.</span> <span class="toc-text">usr :unix操作系統的支援(不是user!!!!!)，可放置一些系統默認程式。</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#var-%E6%94%BE%E7%BD%AE%E5%BF%AB%E5%8F%96"><span class="toc-number">1.1.20.14.</span> <span class="toc-text">var :放置快取</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#cd-Change-Directory-%E5%88%87%E6%8F%9B%E7%9B%AE%E9%8C%84%E3%80%82"><span class="toc-number">1.1.21.</span> <span class="toc-text">cd(Change Directory) :切換目錄。</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%B5%95%E5%B0%8D%E8%B7%AF%E5%BE%91-%E6%98%AF%E7%94%B1%E6%A0%B9%E7%9B%AE%E9%8C%84%E4%B9%9F%E5%B0%B1%E6%98%AF%E6%9C%80%E5%89%8D%E9%9D%A2%E7%9A%84%E9%82%A3%E4%B8%80%E5%80%8B%E7%9B%AE%E9%8C%84%E9%96%8B%E5%A7%8B%E5%90%91%E4%B8%8B%E8%BC%B8%E5%85%A5%E7%9A%84-%E8%A6%81%E5%8A%A0-x2F-%EF%BC%8C%E4%B8%8D%E7%AE%A1%E5%9C%A8%E5%93%AA%E8%A3%A1%EF%BC%8C%E5%8F%AA%E8%A6%81%E6%9C%89%E7%B5%95%E5%B0%8D%E8%B7%AF%E5%BE%91%E9%83%BD%E5%8F%AF%E4%BB%A5%E5%8E%BB%E3%80%82"><span class="toc-number">1.1.21.1.</span> <span class="toc-text">絕對路徑 :是由根目錄也就是最前面的那一個目錄開始向下輸入的(要加&#x2F;)，不管在哪裡，只要有絕對路徑都可以去。</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%9B%B8%E5%B0%8D%E8%B7%AF%E5%BE%91-%E7%9B%B8%E5%B0%8D%E6%96%BC%E7%95%B6%E5%89%8D%E5%B7%A5%E4%BD%9C%E7%9B%AE%E9%8C%84-pwd-%EF%BC%8C%E4%B8%8D%E6%98%AF%E5%BE%9E%E6%A0%B9%E7%9B%AE%E9%8C%84%E9%96%8B%E5%A7%8B%E3%80%82"><span class="toc-number">1.1.21.2.</span> <span class="toc-text">相對路徑 :相對於當前工作目錄(pwd)，不是從根目錄開始。</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#cd-%E7%95%B6%E5%89%8D%E7%9B%AE%E9%8C%84%E3%80%82"><span class="toc-number">1.1.21.3.</span> <span class="toc-text">cd . :當前目錄。</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#cd-%E8%A9%B2%E7%9B%AE%E9%8C%84%E7%9A%84%E4%B8%8A%E4%B8%80%E5%B1%A4%E7%9B%AE%E9%8C%84%E3%80%82"><span class="toc-number">1.1.21.4.</span> <span class="toc-text">cd .. :該目錄的上一層目錄。</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#man-manual-page-%E6%8C%87%E4%BB%A4%E6%9F%A5%E8%A9%A2"><span class="toc-number">1.1.22.</span> <span class="toc-text">man(manual page) :指令查詢</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#mkdir-%E5%89%B5%E9%80%A0%E8%B7%AF%E5%BE%91"><span class="toc-number">1.1.23.</span> <span class="toc-text">mkdir :創造路徑</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%89%B5%E9%80%A0%E5%A4%9A%E5%B1%A4%E7%9B%AE%E9%8C%84"><span class="toc-number">1.1.23.1.</span> <span class="toc-text">創造多層目錄:</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#p-%E5%8F%AF%E4%BB%A5%E5%B9%AB%E4%BD%A0%E6%8A%8A%E4%B8%8A%E4%B8%80%E5%B1%A4%E7%9B%AE%E9%8C%84%E4%B9%9F%E5%89%B5%E5%BB%BA%E5%A5%BD-%E5%A6%82%E6%9E%9C%E4%B8%8A%E4%B8%80%E5%B1%A4%E7%9B%AE%E9%8C%84%E4%B8%8D%E5%AD%98%E5%9C%A8%E7%9A%84%E8%A9%B1-%E3%80%82"><span class="toc-number">1.1.23.1.1.</span> <span class="toc-text">-p :可以幫你把上一層目錄也創建好(如果上一層目錄不存在的話)。</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#pv-v%E7%9A%84%E5%8A%9F%E8%83%BD%E5%8F%AF%E4%BB%A5%E5%B9%AB%E4%BD%A0%E9%A1%AF%E7%A4%BA%E4%BB%96%E6%AD%A3%E5%9C%A8%E5%9F%B7%E8%A1%8C%E7%94%9A%E9%BA%BC%E3%80%82"><span class="toc-number">1.1.23.1.2.</span> <span class="toc-text">-pv :v的功能可以幫你顯示他正在執行甚麼。</span></a></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#rmdir-%E5%88%AA%E9%99%A4%E7%9B%AE%E9%8C%84%E3%80%82"><span class="toc-number">1.1.24.</span> <span class="toc-text">rmdir :刪除目錄。</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#p-%E5%8F%AF%E4%B8%80%E6%AC%A1%E5%88%AA%E9%99%A4%E5%A4%9A%E5%80%8B%E7%9B%AE%E9%8C%84"><span class="toc-number">1.1.24.1.</span> <span class="toc-text">-p :可一次刪除多個目錄</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#touch-%E5%89%B5%E5%BB%BA%E7%A9%BA%E6%96%87%E4%BB%B6%EF%BC%8C%E4%B8%BB%E8%A6%81%E5%8A%9F%E8%83%BD%E7%82%BA%E4%BF%AE%E6%94%B9%E6%96%87%E4%BB%B6%EF%BC%8C%E5%A6%82%E6%9E%9C%E8%A9%B2%E6%96%87%E4%BB%B6%E4%B8%8D%E5%AD%98%E5%9C%A8%EF%BC%8C%E5%89%87%E6%9C%83%E5%89%B5%E9%80%A0%E4%B8%80%E5%80%8B%E7%A9%BA%E6%96%87%E4%BB%B6%E3%80%82"><span class="toc-number">1.1.25.</span> <span class="toc-text">touch :創建空文件，主要功能為修改文件，如果該文件不存在，則會創造一個空文件。</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#a-%E4%BF%AE%E6%94%B9%E8%A8%AA%E5%95%8F%E6%99%82%E9%96%93%E3%80%82"><span class="toc-number">1.1.25.1.</span> <span class="toc-text">-a :修改訪問時間。</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#c-%E4%BF%AE%E6%94%B9%E6%96%87%E4%BB%B6%E6%99%82%E9%96%93%EF%BC%8C%E8%8B%A5%E4%B8%8D%E5%AD%98%E5%9C%A8%E5%89%87%E4%B8%8D%E5%89%B5%E5%BB%BA%E6%96%B0%E6%96%87%E4%BB%B6%E3%80%82"><span class="toc-number">1.1.25.2.</span> <span class="toc-text">-c :修改文件時間，若不存在則不創建新文件。</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#d-%E4%BD%BF%E7%94%A8%E6%8C%87%E5%AE%9A%E6%97%A5%E6%9C%9F%EF%BC%8C%E8%80%8C%E4%B8%8D%E6%98%AF%E7%95%B6%E5%89%8D%E6%97%A5%E6%9C%9F%E3%80%82"><span class="toc-number">1.1.25.3.</span> <span class="toc-text">-d :使用指定日期，而不是當前日期。</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#m-%E5%83%85%E4%BF%AE%E6%94%B9mtime%E3%80%82"><span class="toc-number">1.1.25.4.</span> <span class="toc-text">-m :僅修改mtime。</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#t-%E4%BD%BF%E7%94%A8%E6%8C%87%E5%AE%9A%E7%9A%84%E6%99%82%E9%96%93%E8%80%8C%E4%B8%8D%E6%98%AF%E7%95%B6%E5%89%8D%E7%9A%84%E6%99%82%E9%96%93%E3%80%82"><span class="toc-number">1.1.25.5.</span> <span class="toc-text">-t :使用指定的時間而不是當前的時間。</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#cp-%E8%A4%87%E8%A3%BD%EF%BC%8C%E7%94%A8%E6%B3%95-cp-a-b-%EF%BC%8C%E5%B0%87a%E8%A4%87%E8%A3%BD%E7%B5%A6b%E3%80%82"><span class="toc-number">1.1.26.</span> <span class="toc-text">cp :複製，用法 cp a b ，將a複製給b。</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#echo%E7%99%BC%E9%80%81%E6%96%87%E5%AD%97"><span class="toc-number">1.1.27.</span> <span class="toc-text">echo發送文字:</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%B0%87%E6%96%87%E5%AD%97%E8%BC%B8%E5%85%A5%E9%80%B2%E4%B8%80%E5%80%8B%E6%AA%94%E6%A1%88%E8%A3%A1"><span class="toc-number">1.1.27.1.</span> <span class="toc-text">將文字輸入進一個檔案裡:</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#cat-concatenate-%E9%A1%AF%E7%A4%BA%E5%87%BA%E6%AA%94%E6%A1%88%E8%A3%A1%E7%9A%84%E6%96%87%E5%AD%97"><span class="toc-number">1.1.28.</span> <span class="toc-text">cat(concatenate)顯示出檔案裡的文字</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#cat-%E5%90%88%E4%BD%B5%E8%B3%87%E6%96%99%E8%BC%B8%E5%87%BA"><span class="toc-number">1.1.28.1.</span> <span class="toc-text">cat 合併資料輸出</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%B0%87%E5%85%A9%E5%80%8B%E6%AA%94%E6%A1%88%E5%90%88%E4%BD%B5%E5%87%BA%E4%B8%80%E5%80%8B%E6%96%B0%E7%9A%84%E6%AA%94%E6%A1%88"><span class="toc-number">1.1.28.2.</span> <span class="toc-text">將兩個檔案合併出一個新的檔案</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%94%A8printf%E8%BC%B8%E5%87%BA"><span class="toc-number">1.1.29.</span> <span class="toc-text">用printf輸出</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#vim%E6%96%87%E5%AD%97%E7%B7%A8%E8%BC%AF%E5%99%A8"><span class="toc-number">1.1.30.</span> <span class="toc-text">vim文字編輯器</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%8B%E8%BC%89vim"><span class="toc-number">1.1.31.</span> <span class="toc-text">下載vim</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#whereis"><span class="toc-number">1.1.32.</span> <span class="toc-text">whereis</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#which"><span class="toc-number">1.1.33.</span> <span class="toc-text">which</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9F%A5%E7%9C%8B%E7%89%A9%E5%93%81%E7%9A%84%E5%AF%A6%E9%9A%9B%E4%BD%8D%E7%BD%AE"><span class="toc-number">1.1.34.</span> <span class="toc-text">查看物品的實際位置</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#vim"><span class="toc-number">1.1.35.</span> <span class="toc-text">vim</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#linux-ssh"><span class="toc-number">1.2.</span> <span class="toc-text">linux ssh</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#linux%E6%9F%A5%E8%A9%A2gpu%E5%9E%8B%E8%99%9F"><span class="toc-number">1.2.1.</span> <span class="toc-text">linux查詢gpu型號</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9F%A5%E7%9C%8Bubuntu%E7%89%88%E6%9C%AC"><span class="toc-number">1.2.2.</span> <span class="toc-text">查看ubuntu版本</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9B%B4%E6%94%B9%E6%AA%94%E6%A1%88%E5%90%8D%E7%A8%B1"><span class="toc-number">1.2.3.</span> <span class="toc-text">更改檔案名稱</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9F%A5%E7%9C%8B%E7%9B%AE%E9%8C%84%E8%A3%A1%E8%B3%87%E6%96%99%E7%9A%84%E6%95%B8%E9%87%8F"><span class="toc-number">1.2.4.</span> <span class="toc-text">查看目錄裡資料的數量</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#tmux"><span class="toc-number">1.3.</span> <span class="toc-text">tmux</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Panes%E5%88%86%E5%89%B2%E8%A6%96%E7%AA%97"><span class="toc-number">1.3.1.</span> <span class="toc-text">Panes分割視窗</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Windows%E8%A6%96%E7%AA%97"><span class="toc-number">1.3.2.</span> <span class="toc-text">Windows視窗</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Session"><span class="toc-number">1.3.3.</span> <span class="toc-text">Session</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#by-%E4%B8%AD%E5%92%8C%E9%AB%98%E4%B8%AD-%E5%90%B3%E6%8C%AF%E6%A6%AE"><span class="toc-number">1.3.3.0.1.</span> <span class="toc-text">by 中和高中 吳振榮</span></a></li></ol></li></ol></li></ol></li></ol></li></ol>
+            </div>
+        
+        <!-- sidebar -->
+        <div class="sidebar sidebar-hide">
+    <ul class="sidebar-tabs sidebar-tabs-active-0">
+        <li class="sidebar-tab-archives"><span class="iconfont-archer">&#xe67d;</span><span class="tab-name">Archive</span></li>
+        <li class="sidebar-tab-tags"><span class="iconfont-archer">&#xe61b;</span><span class="tab-name">Tag</span></li>
+        <li class="sidebar-tab-categories"><span class="iconfont-archer">&#xe666;</span><span class="tab-name">Cate</span></li>
+    </ul>
+    <div class="sidebar-content sidebar-content-show-archive">
+        <div class="sidebar-panel-archives">
+    <!-- 在 ejs 中将 archive 按照时间排序 -->
+    
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+    
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+    
+    
+    
+    
+    <div class="total-and-search">
+        <div class="total-archive">
+        Total : 28
+        </div>
+        <!-- search  -->
+        
+    </div>
+    
+    <div class="post-archive">
+    
+        
+            
+            
+            <div class="archive-year"> 2022 </div>
+            <ul class="year-list">
+            
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/24</span>
+            <a class="archive-post-title" href="/2022/06/24/Algorithm2/">Algorithm2</a>
+        </li>
+    
+        
+            
+            
+                
+                </ul>
+            
+            <div class="archive-year"> 2021 </div>
+            <ul class="year-list">
+            
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/12</span>
+            <a class="archive-post-title" href="/2021/09/12/%E5%9C%A8Linux%E5%AE%89%E8%A3%9DCUDA/">在Linux安裝CUDA，並在Pytorch進行CUDA訓練</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/29</span>
+            <a class="archive-post-title" href="/2021/08/29/%E5%9F%BA%E6%96%BC%E6%B7%B1%E5%BA%A6%E5%AD%B8%E7%BF%92%E9%80%B2%E8%A1%8C%E8%B2%93%E8%88%87%E7%8B%97%E7%9A%84%E8%BE%A8%E8%AA%8D-Pytorch/">基於深度學習進行貓與狗的辨認(Pytorch)</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/28</span>
+            <a class="archive-post-title" href="/2021/08/28/C-%E7%89%A9%E4%BB%B6%E5%B0%8E%E5%90%91/">C++物件導向</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/28</span>
+            <a class="archive-post-title" href="/2021/08/28/%E5%9F%BA%E7%A4%8E%E6%BC%94%E7%AE%97%E6%B3%95-C/">基礎演算法(Algorithm)-C++</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/28</span>
+            <a class="archive-post-title" href="/2021/08/28/%E5%9F%BA%E7%A4%8E%E8%B3%87%E6%96%99%E7%B5%90%E6%A7%8B-C/">基礎資料結構(Data Structure)-C++</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/27</span>
+            <a class="archive-post-title" href="/2021/08/27/APCS%E5%AF%A6%E4%BD%9C%E9%A1%8C/">APCS實作題</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/27</span>
+            <a class="archive-post-title" href="/2021/08/27/CSS/">CSS</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/27</span>
+            <a class="archive-post-title" href="/2021/08/27/HTML/">HTML</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/27</span>
+            <a class="archive-post-title" href="/2021/08/27/Linux%E5%9F%BA%E7%A4%8E%E4%BD%BF%E7%94%A8/">Linux基礎使用</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/27</span>
+            <a class="archive-post-title" href="/2021/08/27/MNIST%E6%89%8B%E5%AF%AB%E8%BE%A8%E8%AD%98-Pytorch-version/">MNIST手寫辨識(Pytorch version)</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/27</span>
+            <a class="archive-post-title" href="/2021/08/27/MNIST%E6%89%8B%E5%AF%AB%E8%BE%A8%E8%AD%98-TensorFlow-version/">MNIST手寫辨識(TensorFlow-version)</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/27</span>
+            <a class="archive-post-title" href="/2021/08/27/Matplotlib/">Matplotlib</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/27</span>
+            <a class="archive-post-title" href="/2021/08/27/Numpy/">Numpy</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/27</span>
+            <a class="archive-post-title" href="/2021/08/27/Pandas/">Pandas</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/27</span>
+            <a class="archive-post-title" href="/2021/08/27/Scikit-Learn/">Scikit Learn</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/27</span>
+            <a class="archive-post-title" href="/2021/08/27/TensorFlow1%E5%9F%BA%E7%A4%8E%E4%BD%BF%E7%94%A8%E6%96%B9%E6%B3%95/">TensorFlow1基礎使用方法</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/27</span>
+            <a class="archive-post-title" href="/2021/08/27/%E9%81%B7%E7%A7%BB%E5%AD%B8%E7%BF%92-%E5%9C%96%E7%89%87%E8%BE%A8%E8%AD%98/">遷移學習-圖片辨識</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/27</span>
+            <a class="archive-post-title" href="/2021/08/27/%E5%9F%BA%E7%A4%8ETensorFlow2%E8%88%87%E6%A9%9F%E5%99%A8%E5%AD%B8%E7%BF%92/">基礎TensorFlow1和2與機器學習</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/27</span>
+            <a class="archive-post-title" href="/2021/08/27/%E5%9F%BA%E7%A4%8Epytorch%E8%88%87%E6%A9%9F%E5%99%A8%E5%AD%B8%E7%BF%92/">基礎pytorch與機器學習</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/24</span>
+            <a class="archive-post-title" href="/2021/08/24/OpenCV/">OpenCV</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/24</span>
+            <a class="archive-post-title" href="/2021/08/24/pipenv/">pipenv</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/24</span>
+            <a class="archive-post-title" href="/2021/06/24/Linked-List/">Linked_List</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/24</span>
+            <a class="archive-post-title" href="/2021/06/24/Stringstream/">Stringstream</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/24</span>
+            <a class="archive-post-title" href="/2021/06/24/Web/">Web</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/24</span>
+            <a class="archive-post-title" href="/2021/06/24/ctime/">ctime</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/24</span>
+            <a class="archive-post-title" href="/2021/06/24/%E6%8C%87%E6%A8%99/">指標</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/24</span>
+            <a class="archive-post-title" href="/2021/06/24/%E9%81%8B%E7%AE%97%E5%AD%90%E9%87%8D%E8%BC%89/">運算子重載</a>
+        </li>
+    
+    </div>
+</div>
+
+        <div class="sidebar-panel-tags">
+    <div class="sidebar-tags-name">
+        
+            <span class="sidebar-tag-name" data-tags="APCS">
+                <span class="iconfont-archer">&#xe606;</span>
+                APCS
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="C++">
+                <span class="iconfont-archer">&#xe606;</span>
+                C++
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="OOP">
+                <span class="iconfont-archer">&#xe606;</span>
+                OOP
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="CSS">
+                <span class="iconfont-archer">&#xe606;</span>
+                CSS
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="web dev">
+                <span class="iconfont-archer">&#xe606;</span>
+                web dev
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="HTML">
+                <span class="iconfont-archer">&#xe606;</span>
+                HTML
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="Linux">
+                <span class="iconfont-archer">&#xe606;</span>
+                Linux
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="Pytorch">
+                <span class="iconfont-archer">&#xe606;</span>
+                Pytorch
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="Machine Learning">
+                <span class="iconfont-archer">&#xe606;</span>
+                Machine Learning
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="TensorFlow2">
+                <span class="iconfont-archer">&#xe606;</span>
+                TensorFlow2
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="Python">
+                <span class="iconfont-archer">&#xe606;</span>
+                Python
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="Scikit Learn">
+                <span class="iconfont-archer">&#xe606;</span>
+                Scikit Learn
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="TensorFlow1">
+                <span class="iconfont-archer">&#xe606;</span>
+                TensorFlow1
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="TensorFlow">
+                <span class="iconfont-archer">&#xe606;</span>
+                TensorFlow
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="algorithm">
+                <span class="iconfont-archer">&#xe606;</span>
+                algorithm
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="Data structure">
+                <span class="iconfont-archer">&#xe606;</span>
+                Data structure
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="Transfer Learning">
+                <span class="iconfont-archer">&#xe606;</span>
+                Transfer Learning
+            </span>
+        
+    </div>
+    <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>
+    <div class="tag-load-fail" style="display: none; color: #ccc; font-size: 0.6rem;">
+        缺失模块，请参考主题文档进行安装配置：https://github.com/fi3ework/hexo-theme-archer#%E5%AE%89%E8%A3%85%E4%B8%BB%E9%A2%98
+    </div> 
+    <div class="sidebar-tags-list"></div>
+</div>
+
+        <div class="sidebar-panel-categories">
+    <div class="sidebar-categories-name">
+    
+    </div>
+    <div class="iconfont-archer sidebar-categories-empty">&#xe678;</div>
+    <div class="sidebar-categories-list"></div>
+</div>
+
+    </div>
+</div>
+
+        <!-- site-meta -->
+        <script>
+    var siteMetaRoot = "/"
+    if (siteMetaRoot === "undefined") {
+        siteMetaRoot = '/'
+    }
+    var siteMeta = {
+        url: "https://maxwutw.github.io",
+        root: siteMetaRoot,
+        author: "吳振榮(WU,ZHEN-RONG)"
+    }
+</script>
+
+        <!-- import experimental options here -->
+        <!-- Custom Font -->
+
+
+        <!-- main func -->
+        <script src="/scripts/main.js?v=20211217"></script>
+        <!-- dark mode -->
+        <script src="/scripts/dark.js?v=20211217"></script>
+        <!-- fancybox -->
+        <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js" defer></script>
+        <!-- algolia -->
+        
+        <!-- busuanzi -->
+        
+            <script src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" async></script>
+        
+        <!-- CNZZ -->
+        
+        <!-- async load share.js -->
+        
+            <script src="/scripts/share.js?v=20211217" async></script>
+        
+        <!-- mermaid -->
+        
+    </body>
+</html>
