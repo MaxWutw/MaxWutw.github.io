@@ -1,0 +1,1519 @@
+<!DOCTYPE html>
+<html lang="en">
+    <!-- title -->
+
+
+    
+
+<!-- keywords -->
+
+
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="author" content="Max Wu">
+    <meta name="renderer" content="webkit">
+    <meta name="copyright" content="Max Wu">
+    
+        <meta name="keywords" content="hexo,hexo-theme,hexo-blog">
+    
+    <meta name="description" content="">
+    <meta name="description" content="前言 學到演算法這邊終於知道題目不是能解出來就好，要解的簡潔，什麼意思呢？就是說不是答案對就可以了，要有效率，執行速度能快就快，使用空間能小就小，這樣的觀念打破我一直以來的想法，也對程式越來越有興趣了，程式啊程式，你是多麼神秘且講道理啊！！！！ ## 貪婪演算法 貪婪演算法就是做眼前最佳的動作，也就是局部解，但是到最後不見得是最好的動作，以下舉一個找零錢的例子。 通常找顧客零錢都是先將面額大的給顧">
+<meta property="og:type" content="article">
+<meta property="og:title" content="基礎演算法(Algorithm)-C++">
+<meta property="og:url" content="https://maxwutw.github.io/2021/08/28/%E5%9F%BA%E7%A4%8E%E6%BC%94%E7%AE%97%E6%B3%95-C/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="前言 學到演算法這邊終於知道題目不是能解出來就好，要解的簡潔，什麼意思呢？就是說不是答案對就可以了，要有效率，執行速度能快就快，使用空間能小就小，這樣的觀念打破我一直以來的想法，也對程式越來越有興趣了，程式啊程式，你是多麼神秘且講道理啊！！！！ ## 貪婪演算法 貪婪演算法就是做眼前最佳的動作，也就是局部解，但是到最後不見得是最好的動作，以下舉一個找零錢的例子。 通常找顧客零錢都是先將面額大的給顧">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2021-08-28T09:15:55.000Z">
+<meta property="article:modified_time" content="2023-04-05T23:19:22.000Z">
+<meta property="article:author" content="Max Wu">
+<meta property="article:tag" content="C++">
+<meta property="article:tag" content="algorithm">
+<meta name="twitter:card" content="summary">
+    <meta http-equiv="Cache-control" content="no-cache">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <link rel="icon" href="/assets/favicon.ico">
+    
+    <title>基礎演算法(Algorithm)-C++ · Max Coding blog</title>
+    <!-- /*! loadCSS. [c]2017 Filament Group, Inc. MIT License */
+/* This file is meant as a standalone workflow for
+- testing support for link[rel=preload]
+- enabling async CSS loading in browsers that do not support rel=preload
+- applying rel preload css once loaded, whether supported or not.
+*/ -->
+<script>
+    (function (w) {
+        'use strict'
+        // rel=preload support test
+        if (!w.loadCSS) {
+            w.loadCSS = function () {}
+        }
+        // define on the loadCSS obj
+        var rp = (loadCSS.relpreload = {})
+        // rel=preload feature support test
+        // runs once and returns a function for compat purposes
+        rp.support = (function () {
+            var ret
+            try {
+                ret = w.document.createElement('link').relList.supports('preload')
+            } catch (e) {
+                ret = false
+            }
+            return function () {
+                return ret
+            }
+        })()
+
+        // if preload isn't supported, get an asynchronous load by using a non-matching media attribute
+        // then change that media back to its intended value on load
+        rp.bindMediaToggle = function (link) {
+            // remember existing media attr for ultimate state, or default to 'all'
+            var finalMedia = link.media || 'all'
+
+            function enableStylesheet() {
+                link.media = finalMedia
+            }
+
+            // bind load handlers to enable media
+            if (link.addEventListener) {
+                link.addEventListener('load', enableStylesheet)
+            } else if (link.attachEvent) {
+                link.attachEvent('onload', enableStylesheet)
+            }
+
+            // Set rel and non-applicable media type to start an async request
+            // note: timeout allows this to happen async to let rendering continue in IE
+            setTimeout(function () {
+                link.rel = 'stylesheet'
+                link.media = 'only x'
+            })
+            // also enable media after 3 seconds,
+            // which will catch very old browsers (android 2.x, old firefox) that don't support onload on link
+            setTimeout(enableStylesheet, 3000)
+        }
+
+        // loop through link elements in DOM
+        rp.poly = function () {
+            // double check this to prevent external calls from running
+            if (rp.support()) {
+                return
+            }
+            var links = w.document.getElementsByTagName('link')
+            for (var i = 0; i < links.length; i++) {
+                var link = links[i]
+                // qualify links to those with rel=preload and as=style attrs
+                if (
+                    link.rel === 'preload' &&
+                    link.getAttribute('as') === 'style' &&
+                    !link.getAttribute('data-loadcss')
+                ) {
+                    // prevent rerunning on link
+                    link.setAttribute('data-loadcss', true)
+                    // bind listeners to toggle media back
+                    rp.bindMediaToggle(link)
+                }
+            }
+        }
+
+        // if unsupported, run the polyfill
+        if (!rp.support()) {
+            // run once at least
+            rp.poly()
+
+            // rerun poly on an interval until onload
+            var run = w.setInterval(rp.poly, 500)
+            if (w.addEventListener) {
+                w.addEventListener('load', function () {
+                    rp.poly()
+                    w.clearInterval(run)
+                })
+            } else if (w.attachEvent) {
+                w.attachEvent('onload', function () {
+                    rp.poly()
+                    w.clearInterval(run)
+                })
+            }
+        }
+
+        // commonjs
+        if (typeof exports !== 'undefined') {
+            exports.loadCSS = loadCSS
+        } else {
+            w.loadCSS = loadCSS
+        }
+    })(typeof global !== 'undefined' ? global : this)
+</script>
+
+    <style type="text/css">
+    @font-face {
+        font-family: 'Oswald-Regular';
+        src: url("/font/Oswald-Regular.ttf");
+    }
+
+    body {
+        margin: 0;
+    }
+
+    header,
+    footer,
+    .back-top,
+    .sidebar,
+    .container,
+    .site-intro-meta,
+    .toc-wrapper {
+        display: none;
+    }
+
+    .site-intro {
+        position: relative;
+        z-index: 3;
+        width: 100%;
+        /* height: 50vh; */
+        overflow: hidden;
+    }
+
+    .site-intro-placeholder {
+        position: absolute;
+        z-index: -2;
+        top: 0;
+        left: 0;
+        width: calc(100% + 300px);
+        height: 100%;
+        background: repeating-linear-gradient(-45deg, #444 0, #444 80px, #333 80px, #333 160px);
+        background-position: center center;
+        transform: translate3d(-226px, 0, 0);
+        animation: gradient-move 2.5s ease-out 0s infinite;
+    }
+
+    @keyframes gradient-move {
+        0% {
+            transform: translate3d(-226px, 0, 0);
+        }
+        100% {
+            transform: translate3d(0, 0, 0);
+        }
+    }
+</style>
+
+    <link rel="preload" href="/css/style.css?v=20211217" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="preload" href="/css/dark.css?v=20211217" as="style">
+    <link rel="stylesheet" href="/css/dark.css">
+    <link rel="stylesheet" href="/css/mobile.css?v=20211217" media="(max-width: 960px)">
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js" as="script">
+    <link rel="preload" href="/scripts/main.js?v=20211217" as="script">
+    <link rel="preload" href="/scripts/dark.js?v=20211217" as="script">
+    <link rel="preload" href="/font/Oswald-Regular.ttf" as="font" crossorigin>
+    <link rel="preload" href="https://at.alicdn.com/t/font_327081_1dta1rlogw17zaor.woff" as="font" crossorigin>
+    <!-- algolia -->
+    
+    <!-- 百度统计  -->
+    
+    <!-- 谷歌统计  -->
+    
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --><meta name="generator" content="Hexo 6.3.0"></head>
+
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+    <script type="text/javascript">
+        if (typeof window.$ == undefined) {
+            console.warn('jquery load from jsdelivr failed, will load local script')
+            document.write('<script src="/lib/jquery.min.js" />')
+        }
+    </script>
+    
+        <body class="post-body">
+    
+        <!-- header -->
+        <header class="header header-mobile">
+    <!-- top read progress line -->
+    <div class="header-element">
+        <div class="read-progress"></div>
+    </div>
+    <!-- sidebar menu button -->
+    <div class="header-element">
+        
+            <div class="header-sidebar-menu">
+        
+            
+                <div style="padding-left: 1px;">&#xe775;</div>
+            
+        </div>
+    </div>
+    <!-- header actions -->
+    <div class="header-actions">
+        <!-- theme mode switch button -->
+        <span class="header-theme-btn header-element">
+            <i class="fas fa-adjust"></i>
+        </span>
+        <!-- back to home page text -->
+        <span class="home-link header-element">
+            <a href=/>Max Coding blog</a>
+        </span>
+    </div>
+    <!-- toggle banner for post layout -->
+    
+        
+            <div class="banner">
+        
+            <div class="blog-title header-element">
+                <a href="/">Max Coding blog</a>
+            </div>
+            <div class="post-title header-element">
+                <a href="#" class="post-name">基礎演算法(Algorithm)-C++</a>
+            </div>
+        </div>
+    
+</header>
+
+        <!-- fixed footer -->
+        <footer class="footer-fixed">
+    <!-- back to top button -->
+    <div class="footer-fixed-element">
+        
+            <div class="back-top back-top-hidden">
+        
+        
+            <div>&#xe639;</div>
+        
+        </div>
+    </div>
+</footer>
+
+        <!-- wrapper -->
+        <div class="wrapper">
+            <div class="site-intro" style="
+
+
+
+
+
+
+
+    height:50vh;
+
+">
+    
+    <!-- 主页  -->
+    
+        
+    <!-- 404页  -->
+    
+    <div class="site-intro-placeholder"></div>
+    <div class="site-intro-img" style="background-image: url(/intro/post-bg.jpg)"></div>
+    <div class="site-intro-meta">
+        <!-- 标题  -->
+        <h1 class="intro-title">
+            <!-- 主页  -->
+            
+                基礎演算法(Algorithm)-C++
+            <!-- 404 -->
+            
+        </h1>
+        <!-- 副标题 -->
+        <p class="intro-subtitle">
+            <!-- 主页副标题  -->
+            
+                
+            <!-- 404 -->
+            
+        </p>
+        <!-- 文章页 meta -->
+        
+            <div class="post-intros">
+                <!-- 文章页标签  -->
+                
+                    <div class= post-intro-tags >
+    
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="C++">C++</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="algorithm">algorithm</a>
+    
+</div>
+
+                
+                <!-- 文章字数统计 -->
+                
+                <div class="post-intro-meta">
+                    <!-- 撰写日期 -->
+                    <span class="iconfont-archer post-intro-calander">&#xe676;</span>
+                    <span class="post-intro-time">2021/08/28</span>
+                    <!-- busuanzi -->
+                    
+                        <span id="busuanzi_container_page_pv" class="busuanzi-pv">
+                            <span class="iconfont-archer post-intro-busuanzi">&#xe602;</span>
+                            <span id="busuanzi_value_page_pv"></span>
+                        </span>
+                    
+                    <!-- 文章分享 -->
+                    <span class="share-wrapper">
+                        <span class="iconfont-archer share-icon">&#xe71d;</span>
+                        <span class="share-text">Share</span>
+                        <ul class="share-list">
+                            <li class="iconfont-archer share-qr" data-type="qr">&#xe75b;
+                                <div class="share-qrcode"></div>
+                            </li>
+                            <li class="iconfont-archer" data-type="weibo">&#xe619;</li>
+                            <li class="iconfont-archer" data-type="qzone">&#xe62e;</li>
+                            <li class="iconfont-archer" data-type="twitter">&#xe634;</li>
+                            <li class="iconfont-archer" data-type="facebook">&#xe67a;</li>
+                        </ul>
+                    </span>
+                </div>
+            </div>
+        
+    </div>
+</div>
+
+            <script>
+  // get user agent
+  function getBrowserVersions() {
+    var u = window.navigator.userAgent
+    return {
+      userAgent: u,
+      trident: u.indexOf('Trident') > -1, //IE内核
+      presto: u.indexOf('Presto') > -1, //opera内核
+      webKit: u.indexOf('AppleWebKit') > -1, //苹果、谷歌内核
+      gecko: u.indexOf('Gecko') > -1 && u.indexOf('KHTML') == -1, //火狐内核
+      mobile: !!u.match(/AppleWebKit.*Mobile.*/), //是否为移动终端
+      ios: !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/), //ios终端
+      android: u.indexOf('Android') > -1 || u.indexOf('Linux') > -1, //android终端或者uc浏览器
+      iPhone: u.indexOf('iPhone') > -1 || u.indexOf('Mac') > -1, //是否为iPhone或者安卓QQ浏览器
+      iPad: u.indexOf('iPad') > -1, //是否为iPad
+      webApp: u.indexOf('Safari') == -1, //是否为web应用程序，没有头部与底部
+      weixin: u.indexOf('MicroMessenger') == -1, //是否为微信浏览器
+      uc: u.indexOf('UCBrowser') > -1, //是否为android下的UC浏览器
+    }
+  }
+  var browser = {
+    versions: getBrowserVersions(),
+  }
+  console.log('userAgent: ' + browser.versions.userAgent)
+
+  // callback
+  function fontLoaded() {
+    console.log('font loaded')
+    if (document.getElementsByClassName('site-intro-meta')) {
+      document
+        .getElementsByClassName('intro-title')[0]
+        .classList.add('intro-fade-in')
+      document
+        .getElementsByClassName('intro-subtitle')[0]
+        .classList.add('intro-fade-in')
+      var postIntros = document.getElementsByClassName('post-intros')[0]
+      if (postIntros) {
+        postIntros.classList.add('post-fade-in')
+      }
+    }
+  }
+
+  // UC不支持跨域，所以直接显示
+  function asyncCb() {
+    if (browser.versions.uc) {
+      console.log('UCBrowser')
+      fontLoaded()
+    } else {
+      WebFont.load({
+        custom: {
+          families: ['Oswald-Regular'],
+        },
+        loading: function () {
+          // 所有字体开始加载
+          // console.log('font loading');
+        },
+        active: function () {
+          // 所有字体已渲染
+          fontLoaded()
+        },
+        inactive: function () {
+          // 字体预加载失败，无效字体或浏览器不支持加载
+          console.log('inactive: timeout')
+          fontLoaded()
+        },
+        timeout: 5000, // Set the timeout to two seconds
+      })
+    }
+  }
+
+  function asyncErr() {
+    console.warn('script load from CDN failed, will load local script')
+  }
+
+  // load webfont-loader async, and add callback function
+  function async(u, cb, err) {
+    var d = document,
+      t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0]
+    o.src = u
+    if (cb) {
+      o.addEventListener(
+        'load',
+        function (e) {
+          cb(null, e)
+        },
+        false
+      )
+    }
+    if (err) {
+      o.addEventListener(
+        'error',
+        function (e) {
+          err(null, e)
+        },
+        false
+      )
+    }
+    s.parentNode.insertBefore(o, s)
+  }
+
+  var asyncLoadWithFallBack = function (arr, success, reject) {
+    var currReject = function () {
+      reject()
+      arr.shift()
+      if (arr.length) async(arr[0], success, currReject)
+    }
+
+    async(arr[0], success, currReject)
+  }
+
+  asyncLoadWithFallBack(
+    [
+      'https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js',
+      'https://cdn.bootcss.com/webfont/1.6.28/webfontloader.js',
+      "/lib/webfontloader.min.js",
+    ],
+    asyncCb,
+    asyncErr
+  )
+</script>
+
+            <img class="loading" src="/assets/loading.svg" style="display: block; margin: 6rem auto 0 auto; width: 6rem; height: 6rem;" />
+            <div class="container container-unloaded">
+                <main class="main post-page">
+    <article class="article-entry">
+        <h2 id="前言">前言</h2>
+<p>學到演算法這邊終於知道題目不是能解出來就好，要解的簡潔，什麼意思呢？就是說不是答案對就可以了，要有效率，執行速度能快就快，使用空間能小就小，這樣的觀念打破我一直以來的想法，也對程式越來越有興趣了，程式啊程式，你是多麼神秘且講道理啊！！！！
+## 貪婪演算法
+貪婪演算法就是做眼前最佳的動作，也就是局部解，但是到最後不見得是最好的動作，以下舉一個找零錢的例子。
+通常找顧客零錢都是先將面額大的給顧客，再將較第二大<span id="more"></span>的面額給顧客，依序這樣下去，直到不能找為止，所以貪婪演算法就是運用這個想法。
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="type">int</span> cash[<span class="number">10</span>],n;</span><br><span class="line">    cash[<span class="number">0</span>] = <span class="number">1</span>;</span><br><span class="line">    cash[<span class="number">1</span>] = <span class="number">5</span>;</span><br><span class="line">    cash[<span class="number">2</span>] = <span class="number">10</span>;</span><br><span class="line">    cash[<span class="number">3</span>] = <span class="number">50</span>;</span><br><span class="line">    cash[<span class="number">4</span>] = <span class="number">100</span>;</span><br><span class="line">    cash[<span class="number">5</span>] = <span class="number">500</span>;</span><br><span class="line">    cash[<span class="number">6</span>] = <span class="number">1000</span>;</span><br><span class="line">    cin &gt;&gt; n;</span><br><span class="line">    cout &lt;&lt; n &lt;&lt; <span class="string">&quot;=&quot;</span>;</span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">6</span>;i &gt;= <span class="number">0</span>;i--)&#123;</span><br><span class="line">        <span class="keyword">if</span>(n &gt;= cash[i])&#123;</span><br><span class="line">            cout &lt;&lt; cash[i] &lt;&lt; <span class="string">&quot;*&quot;</span> &lt;&lt; n/cash[i] &lt;&lt; <span class="string">&quot; &quot;</span>;</span><br><span class="line">            n = n%cash[i];</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h2
+id="貪婪演算法-最小生成樹minimum-spanning-treesmst">貪婪演算法-最小生成樹(Minimum
+spanning trees)MST</h2>
+<p>其實tree是一種資料結構，但我配合greedy來講。
+Tree的特性，必連通，但不能有cycle。
+MST的定義就是生成出來的樹，他的邊的總和最小的。
+英文版定義（由於翻譯成中文可能無法清楚表達他的含義，所以這邊使用別人的定義，原文是英文）：
+Definition: G = (V,E):weighted connected undirected graph * <span
+style="color:blue">Spanning tree</span> : S = (V,T),T ⊆ E,undirected
+tree * <span style="color:blue">Minimum spanning tree(MST)</span> : a
+spanning tree with the smallest total weight. 中文定義： 1.
+樹(tree):一個無向連通非環狀圖(acyclic,connected, undirected graph) 2.
+有根樹(rooted
+tree):以某個頂點為跟的樹（獨立於樹之外的頂點不能作為根）。因此有根樹也被直接稱為樹。
+3. 生成樹(spanning tree):包含圖中所有頂點且符合樹的定義的連通子圖。 4.
+最小生成樹(minimum spanning tree):即具有最小的權重的生成樹。 ##
+用貪婪演算法解最小生成樹 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">F = empty set</span><br><span class="line"><span class="keyword">while</span>(當問題未得解)&#123;</span><br><span class="line">	找出問題區域最佳解的方式找出一個邊;</span><br><span class="line">	<span class="keyword">if</span>(選出來的邊不會使F產生任何cycle)</span><br><span class="line">		將邊加入F中;</span><br><span class="line">	<span class="keyword">if</span>(答案是生成樹)</span><br><span class="line">		此問題得解;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure> ## Kruskal algorithm
+先將所有邊拿掉，接著再依序找小邊，並隨時確保他不會形成一個cycle。 ##
+Prim algorithm
+先挑一個點，然後找那個頂點連接的邊哪個最小，然後當所有的點都選到後就結束了。
+## 排序演算法 ### bubble sort
+泡沫排序法是一個很直觀且簡易的一種排序算法，以升冪從未排序的第一筆開始，第一筆資料和第二筆做交換，如果第二筆大於第三筆，就將第二筆和第三筆交換，以此類推。
+Time complexity :O(n^2) <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;vector&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="type">int</span> counts;</span><br><span class="line">    <span class="keyword">while</span>(cin &gt;&gt; counts)&#123;</span><br><span class="line">        vector&lt;<span class="type">int</span>&gt; vec;</span><br><span class="line">        <span class="type">int</span> temp;</span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">0</span>;i &lt; counts;i++)&#123;</span><br><span class="line">            cin &gt;&gt; temp;</span><br><span class="line">            vec.<span class="built_in">push_back</span>(temp);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">0</span>;i &lt; counts;i++)&#123;</span><br><span class="line">            <span class="keyword">for</span>(<span class="type">int</span> k = <span class="number">0</span>;k &lt; counts<span class="number">-1</span>;k++)&#123;</span><br><span class="line">                <span class="keyword">if</span>(vec[k] &gt; vec[k+<span class="number">1</span>])</span><br><span class="line">                    <span class="built_in">swap</span>(vec[k],vec[k+<span class="number">1</span>]);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">0</span> ;i &lt; counts;i++)&#123;</span><br><span class="line">            cout &lt;&lt; vec[i] &lt;&lt; <span class="string">&quot; &quot;</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        cout &lt;&lt; endl;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure> ## merge sort merge sort
+是一個運用divide and conquer
+演算法的演算法，先將問題分為數個子問題，最後再結合起來就會是問題的答案了。
+<span style="color:red">time complexity : O(nlogn)</span> <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;vector&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"><span class="type">long</span> <span class="type">long</span> <span class="type">int</span> infinity = <span class="number">999999999</span>;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">merge</span><span class="params">(vector&lt;<span class="type">int</span>&gt; &amp;vec,<span class="type">int</span> first,<span class="type">int</span> mid,<span class="type">int</span> last)</span></span>&#123;</span><br><span class="line">    <span class="function">vector&lt;<span class="type">int</span>&gt; <span class="title">left_area</span><span class="params">(vec.begin()+first,vec.begin()+mid+<span class="number">1</span>)</span></span>;</span><br><span class="line">    <span class="function">vector&lt;<span class="type">int</span>&gt; <span class="title">right_area</span><span class="params">(vec.begin()+mid+<span class="number">1</span>,vec.begin()+last+<span class="number">1</span>)</span></span>;</span><br><span class="line">    left_area.<span class="built_in">emplace</span>(left_area.<span class="built_in">end</span>(),infinity);</span><br><span class="line">    right_area.<span class="built_in">emplace</span>(right_area.<span class="built_in">end</span>(),infinity);</span><br><span class="line">    <span class="type">int</span> left_idx = <span class="number">0</span>,right_idx = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> i = first;i &lt;= last;i++)&#123;</span><br><span class="line">        <span class="keyword">if</span>(left_area[left_idx] &lt;= right_area[right_idx])&#123;</span><br><span class="line">            vec[i] = left_area[left_idx];</span><br><span class="line">            left_idx++;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span>&#123;</span><br><span class="line">            vec[i] = right_area[right_idx];</span><br><span class="line">            right_idx++;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">merge_sort</span><span class="params">(vector&lt;<span class="type">int</span>&gt; &amp;vec,<span class="type">int</span> first,<span class="type">int</span> last)</span></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(first &lt; last)&#123;</span><br><span class="line">        <span class="type">int</span> mid = (first+last)/<span class="number">2</span>;</span><br><span class="line">        <span class="built_in">merge_sort</span>(vec,first,mid);</span><br><span class="line">        <span class="built_in">merge_sort</span>(vec,mid+<span class="number">1</span>,last);</span><br><span class="line">        <span class="built_in">merge</span>(vec,first,mid,last);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">    vector&lt;<span class="type">int</span>&gt; vec&#123;<span class="number">48</span>,<span class="number">23</span>,<span class="number">19</span>,<span class="number">34</span>,<span class="number">65</span>,<span class="number">20</span>,<span class="number">3</span>&#125;;</span><br><span class="line">    cout &lt;&lt; <span class="string">&quot;original : &quot;</span>;</span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">0</span>;i &lt; vec.<span class="built_in">size</span>();i++)</span><br><span class="line">        cout &lt;&lt; vec[i] &lt;&lt; <span class="string">&quot; &quot;</span>;</span><br><span class="line">    cout &lt;&lt; endl;</span><br><span class="line">    cout &lt;&lt; <span class="string">&quot;After merge sort : &quot;</span>;</span><br><span class="line">    <span class="built_in">merge_sort</span>(vec,<span class="number">0</span>,<span class="number">7</span>);</span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">0</span>;i &lt; vec.<span class="built_in">size</span>();i++)</span><br><span class="line">        cout &lt;&lt; vec[i] &lt;&lt; <span class="string">&quot; &quot;</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+首先使用vector來儲存資料，接著把vector加入merge_sort()函式，merge_sort主要運行遞迴，前面有說merge_sort是將大問題分為數個子問題，而此遞迴就是為了實現此方式，首先將矩陣分為兩個，各自再分為兩個，一直分到不能分為止，此時停止遞迴，接著合併各個矩陣，在第6行和第7行是vector的constructor，將兩個矩陣分別放入left_area和right_area，然後用emplace把一個極大的數字插在他們的最後的地方，然後開始比較，兩個不同的vector用兩個不同的指標，把小的依序擺下來，擺好後在和下一個比，直到完成排序，這樣就完成merge_sort了。
+## quick sort quick sort是一個運用divide and conquer
+演算法的演算法，而隸屬於algorithm這個函式庫中有一個函式sort()就是利用quick
+sort，這是別人寫好的，可以接利用，首先先介紹這個函式，這個函式可加入三個參數，第一個參數是陣列或向量的第一個值，而第二個值是陣列或向量的最後一個值，第三個參數可有可無，是放入自訂函式，決定升冪或降冪，或當陣列或向量並不純，而是有和結構做連接，所以此時適合加入第三個參數，幫助解決。
+<span style="color:red">time complexity : O(nlogn) 但是worst
+case的時候是O(n^2)</span> <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;algorithm&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;cstdlib&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;ctime&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">data</span>&#123;</span><br><span class="line">    <span class="type">int</span> a;</span><br><span class="line">    <span class="type">int</span> b;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="function"><span class="type">bool</span> <span class="title">cmp</span><span class="params">(data x,data y)</span></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(x.a == y.a) <span class="keyword">return</span> x.b &lt; y.b;</span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">    data foo[<span class="number">10</span>];</span><br><span class="line">    <span class="built_in">srand</span>(<span class="built_in">time</span>(<span class="literal">NULL</span>));</span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> j = <span class="number">0</span>;j &lt; <span class="number">10</span>;j++)</span><br><span class="line">        foo[j].a = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">0</span>;i &lt; <span class="number">10</span>;i++)&#123;</span><br><span class="line">        foo[i].b = <span class="built_in">rand</span>()%<span class="number">1000</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">sort</span>(foo,foo+<span class="number">10</span>,cmp);<span class="comment">//此處加入第三個參數</span></span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">0</span>;i &lt; <span class="number">10</span>;i++)</span><br><span class="line">        cout &lt;&lt; foo[i].b &lt;&lt; <span class="string">&quot; &quot;</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+但是不能只會用別人的東西，自己也要會寫，所以接下來要介紹quick
+sort是如何運行的。 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;bits/stdc++.h&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">quick_sort</span><span class="params">(<span class="type">int</span> *arr,<span class="type">int</span> front_,<span class="type">int</span> end_)</span></span>;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">swap_</span><span class="params">(<span class="type">int</span> *a,<span class="type">int</span> *b)</span></span>;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">partition_</span><span class="params">(<span class="type">int</span> *arr,<span class="type">int</span> front_,<span class="type">int</span> end_)</span></span>;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="type">int</span> arr[<span class="number">10</span>] = &#123;<span class="number">3</span>,<span class="number">5</span>,<span class="number">7</span>,<span class="number">2</span>,<span class="number">13</span>,<span class="number">21</span>,<span class="number">6</span>,<span class="number">1</span>&#125;;</span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">0</span>;i &lt; <span class="number">8</span>;i++)</span><br><span class="line">        cout &lt;&lt; arr[i] &lt;&lt; <span class="string">&quot; &quot;</span>;</span><br><span class="line">    cout &lt;&lt; endl;</span><br><span class="line">    <span class="built_in">quick_sort</span>(arr,<span class="number">0</span>,<span class="number">7</span>);</span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">0</span>;i &lt; <span class="number">8</span>;i++)</span><br><span class="line">        cout &lt;&lt; arr[i] &lt;&lt; <span class="string">&quot; &quot;</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">swap_</span><span class="params">(<span class="type">int</span> *a,<span class="type">int</span> *b)</span></span>&#123;</span><br><span class="line">    <span class="type">int</span> tmp;</span><br><span class="line">    tmp = *a;</span><br><span class="line">    *a = *b;</span><br><span class="line">    *b = tmp;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">quick_sort</span><span class="params">(<span class="type">int</span> *arr,<span class="type">int</span> front_,<span class="type">int</span> end_)</span></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(front_ &lt; end_)&#123;</span><br><span class="line">        <span class="type">int</span> pivot = <span class="built_in">partition_</span>(arr,front_,end_);</span><br><span class="line">        <span class="built_in">quick_sort</span>(arr,pivot+<span class="number">1</span>,end_);</span><br><span class="line">        <span class="built_in">quick_sort</span>(arr,front_,pivot<span class="number">-1</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">partition_</span><span class="params">(<span class="type">int</span> *arr,<span class="type">int</span> front_,<span class="type">int</span> end_)</span></span>&#123;</span><br><span class="line">    <span class="type">int</span> pivot = arr[end_];</span><br><span class="line">    <span class="type">int</span> i = front_<span class="number">-1</span>;</span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> j = front_;j &lt; end_;j++)&#123;</span><br><span class="line">        <span class="keyword">if</span>(arr[j] &lt; pivot)&#123;<span class="comment">//to control ascending power and Descending powers</span></span><br><span class="line">            i++;</span><br><span class="line">            <span class="built_in">swap_</span>(&amp;arr[i],&amp;arr[j]);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    i++;</span><br><span class="line">    <span class="built_in">swap_</span>(&amp;arr[i],&amp;arr[end_]);</span><br><span class="line">    <span class="keyword">return</span> i;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure> quick
+sort有一個很重要的東西，就是pivot，他就像一個標準，每個值要和他比較，在他左邊的值是比他小的，在他右邊是比他大的，保持這個特性一直做下去，而我們的pivot會採用陣列裡最後一個值，沒有強制規定要找哪一個，而在partition_裡的迴圈作用是一個一個做比較，最後再將pivot插入中間，以得到在他左邊的值是比他小的，在他右邊是比他大的。而quick_sort函式裡是一個遞迴，一直重複直到無法再分到更小的，這邊和merge
+sort有幾分相似。</p>
+<h2 id="總結">總結</h2>
+<p>我覺得排序演算法是一堂很重要的課，也是進入演算法世界的第一把鑰匙，表面上在排序，但實際上有許多的觀念在背後，其實排序演算法有很多，但我這邊就舉三個例子即可，學玩排序後就來學搜尋吧！
+## 二分搜尋法(binary search)
+配合圖片二分搜會學的比較輕鬆，在進行二分搜前可以先畫一個<span
+class="math inline">\(1\)</span> * <span
+class="math inline">\(n\)</span>的矩陣來幫助理解 <img
+src="https://i.imgur.com/9heMmUO.jpg" /> 以上為一個<span
+class="math inline">\(1\)</span>*<span
+class="math inline">\(9\)</span>的矩陣，每個格子中儲存一個數字，切記在進行二分搜得時候要先把數字排好，我習慣由小排到大，而接下來就可以進行搜尋了。
+假設我們要搜尋的目標是<span
+style="color:red"><code>14</code></span>我們先將矩陣的數量除二，可得目前index值為(0+8)/2
+= 4，而index[4]的位置並非我們要找的數值，且index[4] =
+9小於我們的目標14所以我們直接拋棄尋找小於9的數字，直接往以9為中心的右側繼續尋找下一個，一直重複此動作即可尋找到<code>14</code>的位置。</p>
+<p>我們之所以要使用binary search 而不用linear search是因為linear
+search的time complexity 是O(n) 而binary search 的 time complexity
+是O(logn)比較快。</p>
+<p>程式碼: <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;algorithm&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">Binary_search</span><span class="params">(<span class="type">int</span> * arr,<span class="type">const</span> <span class="type">int</span> target,<span class="type">int</span> left,<span class="type">int</span> right)</span></span>;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="type">int</span> arr[<span class="number">10</span>] = &#123;<span class="number">3</span>,<span class="number">19</span>,<span class="number">23</span>,<span class="number">8</span>,<span class="number">14</span>,<span class="number">6</span>,<span class="number">9</span>,<span class="number">1</span>,<span class="number">20</span>&#125;;<span class="comment">//1,3,6,8,9,14,19,20,23</span></span><br><span class="line">    <span class="type">const</span> <span class="type">int</span> target = <span class="number">14</span>;</span><br><span class="line">    <span class="built_in">sort</span>(arr,arr+<span class="number">9</span>);</span><br><span class="line">    <span class="type">int</span> position = <span class="built_in">Binary_search</span>(arr,target,<span class="number">0</span>,<span class="number">8</span>);</span><br><span class="line">    cout &lt;&lt; position+<span class="number">1</span> &lt;&lt; endl;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">Binary_search</span><span class="params">(<span class="type">int</span> * arr,<span class="type">const</span> <span class="type">int</span> target,<span class="type">int</span> left,<span class="type">int</span> right)</span></span>&#123;</span><br><span class="line">    <span class="keyword">while</span>(left &lt; right)&#123;</span><br><span class="line">        <span class="type">int</span> mid = (left+right)/<span class="number">2</span>;</span><br><span class="line">        <span class="keyword">if</span>(arr[mid] == target) <span class="keyword">return</span> mid;</span><br><span class="line">        <span class="keyword">else</span> <span class="keyword">if</span>(arr[mid] &gt; target) right = mid;</span><br><span class="line">        <span class="keyword">else</span> <span class="keyword">if</span>(arr[mid] &lt; target) left = mid+<span class="number">1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure> ## 圖論 ### dfs <img
+src="https://i.imgur.com/10Qd8Q9.png" /> 深度優先搜尋法
+以下為鄰接矩陣的作法 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"><span class="type">int</span> vertex,edge;</span><br><span class="line"><span class="type">bool</span> visited[<span class="number">10</span>] = &#123;<span class="literal">false</span>&#125;;</span><br><span class="line"><span class="type">int</span> maps[<span class="number">10</span>][<span class="number">10</span>] = &#123;&#123;<span class="number">0</span>&#125;&#125;;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">dfs</span><span class="params">(<span class="type">int</span> node)</span></span>;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">print</span><span class="params">()</span></span>;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">    cin &gt;&gt; vertex &gt;&gt; edge;</span><br><span class="line">    <span class="type">int</span> tmp1,tmp2;</span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">0</span>;i &lt; edge;i++)&#123;</span><br><span class="line">        cin &gt;&gt; tmp1 &gt;&gt; tmp2;</span><br><span class="line">        maps[tmp1<span class="number">-1</span>][tmp2<span class="number">-1</span>] = maps[tmp2<span class="number">-1</span>][tmp1<span class="number">-1</span>] = <span class="number">1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">print</span>();</span><br><span class="line">    cout &lt;&lt; endl;</span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">0</span>;i &lt; vertex;i++)&#123;</span><br><span class="line">        <span class="keyword">if</span>(!visited[i]) <span class="built_in">dfs</span>(i);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">dfs</span><span class="params">(<span class="type">int</span> node)</span></span>&#123;</span><br><span class="line">    cout &lt;&lt; node+<span class="number">1</span> &lt;&lt; <span class="string">&quot; &quot;</span>;</span><br><span class="line">    visited[node] = <span class="literal">true</span>;</span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">0</span>;i &lt; edge;i++)&#123;</span><br><span class="line">        <span class="keyword">if</span>(!visited[i] &amp;&amp; maps[node][i] == <span class="number">1</span>) <span class="built_in">dfs</span>(i);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">print</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">0</span>;i &lt; vertex;i++)&#123;</span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> j = <span class="number">0</span>;j &lt; vertex;j++)&#123;</span><br><span class="line">            cout &lt;&lt; maps[i][j] &lt;&lt; <span class="string">&quot; &quot;</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        cout &lt;&lt; endl;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure> <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;algorithm&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> N 50</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> M 50</span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"><span class="type">int</span> graph[N][M];</span><br><span class="line"><span class="type">int</span> visited[N];</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">dfs</span><span class="params">(<span class="type">int</span> n)</span></span>;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="built_in">fill</span>(visited,visited+N,<span class="number">0</span>);</span><br><span class="line">    <span class="type">int</span> n,m;</span><br><span class="line">    cin &gt;&gt; n &gt;&gt; m;</span><br><span class="line">    <span class="type">int</span> tmp1,tmp2;</span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">0</span>;i &lt; n;i++)&#123;</span><br><span class="line">        cin &gt;&gt; tmp1 &gt;&gt; tmp2;</span><br><span class="line">        graph[tmp1][tmp2] = <span class="number">1</span>;</span><br><span class="line">        graph[tmp2][tmp1] = <span class="number">1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    cout &lt;&lt; endl;</span><br><span class="line">    visited[<span class="number">1</span>] = <span class="number">1</span>;</span><br><span class="line">    <span class="built_in">dfs</span>(<span class="number">1</span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">dfs</span><span class="params">(<span class="type">int</span> n)</span></span>&#123;</span><br><span class="line">    cout &lt;&lt; n &lt;&lt; <span class="string">&quot; &quot;</span>;</span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">1</span>;i &lt;= <span class="number">6</span>;i++)&#123;</span><br><span class="line">        <span class="keyword">if</span>(graph[n][i] == <span class="number">1</span> &amp;&amp; visited[i] == <span class="number">0</span>)&#123;</span><br><span class="line">            visited[i] = <span class="number">1</span>;</span><br><span class="line">            <span class="built_in">dfs</span>(i);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+以上兩種的寫法都是dfs，只是有一些部分不太一樣。
+我們程式講解就拿第二個為例子，由於我們是鄰接矩陣，所以建立一個二維陣列來存放資料比較清楚，再建立一個陣列存放node是否被走訪過，那由於此圖是undirected
+graph(無向圖)，所以假設1連到2，就等於2連到1，接著進入dfs()，我們使用一個迴圈去跑，如果沒被走過且看我們傳入的n有相連的話就將他走訪遞迴，讓走訪過程中走到不能再走後就回傳，雖然我們設的是void，但可以想成回傳一個NULL。
+### bfs <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;cstring&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> vertex 6</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> edge 7</span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"><span class="type">bool</span> visited[vertex];</span><br><span class="line"><span class="type">int</span> line[edge][<span class="number">2</span>];</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">bfs</span><span class="params">(<span class="type">int</span> n)</span></span>&#123;</span><br><span class="line">    <span class="type">int</span> que[<span class="number">100</span>];</span><br><span class="line">    visited[n] = <span class="literal">true</span>;</span><br><span class="line">    <span class="type">int</span> last = <span class="number">-1</span>,first = <span class="number">-1</span>;</span><br><span class="line">    que[++last] = n;</span><br><span class="line">    <span class="keyword">while</span>(first &lt; last)&#123;</span><br><span class="line">        <span class="type">int</span> pop = que[++first];</span><br><span class="line">        cout &lt;&lt; pop &lt;&lt; <span class="string">&quot; &quot;</span>;</span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">0</span>;i &lt; vertex;i++)&#123;</span><br><span class="line">            <span class="keyword">if</span>(visited[i] == <span class="number">0</span> &amp;&amp; line[pop][i] == <span class="number">1</span>)&#123;</span><br><span class="line">                que[++last] = i;</span><br><span class="line">                visited[i] = <span class="literal">true</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="built_in">fill</span>(visited,visited+vertex,<span class="number">0</span>);</span><br><span class="line">    <span class="built_in">memset</span>(line,<span class="number">0</span>,<span class="built_in">sizeof</span>(line));</span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">0</span>;i &lt; edge;i++)&#123;</span><br><span class="line">        <span class="type">int</span> tmp1,tmp2;</span><br><span class="line">        cin &gt;&gt; tmp1 &gt;&gt; tmp2;</span><br><span class="line">        line[tmp1][tmp2] = line[tmp2][tmp1] = <span class="number">1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">0</span>;i &lt; vertex;i++)&#123;</span><br><span class="line">        <span class="keyword">if</span>(!visited[i])&#123;</span><br><span class="line">            <span class="built_in">bfs</span>(i);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure> 首先來看廣度優先搜尋法和深度優先搜尋法的差異:
+dfs是用在深度 &gt; 廣度，而bfs是用在廣度 &gt;
+深度，所以在做bfs時要注意，我們不是把路走訪到不能走為止，而是走到一個node就要將node同一階層的人都走過，再繼續往下走。
+由於dfs和bfs有一些地方相同，所以相似的地方我就不多做贅述了，在bfs()裡我們建立一個佇列(queue)，其實這邊也可以使用STL的queue，但這裡我還是選擇製作一個陣列做撰寫，這邊還有一個地方比較特別的就是我們建立兩個變數分別稱為first和last，代表我們對queue的index，這也是我為甚麼不使用STL的queue，因為對於初學，有index的程式比較好理解，我們先將傳入的n加入佇列裡，接著進入迴圈，這裡的條件是說如果last
+== first
+的時候代表佇列裡已經沒有元素了，所以此時就跳出迴圈，那迴圈的第一個部分是說我們將已經在佇列最前面的元素輸出，也就是pop，剩下的就和dfs類似了。
+## 動態規劃(dynamic programming)
+終於到了我心中的大大大大魔王，這是我目前學到最難做最難想的演算法，運用到的許多遞迴的觀念還有分治演算法的概念，所以對遞迴和分治法要夠熟來解決dp才能得心應手。
+但dp的難度真的太高，所以這邊只會紀錄最基礎的部分。
+一般如果要進行費氏數列的運算會利用遞迴做，f(n-1)+f(n-2) <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">f</span><span class="params">(<span class="type">int</span> n)</span></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(n == <span class="number">1</span> || n == <span class="number">2</span>) <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">f</span>(n<span class="number">-1</span>)+<span class="built_in">f</span>(n<span class="number">-2</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">1</span>;i &lt;= <span class="number">10</span>;i++)&#123;</span><br><span class="line">        cout &lt;&lt; <span class="built_in">f</span>(i) &lt;&lt; <span class="string">&quot; &quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    cout &lt;&lt; endl;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+雖然此方法可行，但是當數字過大的時候他就沒辦法運算，此時就要用到動態規劃法，這樣可以算到很大的數字。
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="type">long</span> <span class="type">long</span> <span class="type">int</span> f[<span class="number">100</span>];</span><br><span class="line">    f[<span class="number">0</span>] = <span class="number">1</span>;</span><br><span class="line">    f[<span class="number">1</span>] = <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">2</span>;i &lt; <span class="number">80</span>;i++)</span><br><span class="line">        f[i] = f[i<span class="number">-1</span>]+f[i<span class="number">-2</span>];</span><br><span class="line">    cout &lt;&lt; f[<span class="number">69</span>] &lt;&lt; endl;<span class="comment">//ouput = 190392490709135</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h5 id="by-中和高中-吳振榮">by 中和高中 吳振榮</h5>
+
+    </article>
+    <!-- license -->
+    
+    <!-- paginator -->
+    <ul class="post-paginator">
+        <li class="next">
+            
+                <div class="nextSlogan">Next Post</div>
+                <a href="/2021/08/28/%E5%9F%BA%E7%A4%8E%E8%B3%87%E6%96%99%E7%B5%90%E6%A7%8B-C/" title="基礎資料結構(Data Structure)-C++">
+                    <div class="nextTitle">基礎資料結構(Data Structure)-C++</div>
+                </a>
+            
+        </li>
+        <li class="previous">
+            
+                <div class="prevSlogan">Previous Post</div>
+                <a href="/2021/08/27/CSS/" title="CSS">
+                    <div class="prevTitle">CSS</div>
+                </a>
+            
+        </li>
+    </ul>
+    <!-- comment -->
+    
+        <div class="post-comment">
+            <!-- 来必力 City 版安装代码 -->
+
+
+            
+
+            
+
+            
+
+            <!-- utteranc评论 -->
+
+
+            <!-- partial('_partial/comment/changyan') -->
+            <!--PC版-->
+
+
+            
+            
+
+            
+
+        </div>
+    
+    <!-- timeliness note -->
+    <!-- idea from: https://hexo.fluid-dev.com/posts/hexo-injector/#%E6%96%87%E7%AB%A0%E6%97%B6%E6%95%88%E6%80%A7%E6%8F%90%E7%A4%BA -->
+    
+    <!-- Mathjax -->
+    
+        
+    <script>
+        MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+            }
+        };
+    </script>
+
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3.2.0/es5/tex-mml-chtml.js"></script>
+
+
+    
+</main>
+
+                <!-- profile -->
+                
+            </div>
+            <footer class="footer footer-unloaded">
+    <!-- social  -->
+    
+        <div class="social">
+            
+    
+        
+            
+                <a href="mailto:WuMax13@gmail.com" class="iconfont-archer email" title=email ></a>
+            
+        
+    
+        
+            
+                <a href="https://github.com/MaxWutw" class="iconfont-archer github" target="_blank" title=github></a>
+            
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+            
+                <a href="https://www.facebook.com/profile.php?id=100020738000412" class="iconfont-archer facebook" target="_blank" title=facebook></a>
+            
+        
+    
+        
+    
+        
+            
+                <a href="https://www.instagram.com/_wuzhenlong/" class="iconfont-archer instagram" target="_blank" title=instagram></a>
+            
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+
+
+        </div>
+    
+    <!-- powered by Hexo  -->
+    <div class="copyright">
+        <span id="hexo-power">Powered by <a href="https://hexo.io/" target="_blank">Hexo</a></span><span class="iconfont-archer power">&#xe635;</span><span id="theme-info">theme <a href="https://github.com/fi3ework/hexo-theme-archer" target="_blank">Archer</a></span>
+    </div>
+    <!-- website approve for Chinese user -->
+    
+    <!-- 不蒜子  -->
+    
+        <div class="busuanzi-container">
+            
+             
+                <span id="busuanzi_container_site_pv">PV: <span id="busuanzi_value_site_pv"></span> :)</span>
+            
+        </div>
+    	
+</footer>
+
+        </div>
+        <!-- toc -->
+        
+            <div class="toc-wrapper toc-wrapper-loding" style=
+
+
+
+
+
+
+
+    top:50vh;
+
+>
+                <div class="toc-catalog">
+                    <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
+                </div>
+                <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%89%8D%E8%A8%80"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%B2%AA%E5%A9%AA%E6%BC%94%E7%AE%97%E6%B3%95-%E6%9C%80%E5%B0%8F%E7%94%9F%E6%88%90%E6%A8%B9minimum-spanning-treesmst"><span class="toc-number">2.</span> <span class="toc-text">貪婪演算法-最小生成樹(Minimum
+spanning trees)MST</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%B8%BD%E7%B5%90"><span class="toc-number">3.</span> <span class="toc-text">總結</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#by-%E4%B8%AD%E5%92%8C%E9%AB%98%E4%B8%AD-%E5%90%B3%E6%8C%AF%E6%A6%AE"><span class="toc-number">3.0.0.1.</span> <span class="toc-text">by 中和高中 吳振榮</span></a></li></ol></li></ol></li></ol></li></ol>
+            </div>
+        
+        <!-- sidebar -->
+        <div class="sidebar sidebar-hide">
+    <ul class="sidebar-tabs sidebar-tabs-active-0">
+        <li class="sidebar-tab-archives"><span class="iconfont-archer">&#xe67d;</span><span class="tab-name">Archive</span></li>
+        <li class="sidebar-tab-tags"><span class="iconfont-archer">&#xe61b;</span><span class="tab-name">Tag</span></li>
+        <li class="sidebar-tab-categories"><span class="iconfont-archer">&#xe666;</span><span class="tab-name">Cate</span></li>
+    </ul>
+    <div class="sidebar-content sidebar-content-show-archive">
+        <div class="sidebar-panel-archives">
+    <!-- 在 ejs 中将 archive 按照时间排序 -->
+    
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+    
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+    
+    
+    
+    
+    <div class="total-and-search">
+        <div class="total-archive">
+        Total : 31
+        </div>
+        <!-- search  -->
+        
+    </div>
+    
+    <div class="post-archive">
+    
+        
+            
+            
+            <div class="archive-year"> 2023 </div>
+            <ul class="year-list">
+            
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/10</span>
+            <a class="archive-post-title" href="/2023/05/10/%E5%9F%BA%E7%A4%8E%E6%95%B8%E8%AB%96/">基礎數論</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/05</span>
+            <a class="archive-post-title" href="/2023/04/05/GIT/">GIT</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/05</span>
+            <a class="archive-post-title" href="/2023/04/05/%E5%BF%AB%E9%80%9F%E5%86%AA%E5%92%8C%E7%9F%A9%E9%99%A3%E5%BF%AB%E9%80%9F%E5%86%AA/">快速冪和矩陣快速冪</a>
+        </li>
+    
+        
+            
+            
+                
+                </ul>
+            
+            <div class="archive-year"> 2021 </div>
+            <ul class="year-list">
+            
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/12</span>
+            <a class="archive-post-title" href="/2021/09/12/%E5%9C%A8Linux%E5%AE%89%E8%A3%9DCUDA/">在Linux安裝CUDA，並在Pytorch進行CUDA訓練</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/29</span>
+            <a class="archive-post-title" href="/2021/08/29/%E5%8F%AF%E8%A7%A3%E9%87%8B%E4%BA%BA%E5%B7%A5%E6%99%BA%E6%85%A7-explainable-ai/">可解釋人工智慧_explainable_ai</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/29</span>
+            <a class="archive-post-title" href="/2021/08/29/%E5%9F%BA%E6%96%BC%E6%B7%B1%E5%BA%A6%E5%AD%B8%E7%BF%92%E9%80%B2%E8%A1%8C%E8%B2%93%E8%88%87%E7%8B%97%E7%9A%84%E8%BE%A8%E8%AA%8D-Pytorch/">基於深度學習進行貓與狗的辨認(Pytorch)</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/28</span>
+            <a class="archive-post-title" href="/2021/08/28/C-%E7%89%A9%E4%BB%B6%E5%B0%8E%E5%90%91/">C++物件導向</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/28</span>
+            <a class="archive-post-title" href="/2021/08/28/%E5%9F%BA%E7%A4%8E%E6%BC%94%E7%AE%97%E6%B3%95-C/">基礎演算法(Algorithm)-C++</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/28</span>
+            <a class="archive-post-title" href="/2021/08/28/%E5%9F%BA%E7%A4%8E%E8%B3%87%E6%96%99%E7%B5%90%E6%A7%8B-C/">基礎資料結構(Data Structure)-C++</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/27</span>
+            <a class="archive-post-title" href="/2021/08/27/CSS/">CSS</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/27</span>
+            <a class="archive-post-title" href="/2021/08/27/HTML/">HTML</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/27</span>
+            <a class="archive-post-title" href="/2021/08/27/Linux%E5%9F%BA%E7%A4%8E%E4%BD%BF%E7%94%A8/">Linux基礎使用</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/27</span>
+            <a class="archive-post-title" href="/2021/08/27/MNIST%E6%89%8B%E5%AF%AB%E8%BE%A8%E8%AD%98-Pytorch-version/">MNIST手寫辨識(Pytorch version)</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/27</span>
+            <a class="archive-post-title" href="/2021/08/27/MNIST%E6%89%8B%E5%AF%AB%E8%BE%A8%E8%AD%98-TensorFlow-version/">MNIST手寫辨識(TensorFlow-version)</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/27</span>
+            <a class="archive-post-title" href="/2021/08/27/Numpy/">Numpy</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/27</span>
+            <a class="archive-post-title" href="/2021/08/27/Pandas/">Pandas</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/27</span>
+            <a class="archive-post-title" href="/2021/08/27/Scikit-Learn/">Scikit Learn</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/27</span>
+            <a class="archive-post-title" href="/2021/08/27/TensorFlow1%E5%9F%BA%E7%A4%8E%E4%BD%BF%E7%94%A8%E6%96%B9%E6%B3%95/">TensorFlow1基礎使用方法</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/27</span>
+            <a class="archive-post-title" href="/2021/08/27/%E9%81%B7%E7%A7%BB%E5%AD%B8%E7%BF%92-%E5%9C%96%E7%89%87%E8%BE%A8%E8%AD%98/">遷移學習-圖片辨識</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/27</span>
+            <a class="archive-post-title" href="/2021/08/27/APCS%E5%AF%A6%E4%BD%9C%E9%A1%8C/">APCS實作題</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/27</span>
+            <a class="archive-post-title" href="/2021/08/27/Matplotlib/">Matplotlib</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/27</span>
+            <a class="archive-post-title" href="/2021/08/27/%E5%9F%BA%E7%A4%8ETensorFlow2%E8%88%87%E6%A9%9F%E5%99%A8%E5%AD%B8%E7%BF%92/">基礎TensorFlow1和2與機器學習</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/27</span>
+            <a class="archive-post-title" href="/2021/08/27/%E5%9F%BA%E7%A4%8Epytorch%E8%88%87%E6%A9%9F%E5%99%A8%E5%AD%B8%E7%BF%92/">基礎pytorch與機器學習</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/24</span>
+            <a class="archive-post-title" href="/2021/08/24/OpenCV/">OpenCV</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/24</span>
+            <a class="archive-post-title" href="/2021/08/24/pipenv/">pipenv</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/24</span>
+            <a class="archive-post-title" href="/2021/06/24/Linked-List/">Linked_List</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/24</span>
+            <a class="archive-post-title" href="/2021/06/24/Stringstream/">Stringstream</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/24</span>
+            <a class="archive-post-title" href="/2021/06/24/Web/">Web</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/24</span>
+            <a class="archive-post-title" href="/2021/06/24/ctime/">ctime</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/24</span>
+            <a class="archive-post-title" href="/2021/06/24/%E6%8C%87%E6%A8%99/">指標</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/24</span>
+            <a class="archive-post-title" href="/2021/06/24/%E9%81%8B%E7%AE%97%E5%AD%90%E9%87%8D%E8%BC%89/">運算子重載</a>
+        </li>
+    
+    </div>
+</div>
+
+        <div class="sidebar-panel-tags">
+    <div class="sidebar-tags-name">
+        
+            <span class="sidebar-tag-name" data-tags="C++">
+                <span class="iconfont-archer">&#xe606;</span>
+                C++
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="OOP">
+                <span class="iconfont-archer">&#xe606;</span>
+                OOP
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="CSS">
+                <span class="iconfont-archer">&#xe606;</span>
+                CSS
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="web dev">
+                <span class="iconfont-archer">&#xe606;</span>
+                web dev
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="HTML">
+                <span class="iconfont-archer">&#xe606;</span>
+                HTML
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="Linux">
+                <span class="iconfont-archer">&#xe606;</span>
+                Linux
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="Pytorch">
+                <span class="iconfont-archer">&#xe606;</span>
+                Pytorch
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="Machine Learning">
+                <span class="iconfont-archer">&#xe606;</span>
+                Machine Learning
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="TensorFlow2">
+                <span class="iconfont-archer">&#xe606;</span>
+                TensorFlow2
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="Python">
+                <span class="iconfont-archer">&#xe606;</span>
+                Python
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="Scikit Learn">
+                <span class="iconfont-archer">&#xe606;</span>
+                Scikit Learn
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="TensorFlow1">
+                <span class="iconfont-archer">&#xe606;</span>
+                TensorFlow1
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="Math theorem">
+                <span class="iconfont-archer">&#xe606;</span>
+                Math theorem
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="algorithm">
+                <span class="iconfont-archer">&#xe606;</span>
+                algorithm
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="Data structure">
+                <span class="iconfont-archer">&#xe606;</span>
+                Data structure
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="Transfer Learning">
+                <span class="iconfont-archer">&#xe606;</span>
+                Transfer Learning
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="APCS">
+                <span class="iconfont-archer">&#xe606;</span>
+                APCS
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="TensorFlow">
+                <span class="iconfont-archer">&#xe606;</span>
+                TensorFlow
+            </span>
+        
+    </div>
+    <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>
+    <div class="tag-load-fail" style="display: none; color: #ccc; font-size: 0.6rem;">
+        缺失模块，请参考主题文档进行安装配置：https://github.com/fi3ework/hexo-theme-archer#%E5%AE%89%E8%A3%85%E4%B8%BB%E9%A2%98
+    </div> 
+    <div class="sidebar-tags-list"></div>
+</div>
+
+        <div class="sidebar-panel-categories">
+    <div class="sidebar-categories-name">
+    
+    </div>
+    <div class="iconfont-archer sidebar-categories-empty">&#xe678;</div>
+    <div class="sidebar-categories-list"></div>
+</div>
+
+    </div>
+</div>
+
+        <!-- site-meta -->
+        <script>
+    var siteMetaRoot = "/"
+    if (siteMetaRoot === "undefined") {
+        siteMetaRoot = '/'
+    }
+    var siteMeta = {
+        url: "https://maxwutw.github.io",
+        root: siteMetaRoot,
+        author: "Max Wu"
+    }
+</script>
+
+        <!-- import experimental options here -->
+        <!-- Custom Font -->
+
+
+        <!-- main func -->
+        <script src="/scripts/main.js?v=20211217"></script>
+        <!-- dark mode -->
+        <script src="/scripts/dark.js?v=20211217"></script>
+        <!-- fancybox -->
+        <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js" defer></script>
+        <!-- algolia -->
+        
+        <!-- busuanzi -->
+        
+            <script src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" async></script>
+        
+        <!-- CNZZ -->
+        
+        <!-- async load share.js -->
+        
+            <script src="/scripts/share.js?v=20211217" async></script>
+        
+        <!-- mermaid -->
+        
+    </body>
+</html>

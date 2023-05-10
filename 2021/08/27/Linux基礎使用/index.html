@@ -1,0 +1,1592 @@
+<!DOCTYPE html>
+<html lang="en">
+    <!-- title -->
+
+
+    
+
+<!-- keywords -->
+
+
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="author" content="Max Wu">
+    <meta name="renderer" content="webkit">
+    <meta name="copyright" content="Max Wu">
+    
+        <meta name="keywords" content="hexo,hexo-theme,hexo-blog">
+    
+    <meta name="description" content="">
+    <meta name="description" content="Linux linux基礎用法 第一個輸入大多為命令(command)，後面家的通常為跟著這個命令的參數，參數都是用空格分開，不管加多少空格，terminal都會認為只加了一個空格。在最一開此使，@前面是用戶名，在@後面是計算機名 ### @ at在 ### computer:後第一個字元(Home Directory):為所在文件夾的名字 ### computer:後第二個字元(Prompt):">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Linux基礎使用">
+<meta property="og:url" content="https://maxwutw.github.io/2021/08/27/Linux%E5%9F%BA%E7%A4%8E%E4%BD%BF%E7%94%A8/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="Linux linux基礎用法 第一個輸入大多為命令(command)，後面家的通常為跟著這個命令的參數，參數都是用空格分開，不管加多少空格，terminal都會認為只加了一個空格。在最一開此使，@前面是用戶名，在@後面是計算機名 ### @ at在 ### computer:後第一個字元(Home Directory):為所在文件夾的名字 ### computer:後第二個字元(Prompt):">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2021-08-27T11:27:52.000Z">
+<meta property="article:modified_time" content="2023-04-05T23:24:26.000Z">
+<meta property="article:author" content="Max Wu">
+<meta property="article:tag" content="Linux">
+<meta name="twitter:card" content="summary">
+    <meta http-equiv="Cache-control" content="no-cache">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <link rel="icon" href="/assets/favicon.ico">
+    
+    <title>Linux基礎使用 · Max Coding blog</title>
+    <!-- /*! loadCSS. [c]2017 Filament Group, Inc. MIT License */
+/* This file is meant as a standalone workflow for
+- testing support for link[rel=preload]
+- enabling async CSS loading in browsers that do not support rel=preload
+- applying rel preload css once loaded, whether supported or not.
+*/ -->
+<script>
+    (function (w) {
+        'use strict'
+        // rel=preload support test
+        if (!w.loadCSS) {
+            w.loadCSS = function () {}
+        }
+        // define on the loadCSS obj
+        var rp = (loadCSS.relpreload = {})
+        // rel=preload feature support test
+        // runs once and returns a function for compat purposes
+        rp.support = (function () {
+            var ret
+            try {
+                ret = w.document.createElement('link').relList.supports('preload')
+            } catch (e) {
+                ret = false
+            }
+            return function () {
+                return ret
+            }
+        })()
+
+        // if preload isn't supported, get an asynchronous load by using a non-matching media attribute
+        // then change that media back to its intended value on load
+        rp.bindMediaToggle = function (link) {
+            // remember existing media attr for ultimate state, or default to 'all'
+            var finalMedia = link.media || 'all'
+
+            function enableStylesheet() {
+                link.media = finalMedia
+            }
+
+            // bind load handlers to enable media
+            if (link.addEventListener) {
+                link.addEventListener('load', enableStylesheet)
+            } else if (link.attachEvent) {
+                link.attachEvent('onload', enableStylesheet)
+            }
+
+            // Set rel and non-applicable media type to start an async request
+            // note: timeout allows this to happen async to let rendering continue in IE
+            setTimeout(function () {
+                link.rel = 'stylesheet'
+                link.media = 'only x'
+            })
+            // also enable media after 3 seconds,
+            // which will catch very old browsers (android 2.x, old firefox) that don't support onload on link
+            setTimeout(enableStylesheet, 3000)
+        }
+
+        // loop through link elements in DOM
+        rp.poly = function () {
+            // double check this to prevent external calls from running
+            if (rp.support()) {
+                return
+            }
+            var links = w.document.getElementsByTagName('link')
+            for (var i = 0; i < links.length; i++) {
+                var link = links[i]
+                // qualify links to those with rel=preload and as=style attrs
+                if (
+                    link.rel === 'preload' &&
+                    link.getAttribute('as') === 'style' &&
+                    !link.getAttribute('data-loadcss')
+                ) {
+                    // prevent rerunning on link
+                    link.setAttribute('data-loadcss', true)
+                    // bind listeners to toggle media back
+                    rp.bindMediaToggle(link)
+                }
+            }
+        }
+
+        // if unsupported, run the polyfill
+        if (!rp.support()) {
+            // run once at least
+            rp.poly()
+
+            // rerun poly on an interval until onload
+            var run = w.setInterval(rp.poly, 500)
+            if (w.addEventListener) {
+                w.addEventListener('load', function () {
+                    rp.poly()
+                    w.clearInterval(run)
+                })
+            } else if (w.attachEvent) {
+                w.attachEvent('onload', function () {
+                    rp.poly()
+                    w.clearInterval(run)
+                })
+            }
+        }
+
+        // commonjs
+        if (typeof exports !== 'undefined') {
+            exports.loadCSS = loadCSS
+        } else {
+            w.loadCSS = loadCSS
+        }
+    })(typeof global !== 'undefined' ? global : this)
+</script>
+
+    <style type="text/css">
+    @font-face {
+        font-family: 'Oswald-Regular';
+        src: url("/font/Oswald-Regular.ttf");
+    }
+
+    body {
+        margin: 0;
+    }
+
+    header,
+    footer,
+    .back-top,
+    .sidebar,
+    .container,
+    .site-intro-meta,
+    .toc-wrapper {
+        display: none;
+    }
+
+    .site-intro {
+        position: relative;
+        z-index: 3;
+        width: 100%;
+        /* height: 50vh; */
+        overflow: hidden;
+    }
+
+    .site-intro-placeholder {
+        position: absolute;
+        z-index: -2;
+        top: 0;
+        left: 0;
+        width: calc(100% + 300px);
+        height: 100%;
+        background: repeating-linear-gradient(-45deg, #444 0, #444 80px, #333 80px, #333 160px);
+        background-position: center center;
+        transform: translate3d(-226px, 0, 0);
+        animation: gradient-move 2.5s ease-out 0s infinite;
+    }
+
+    @keyframes gradient-move {
+        0% {
+            transform: translate3d(-226px, 0, 0);
+        }
+        100% {
+            transform: translate3d(0, 0, 0);
+        }
+    }
+</style>
+
+    <link rel="preload" href="/css/style.css?v=20211217" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="preload" href="/css/dark.css?v=20211217" as="style">
+    <link rel="stylesheet" href="/css/dark.css">
+    <link rel="stylesheet" href="/css/mobile.css?v=20211217" media="(max-width: 960px)">
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js" as="script">
+    <link rel="preload" href="/scripts/main.js?v=20211217" as="script">
+    <link rel="preload" href="/scripts/dark.js?v=20211217" as="script">
+    <link rel="preload" href="/font/Oswald-Regular.ttf" as="font" crossorigin>
+    <link rel="preload" href="https://at.alicdn.com/t/font_327081_1dta1rlogw17zaor.woff" as="font" crossorigin>
+    <!-- algolia -->
+    
+    <!-- 百度统计  -->
+    
+    <!-- 谷歌统计  -->
+    
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --><meta name="generator" content="Hexo 6.3.0"></head>
+
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+    <script type="text/javascript">
+        if (typeof window.$ == undefined) {
+            console.warn('jquery load from jsdelivr failed, will load local script')
+            document.write('<script src="/lib/jquery.min.js" />')
+        }
+    </script>
+    
+        <body class="post-body">
+    
+        <!-- header -->
+        <header class="header header-mobile">
+    <!-- top read progress line -->
+    <div class="header-element">
+        <div class="read-progress"></div>
+    </div>
+    <!-- sidebar menu button -->
+    <div class="header-element">
+        
+            <div class="header-sidebar-menu">
+        
+            
+                <div style="padding-left: 1px;">&#xe775;</div>
+            
+        </div>
+    </div>
+    <!-- header actions -->
+    <div class="header-actions">
+        <!-- theme mode switch button -->
+        <span class="header-theme-btn header-element">
+            <i class="fas fa-adjust"></i>
+        </span>
+        <!-- back to home page text -->
+        <span class="home-link header-element">
+            <a href=/>Max Coding blog</a>
+        </span>
+    </div>
+    <!-- toggle banner for post layout -->
+    
+        
+            <div class="banner">
+        
+            <div class="blog-title header-element">
+                <a href="/">Max Coding blog</a>
+            </div>
+            <div class="post-title header-element">
+                <a href="#" class="post-name">Linux基礎使用</a>
+            </div>
+        </div>
+    
+</header>
+
+        <!-- fixed footer -->
+        <footer class="footer-fixed">
+    <!-- back to top button -->
+    <div class="footer-fixed-element">
+        
+            <div class="back-top back-top-hidden">
+        
+        
+            <div>&#xe639;</div>
+        
+        </div>
+    </div>
+</footer>
+
+        <!-- wrapper -->
+        <div class="wrapper">
+            <div class="site-intro" style="
+
+
+
+
+
+
+
+    height:50vh;
+
+">
+    
+    <!-- 主页  -->
+    
+        
+    <!-- 404页  -->
+    
+    <div class="site-intro-placeholder"></div>
+    <div class="site-intro-img" style="background-image: url(/intro/post-bg.jpg)"></div>
+    <div class="site-intro-meta">
+        <!-- 标题  -->
+        <h1 class="intro-title">
+            <!-- 主页  -->
+            
+                Linux基礎使用
+            <!-- 404 -->
+            
+        </h1>
+        <!-- 副标题 -->
+        <p class="intro-subtitle">
+            <!-- 主页副标题  -->
+            
+                
+            <!-- 404 -->
+            
+        </p>
+        <!-- 文章页 meta -->
+        
+            <div class="post-intros">
+                <!-- 文章页标签  -->
+                
+                    <div class= post-intro-tags >
+    
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="Linux">Linux</a>
+    
+</div>
+
+                
+                <!-- 文章字数统计 -->
+                
+                <div class="post-intro-meta">
+                    <!-- 撰写日期 -->
+                    <span class="iconfont-archer post-intro-calander">&#xe676;</span>
+                    <span class="post-intro-time">2021/08/27</span>
+                    <!-- busuanzi -->
+                    
+                        <span id="busuanzi_container_page_pv" class="busuanzi-pv">
+                            <span class="iconfont-archer post-intro-busuanzi">&#xe602;</span>
+                            <span id="busuanzi_value_page_pv"></span>
+                        </span>
+                    
+                    <!-- 文章分享 -->
+                    <span class="share-wrapper">
+                        <span class="iconfont-archer share-icon">&#xe71d;</span>
+                        <span class="share-text">Share</span>
+                        <ul class="share-list">
+                            <li class="iconfont-archer share-qr" data-type="qr">&#xe75b;
+                                <div class="share-qrcode"></div>
+                            </li>
+                            <li class="iconfont-archer" data-type="weibo">&#xe619;</li>
+                            <li class="iconfont-archer" data-type="qzone">&#xe62e;</li>
+                            <li class="iconfont-archer" data-type="twitter">&#xe634;</li>
+                            <li class="iconfont-archer" data-type="facebook">&#xe67a;</li>
+                        </ul>
+                    </span>
+                </div>
+            </div>
+        
+    </div>
+</div>
+
+            <script>
+  // get user agent
+  function getBrowserVersions() {
+    var u = window.navigator.userAgent
+    return {
+      userAgent: u,
+      trident: u.indexOf('Trident') > -1, //IE内核
+      presto: u.indexOf('Presto') > -1, //opera内核
+      webKit: u.indexOf('AppleWebKit') > -1, //苹果、谷歌内核
+      gecko: u.indexOf('Gecko') > -1 && u.indexOf('KHTML') == -1, //火狐内核
+      mobile: !!u.match(/AppleWebKit.*Mobile.*/), //是否为移动终端
+      ios: !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/), //ios终端
+      android: u.indexOf('Android') > -1 || u.indexOf('Linux') > -1, //android终端或者uc浏览器
+      iPhone: u.indexOf('iPhone') > -1 || u.indexOf('Mac') > -1, //是否为iPhone或者安卓QQ浏览器
+      iPad: u.indexOf('iPad') > -1, //是否为iPad
+      webApp: u.indexOf('Safari') == -1, //是否为web应用程序，没有头部与底部
+      weixin: u.indexOf('MicroMessenger') == -1, //是否为微信浏览器
+      uc: u.indexOf('UCBrowser') > -1, //是否为android下的UC浏览器
+    }
+  }
+  var browser = {
+    versions: getBrowserVersions(),
+  }
+  console.log('userAgent: ' + browser.versions.userAgent)
+
+  // callback
+  function fontLoaded() {
+    console.log('font loaded')
+    if (document.getElementsByClassName('site-intro-meta')) {
+      document
+        .getElementsByClassName('intro-title')[0]
+        .classList.add('intro-fade-in')
+      document
+        .getElementsByClassName('intro-subtitle')[0]
+        .classList.add('intro-fade-in')
+      var postIntros = document.getElementsByClassName('post-intros')[0]
+      if (postIntros) {
+        postIntros.classList.add('post-fade-in')
+      }
+    }
+  }
+
+  // UC不支持跨域，所以直接显示
+  function asyncCb() {
+    if (browser.versions.uc) {
+      console.log('UCBrowser')
+      fontLoaded()
+    } else {
+      WebFont.load({
+        custom: {
+          families: ['Oswald-Regular'],
+        },
+        loading: function () {
+          // 所有字体开始加载
+          // console.log('font loading');
+        },
+        active: function () {
+          // 所有字体已渲染
+          fontLoaded()
+        },
+        inactive: function () {
+          // 字体预加载失败，无效字体或浏览器不支持加载
+          console.log('inactive: timeout')
+          fontLoaded()
+        },
+        timeout: 5000, // Set the timeout to two seconds
+      })
+    }
+  }
+
+  function asyncErr() {
+    console.warn('script load from CDN failed, will load local script')
+  }
+
+  // load webfont-loader async, and add callback function
+  function async(u, cb, err) {
+    var d = document,
+      t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0]
+    o.src = u
+    if (cb) {
+      o.addEventListener(
+        'load',
+        function (e) {
+          cb(null, e)
+        },
+        false
+      )
+    }
+    if (err) {
+      o.addEventListener(
+        'error',
+        function (e) {
+          err(null, e)
+        },
+        false
+      )
+    }
+    s.parentNode.insertBefore(o, s)
+  }
+
+  var asyncLoadWithFallBack = function (arr, success, reject) {
+    var currReject = function () {
+      reject()
+      arr.shift()
+      if (arr.length) async(arr[0], success, currReject)
+    }
+
+    async(arr[0], success, currReject)
+  }
+
+  asyncLoadWithFallBack(
+    [
+      'https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js',
+      'https://cdn.bootcss.com/webfont/1.6.28/webfontloader.js',
+      "/lib/webfontloader.min.js",
+    ],
+    asyncCb,
+    asyncErr
+  )
+</script>
+
+            <img class="loading" src="/assets/loading.svg" style="display: block; margin: 6rem auto 0 auto; width: 6rem; height: 6rem;" />
+            <div class="container container-unloaded">
+                <main class="main post-page">
+    <article class="article-entry">
+        <h1 id="linux">Linux</h1>
+<h2 id="linux基礎用法">linux基礎用法</h2>
+<p>第一個輸入大多為命令(command)，後面家的通常為跟著這個命令的參數，參數都是用空格分開，不管加多少空格，terminal都會認為只加了一個空格。在最一開此使，<span
+class="citation"
+data-cites="前面是用戶名">@前面是用戶名</span>，在@後面是計算機名 ### @
+at在 ### computer:後第一個字元(Home Directory):為所在文件夾的名字 ###
+computer:後第二個字元(Prompt):提示符 ### uname 1. <span
+style="color:green">uname</span> :會印出內核名字。 2. <span
+style="color:red">uname -a == uname
+--all</span>:會印出系統的所有的資訊，會忽略未知的處理器與未知的硬件平台。
+3. <span style="color:red">uname -s == uname
+--kernel-name</span>:會印出顯示於網路上的主機名稱。 4. <span
+style="color:red">uname -r == uname
+--kernel-release</span>:會印出內核的版本。 5. <span
+style="color:red">uname -v == uname
+--kernel-version</span>:會印出內核運行於哪個linux上，和實際發行的日期。
+6. <span style="color:red">uname -m == uname
+--machine</span>:會印出電腦類型：x86_64(為64位元架構，如為32位元會如：x86_32)
+7. <span style="color:red">uname -p == uname
+--processor</span>:會印出處理器類型：x86_64(為64位元架構，如為32位元會如：x86_32)
+8. <span style="color:red">uname -i == uname
+--hardware-platform</span>:會印出硬件平台類型：x86_64(硬件平台包括如CPU、儲存裝置、主機板等等硬體)
+9. <span style="color:red">uname -o == uname
+--operating-system</span>:會印出操作系統名稱：GNU/Linux(作業系統，如windows)
+10. <span style="color:red">uname -h == uname
+--help</span>:會印出這個指令的幫助，與各個參數的功能 11. <span
+style="color:red">uname --version</span>
+:會印出這個指令(uname)的版本與其他訊息(包括聲明、授權等等) ### ctrl+c
+:強制中斷某一支程式。 ### exit :離開系統。 ### cal :看月曆 。 ### cal
+:年份 :看某年的年曆。 ### cal :年份 月份 :看某年某月的月曆。 ### bc
+:計算機(此情況不能用小數)。 #### scale = 小數位數。 #### quit :退出bc。
+### file :查看文件訊息。 ### pwd(Print Working Directory) 取得目前的路徑
+### ls(list) 取得當前資料夾與檔案名稱 #### ls -l:
+顯示出的資料的第一個區塊為顯示使用者權限，排除第一個字元<span
+style="color:red">(第一個字元如果是dash(-)，此檔案即為文件，如果是d，則為目錄)</span>，剩下字元為三個三個一組，共三組，第一組是user，第二組是group，第三組是other。順序必為rwx，r(read),w(write),x(execute)，若有權限則會顯示出該字元，若沒有權限則會顯示'-'(dash)，而這三組的權限分別為第一個是文件所有者的權限、第二個為用戶組的權限，第三組為其他人的權限。
+### chmod(change mode)
+如果你想要更換權限，可以使用這個命令，command:chmod u+r
+t.py，用法是第一個加入chmod指令，第二個是輸入你想更改權限的對象，user是u，group是g，other是o，接著+後面是加上你要給予的權力，注意如果是要刪除某項權力，就加上-減號，接著加上以下就是給予的權力，r(read),w(write),x(execute)，最後加上檔案名稱。
+### 直接執行檔案 ./file.py
+如果要直接執行某個檔案時可以直接使用這個指令，假設有一個檔案叫做test.py，然後我們想要執行他，所以輸入:./test.py，此時會發現出錯了，原因是你要在test.py的第一行加入一段指令，代表說這份文件要通過什麼來運行，而這邊我輸入#!/usr/bin/python3，之後再輸入:./test.py，即完成。
+### linux有一個特性，就是所有東西都是一個文件。 ###
+linux大小寫必須區分，在linux中大小寫是不一樣的東西。 ###
+在terminal中可使用TAB鍵來補齊一些物件或檔名(善用TAB鍵)。 ### lscpu :查詢
+CPU 規格。 ### / :根目錄。 #### bin :放置執行文件。 #### boot
+:放置開機會運用到的文件。 #### dev :接口設備都會存取在dev中。 #### etc
+:系統主要配置文件，例如用戶的帳號密碼、服務的起始文件。 #### home
+:主文件夾的位置。 #### lib :開機時會用到的主函式庫。 #### media
+:放置可以刪除的設備。 #### opt :第三方程式的放置目錄。 #### root
+:系統管理員的主文件夾。 #### sbin
+:放置一些只有系統管理員才可以執行的執行命令。 #### srv
+:服務取用數據的目錄。 #### tmp :放置一些臨時的文件，需定時清理。 ####
+usr :unix操作系統的支援(不是user!!!!!)，可放置一些系統默認程式。 ####
+var :放置快取 ### cd(Change Directory) :切換目錄。 #### 絕對路徑
+:是由根目錄也就是最前面的那一個目錄開始向下輸入的(要加/)，不管在哪裡，只要有絕對路徑都可以去。
+#### 相對路徑 :相對於當前工作目錄(pwd)，不是從根目錄開始。 #### cd .
+:當前目錄。 #### cd .. :該目錄的上一層目錄。 ### man(manual page)
+:指令查詢 ### mkdir :創造路徑 #### 創造多層目錄: ##### -p
+:可以幫你把上一層目錄也創建好(如果上一層目錄不存在的話)。 ##### -pv
+:v的功能可以幫你顯示他正在執行甚麼。 ### rmdir :刪除目錄。 #### -p
+:可一次刪除多個目錄 ### touch
+:創建空文件，主要功能為修改文件，如果該文件不存在，則會創造一個空文件。
+#### -a :修改訪問時間。 #### -c :修改文件時間，若不存在則不創建新文件。
+#### -d :使用指定日期，而不是當前日期。 #### -m :僅修改mtime。 #### -t
+:使用指定的時間而不是當前的時間。 ### cp :複製，用法 cp a b
+，將a複製給b。 ### echo發送文字: 用法 echo "word"。而且會換行。 ####
+將文字輸入進一個檔案裡: 用法 echo "word" &gt; data.txt。 如果是用 &gt;
+寫入的話會將原本的覆蓋，所以要使用 &gt;&gt; 才能延續檔案原本的資料 echo
+"word" &gt;&gt; data.txt。 ### cat(concatenate)顯示出檔案裡的文字 用法
+cat data.txt #### cat 合併資料輸出 用法 cat first.txt second.txt ####
+將兩個檔案合併出一個新的檔案 方法 cat first.txt second.txt &gt;&gt;
+third.txt，要加 &gt;&gt; 。 若要合併更多檔案，就以此類推 ###
+用printf輸出 用echo和printf的最大差別是echo會換行而printf不會換行。
+也可以使用printf輸入一個檔案，和echo一樣 ### vim文字編輯器
+vi和vim.tiny和vim這三個功能極為相似，不同的地方是有些功能比較多，通常在linux中vim要另外裝。
+此處使用vim.tiny，要進行文字編輯的方法:vim.tiny
+data.txt，按enter鍵後再按 i
+即可進行編輯，當編輯完之後想要結束編輯，先按Esc，再按 :
+，接著如果想要將剛剛編輯的資料寫進去，則按w，如果想直接退出，按q，如果進行編輯後不想儲存，就輸入q!即可強制退出。若想退出又要寫入，就按wq。
+### 下載vim
+首先到ubuntu商店下載vim，接著去terminal輸出apt-get，apt-get會去網站上找有關你要下載的套件，但是如果apt-get沒有更新，他上去找的網站還是舊的，此時要把你的apt-get更新，因此輸入apt-get
+update，但此時又會出現錯誤，因為update此動作為較高階的動作，所以以目前的狀態是沒有權限執行的，所以要在apt-get前加sudo，此時作業系統會嘗試以超級使用者的方式幫你去做執行，所以輸入完sudo
+apt-get update即可完成網站的更新，更新完之後輸入sudo apt-get install
+vim，即可進行安裝，如果要移除，就輸入sudo apt-get remove vim ### whereis
+查看東西在哪裡，會顯示所有相關的路徑。 whereis name ### which
+會明確跟你說東西的實際路徑。 ### 查看物品的實際位置 以vim為例 方法 : ls
+-al /usr/bin/vim 接著會顯示一個箭頭
+-&gt;會指向一個地方，這就是軟連結，會指向更精確的地方，可以再繼續使用那個位置尋找更精確的位置。
+### vim 基本用法和vim.tiny一致，接著為vim的一些基礎指令。 :set nu
+在每一行前面加數字編號。 輸入 dd 即可快速刪去該行。
+輸入d2d可以快速刪除兩行 在前面加 / 後面加你想搜尋的文字。 按u可以undo
+按ctrl+r是redo ## linux ssh
+首先要再其中一台linux上獲取ip位置(稍後要給其他電腦做連接)，首先先下載net-tools(稍後要使用的ifconfig是其中一部分)，接著輸入ifconfig，然後往下滑可以找到你的ip位置，或者輸入ip
+addr show，也可以看到你的ip位置。接著在另一台電腦輸入:ssh
+username@ip，username是你linux的名稱，ip是你的ip位置。 <span
+style="color:red">mac 用戶:</span>
+如果是mac用戶且同時想要利用ssh在自己的mac上看到matplotlib的結果，要先安裝XQuartz，安裝完後在terminal裡輸入的不再是ssh
+user@ip 了，是要改輸入<span style="color:red">ssh -X
+user@ip</span>，這樣才能看到matplotlib的效果。 ### linux查詢gpu型號 輸入
+lspci | grep -i nvidia ，會顯示出幾行文字，例如： 01:00.0 VGA compatible
+controller: NVIDIA Corporation Device 1e84 (rev a1) 01:00.1 Audio
+device: NVIDIA Corporation Device 10f8 (rev a1) 01:00.2 USB controller:
+NVIDIA Corporation Device 1ad8 (rev a1) 01:00.3 Serial bus controller
+[0c80]: NVIDIA Corporation Device 1ad9 (rev a1) 然後看第一行的最後面
+1e84
+，這個就是型號，但我們還是看不出來實際的型號，所以去這個網站上輸入你的型號：http://pci-ids.ucw.cz/mods/PC/10de?action=help?help=pci
+可以查到這張gpu是GeForce RTX 2070 Super。 ### 查看ubuntu版本 cat
+/etc/issue ### 更改檔案名稱 mv 原檔案名稱 更改的名稱 ###
+查看目錄裡資料的數量 1. ls -l|grep "^-"| wc -l ， find ./ -type f | wc
+-l: 查看當前目錄的所有資料數量（<span
+style="color:red">不包括</span>子目錄資料數量）。 2. ls -lR|grep "^-"|
+wc -l : 查看當前目錄的所有資料數量（<span
+style="color:red">包括</span>子目錄資料數量）。 3. ls -l|grep "^d"| wc
+-l : 查看當前目錄的所有資料夾目錄個數（<span
+style="color:red">包括</span>子資料夾目錄個數）。 ## tmux 1.
+tmux:進入tmux。 2. tmux attach:進入預設第一個Session。 3. tmux new -s
+"tmp":新增、進入一個名為tmp的Session。 4. tmux ls:列出所有的Session。 5.
+tmux detach:暫時離開目前的Session。 6.
+<code>Ctrl</code>+<code>D</code>:關閉/結束目前的Session。 7. tmux
+kill-session -t "tmp":關閉、結束名稱維tmp的Session。 ### Panes分割視窗
+1. <code>Ctrl</code>+<code>b</code>+<code>%</code>:垂直分割視窗。 2.
+<code>Ctrl</code>+<code>b</code>+<code>"</code>:水平分割視窗。 3.
+<code>Ctrl</code>+<code>b</code>+<code>o</code>:輪流切換pane。 4.
+<code>Ctrl</code>+<code>b</code>+<code>方向鍵</code>:切換指定方向的pane。
+5. <code>Ctrl</code>+<code>b</code>+<code>空白鍵</code>:切換佈局。 6.
+<code>Ctrl</code>+<code>b</code>+<code>!</code>:將目前的pane抽出來，並獨立建立一個window視窗。
+7. <code>Ctrl</code>+<code>b</code>+<code>x</code>:關閉目前的pane。 ###
+Windows視窗 1.
+<code>Ctrl</code>+<code>b</code>+<code>c</code>:建立新的window視窗。 2.
+<code>Ctrl</code>+<code>b</code>+<code>w</code>:以視覺化選單切換window視窗。
+3.
+<code>Ctrl</code>+<code>b</code>+<code>n</code>:切換至下一個window視窗。
+4.
+<code>Ctrl</code>+<code>b</code>+<code>p</code>:切換至上喔個window視窗。
+5.
+<code>Ctrl</code>+<code>b</code>+<code>數字鍵</code>:切換至指定的window視窗。
+6.
+<code>Ctrl</code>+<code>b</code>+<code>&amp;</code>:關閉目前的window視窗。
+### Session 1.
+<code>Ctrl</code>+<code>b</code>+<code>$</code>:重新命名目前的Session。
+2. <code>Ctrl</code>+<code>b</code>+<code>d</code>:離開tmux環境。 3.
+<code>Ctrl</code>+<code>b</code>+<code>s</code>:視覺化選單切換Session。
+4.
+<code>Ctrl</code>+<code>b</code>+<code>L</code>:切換上一個使用過的Session。
+5. <code>Ctrl</code>+<code>b</code>+<code>(</code>:切換上一個Session。
+6. <code>Ctrl</code>+<code>b</code>+<code>)</code>:切換下一個Session。
+7. 想回去特定的Session: <code>tmux attach -t "session name"</code><span
+style="color:red">(請忽略雙引號)</span> 8.
+修改Session名稱:<code>tmux rename-session -t "origin seesion name" "new name"</code>
+<span style="color:red">(請忽略雙引號)</span> 9. 刪除某一個Session:
+<code>tmux kill-session -t 0</code> 或是
+<code>tmux kill-session -t &lt;session_name&gt;</code> 10.
+刪除所有Session: <code>tmux kill-session -a</code> 11. 快捷鍵：
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">快捷鍵/視窗管理</span><br><span class="line">C-b ? Help</span><br><span class="line">C-b c 新增視窗</span><br><span class="line">C-b， 視窗命名</span><br><span class="line">C-b w 視窗列表</span><br><span class="line">C-b f 尋找視窗</span><br><span class="line">C-b &amp; 刪除視窗</span><br><span class="line">C-b % 垂直分割區塊</span><br><span class="line">C-b “ 水平分割區塊</span><br><span class="line">C-b &lt;方向鍵&gt;</span><br><span class="line">C-b p 上一個視窗</span><br><span class="line">C-b n 下一個視窗</span><br><span class="line">C-b &lt;number&gt; 依照編號直接切換（編號顯示於狀態列）</span><br><span class="line">C-b d 離開 session</span><br><span class="line">C-b x 關閉 Pane</span><br><span class="line">C-d   關閉 Pane</span><br><span class="line">C-b z 讓一個 Pane 變成全螢幕，在輸入一次則回到剛剛的尺寸</span><br></pre></td></tr></table></figure></p>
+<h5 id="by-中和高中-吳振榮">by 中和高中 吳振榮</h5>
+
+    </article>
+    <!-- license -->
+    
+    <!-- paginator -->
+    <ul class="post-paginator">
+        <li class="next">
+            
+                <div class="nextSlogan">Next Post</div>
+                <a href="/2021/08/27/APCS%E5%AF%A6%E4%BD%9C%E9%A1%8C/" title="APCS實作題">
+                    <div class="nextTitle">APCS實作題</div>
+                </a>
+            
+        </li>
+        <li class="previous">
+            
+                <div class="prevSlogan">Previous Post</div>
+                <a href="/2021/08/27/Matplotlib/" title="Matplotlib">
+                    <div class="prevTitle">Matplotlib</div>
+                </a>
+            
+        </li>
+    </ul>
+    <!-- comment -->
+    
+        <div class="post-comment">
+            <!-- 来必力 City 版安装代码 -->
+
+
+            
+
+            
+
+            
+
+            <!-- utteranc评论 -->
+
+
+            <!-- partial('_partial/comment/changyan') -->
+            <!--PC版-->
+
+
+            
+            
+
+            
+
+        </div>
+    
+    <!-- timeliness note -->
+    <!-- idea from: https://hexo.fluid-dev.com/posts/hexo-injector/#%E6%96%87%E7%AB%A0%E6%97%B6%E6%95%88%E6%80%A7%E6%8F%90%E7%A4%BA -->
+    
+    <!-- Mathjax -->
+    
+        
+    <script>
+        MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+            }
+        };
+    </script>
+
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3.2.0/es5/tex-mml-chtml.js"></script>
+
+
+    
+</main>
+
+                <!-- profile -->
+                
+            </div>
+            <footer class="footer footer-unloaded">
+    <!-- social  -->
+    
+        <div class="social">
+            
+    
+        
+            
+                <a href="mailto:WuMax13@gmail.com" class="iconfont-archer email" title=email ></a>
+            
+        
+    
+        
+            
+                <a href="https://github.com/MaxWutw" class="iconfont-archer github" target="_blank" title=github></a>
+            
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+            
+                <a href="https://www.facebook.com/profile.php?id=100020738000412" class="iconfont-archer facebook" target="_blank" title=facebook></a>
+            
+        
+    
+        
+    
+        
+            
+                <a href="https://www.instagram.com/_wuzhenlong/" class="iconfont-archer instagram" target="_blank" title=instagram></a>
+            
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+
+
+        </div>
+    
+    <!-- powered by Hexo  -->
+    <div class="copyright">
+        <span id="hexo-power">Powered by <a href="https://hexo.io/" target="_blank">Hexo</a></span><span class="iconfont-archer power">&#xe635;</span><span id="theme-info">theme <a href="https://github.com/fi3ework/hexo-theme-archer" target="_blank">Archer</a></span>
+    </div>
+    <!-- website approve for Chinese user -->
+    
+    <!-- 不蒜子  -->
+    
+        <div class="busuanzi-container">
+            
+             
+                <span id="busuanzi_container_site_pv">PV: <span id="busuanzi_value_site_pv"></span> :)</span>
+            
+        </div>
+    	
+</footer>
+
+        </div>
+        <!-- toc -->
+        
+            <div class="toc-wrapper toc-wrapper-loding" style=
+
+
+
+
+
+
+
+    top:50vh;
+
+>
+                <div class="toc-catalog">
+                    <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
+                </div>
+                <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#linux"><span class="toc-number">1.</span> <span class="toc-text">Linux</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#linux%E5%9F%BA%E7%A4%8E%E7%94%A8%E6%B3%95"><span class="toc-number">1.1.</span> <span class="toc-text">linux基礎用法</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#by-%E4%B8%AD%E5%92%8C%E9%AB%98%E4%B8%AD-%E5%90%B3%E6%8C%AF%E6%A6%AE"><span class="toc-number">1.1.0.0.1.</span> <span class="toc-text">by 中和高中 吳振榮</span></a></li></ol></li></ol></li></ol></li></ol></li></ol>
+            </div>
+        
+        <!-- sidebar -->
+        <div class="sidebar sidebar-hide">
+    <ul class="sidebar-tabs sidebar-tabs-active-0">
+        <li class="sidebar-tab-archives"><span class="iconfont-archer">&#xe67d;</span><span class="tab-name">Archive</span></li>
+        <li class="sidebar-tab-tags"><span class="iconfont-archer">&#xe61b;</span><span class="tab-name">Tag</span></li>
+        <li class="sidebar-tab-categories"><span class="iconfont-archer">&#xe666;</span><span class="tab-name">Cate</span></li>
+    </ul>
+    <div class="sidebar-content sidebar-content-show-archive">
+        <div class="sidebar-panel-archives">
+    <!-- 在 ejs 中将 archive 按照时间排序 -->
+    
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+    
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+    
+    
+    
+    
+    <div class="total-and-search">
+        <div class="total-archive">
+        Total : 31
+        </div>
+        <!-- search  -->
+        
+    </div>
+    
+    <div class="post-archive">
+    
+        
+            
+            
+            <div class="archive-year"> 2023 </div>
+            <ul class="year-list">
+            
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/10</span>
+            <a class="archive-post-title" href="/2023/05/10/%E5%9F%BA%E7%A4%8E%E6%95%B8%E8%AB%96/">基礎數論</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/05</span>
+            <a class="archive-post-title" href="/2023/04/05/GIT/">GIT</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/05</span>
+            <a class="archive-post-title" href="/2023/04/05/%E5%BF%AB%E9%80%9F%E5%86%AA%E5%92%8C%E7%9F%A9%E9%99%A3%E5%BF%AB%E9%80%9F%E5%86%AA/">快速冪和矩陣快速冪</a>
+        </li>
+    
+        
+            
+            
+                
+                </ul>
+            
+            <div class="archive-year"> 2021 </div>
+            <ul class="year-list">
+            
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/12</span>
+            <a class="archive-post-title" href="/2021/09/12/%E5%9C%A8Linux%E5%AE%89%E8%A3%9DCUDA/">在Linux安裝CUDA，並在Pytorch進行CUDA訓練</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/29</span>
+            <a class="archive-post-title" href="/2021/08/29/%E5%8F%AF%E8%A7%A3%E9%87%8B%E4%BA%BA%E5%B7%A5%E6%99%BA%E6%85%A7-explainable-ai/">可解釋人工智慧_explainable_ai</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/29</span>
+            <a class="archive-post-title" href="/2021/08/29/%E5%9F%BA%E6%96%BC%E6%B7%B1%E5%BA%A6%E5%AD%B8%E7%BF%92%E9%80%B2%E8%A1%8C%E8%B2%93%E8%88%87%E7%8B%97%E7%9A%84%E8%BE%A8%E8%AA%8D-Pytorch/">基於深度學習進行貓與狗的辨認(Pytorch)</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/28</span>
+            <a class="archive-post-title" href="/2021/08/28/C-%E7%89%A9%E4%BB%B6%E5%B0%8E%E5%90%91/">C++物件導向</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/28</span>
+            <a class="archive-post-title" href="/2021/08/28/%E5%9F%BA%E7%A4%8E%E6%BC%94%E7%AE%97%E6%B3%95-C/">基礎演算法(Algorithm)-C++</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/28</span>
+            <a class="archive-post-title" href="/2021/08/28/%E5%9F%BA%E7%A4%8E%E8%B3%87%E6%96%99%E7%B5%90%E6%A7%8B-C/">基礎資料結構(Data Structure)-C++</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/27</span>
+            <a class="archive-post-title" href="/2021/08/27/CSS/">CSS</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/27</span>
+            <a class="archive-post-title" href="/2021/08/27/HTML/">HTML</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/27</span>
+            <a class="archive-post-title" href="/2021/08/27/Linux%E5%9F%BA%E7%A4%8E%E4%BD%BF%E7%94%A8/">Linux基礎使用</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/27</span>
+            <a class="archive-post-title" href="/2021/08/27/MNIST%E6%89%8B%E5%AF%AB%E8%BE%A8%E8%AD%98-Pytorch-version/">MNIST手寫辨識(Pytorch version)</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/27</span>
+            <a class="archive-post-title" href="/2021/08/27/MNIST%E6%89%8B%E5%AF%AB%E8%BE%A8%E8%AD%98-TensorFlow-version/">MNIST手寫辨識(TensorFlow-version)</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/27</span>
+            <a class="archive-post-title" href="/2021/08/27/Numpy/">Numpy</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/27</span>
+            <a class="archive-post-title" href="/2021/08/27/Pandas/">Pandas</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/27</span>
+            <a class="archive-post-title" href="/2021/08/27/Scikit-Learn/">Scikit Learn</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/27</span>
+            <a class="archive-post-title" href="/2021/08/27/TensorFlow1%E5%9F%BA%E7%A4%8E%E4%BD%BF%E7%94%A8%E6%96%B9%E6%B3%95/">TensorFlow1基礎使用方法</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/27</span>
+            <a class="archive-post-title" href="/2021/08/27/%E9%81%B7%E7%A7%BB%E5%AD%B8%E7%BF%92-%E5%9C%96%E7%89%87%E8%BE%A8%E8%AD%98/">遷移學習-圖片辨識</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/27</span>
+            <a class="archive-post-title" href="/2021/08/27/APCS%E5%AF%A6%E4%BD%9C%E9%A1%8C/">APCS實作題</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/27</span>
+            <a class="archive-post-title" href="/2021/08/27/Matplotlib/">Matplotlib</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/27</span>
+            <a class="archive-post-title" href="/2021/08/27/%E5%9F%BA%E7%A4%8ETensorFlow2%E8%88%87%E6%A9%9F%E5%99%A8%E5%AD%B8%E7%BF%92/">基礎TensorFlow1和2與機器學習</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/27</span>
+            <a class="archive-post-title" href="/2021/08/27/%E5%9F%BA%E7%A4%8Epytorch%E8%88%87%E6%A9%9F%E5%99%A8%E5%AD%B8%E7%BF%92/">基礎pytorch與機器學習</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/24</span>
+            <a class="archive-post-title" href="/2021/08/24/OpenCV/">OpenCV</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/24</span>
+            <a class="archive-post-title" href="/2021/08/24/pipenv/">pipenv</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/24</span>
+            <a class="archive-post-title" href="/2021/06/24/Linked-List/">Linked_List</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/24</span>
+            <a class="archive-post-title" href="/2021/06/24/Stringstream/">Stringstream</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/24</span>
+            <a class="archive-post-title" href="/2021/06/24/Web/">Web</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/24</span>
+            <a class="archive-post-title" href="/2021/06/24/ctime/">ctime</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/24</span>
+            <a class="archive-post-title" href="/2021/06/24/%E6%8C%87%E6%A8%99/">指標</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/24</span>
+            <a class="archive-post-title" href="/2021/06/24/%E9%81%8B%E7%AE%97%E5%AD%90%E9%87%8D%E8%BC%89/">運算子重載</a>
+        </li>
+    
+    </div>
+</div>
+
+        <div class="sidebar-panel-tags">
+    <div class="sidebar-tags-name">
+        
+            <span class="sidebar-tag-name" data-tags="C++">
+                <span class="iconfont-archer">&#xe606;</span>
+                C++
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="OOP">
+                <span class="iconfont-archer">&#xe606;</span>
+                OOP
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="CSS">
+                <span class="iconfont-archer">&#xe606;</span>
+                CSS
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="web dev">
+                <span class="iconfont-archer">&#xe606;</span>
+                web dev
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="HTML">
+                <span class="iconfont-archer">&#xe606;</span>
+                HTML
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="Linux">
+                <span class="iconfont-archer">&#xe606;</span>
+                Linux
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="Pytorch">
+                <span class="iconfont-archer">&#xe606;</span>
+                Pytorch
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="Machine Learning">
+                <span class="iconfont-archer">&#xe606;</span>
+                Machine Learning
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="TensorFlow2">
+                <span class="iconfont-archer">&#xe606;</span>
+                TensorFlow2
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="Python">
+                <span class="iconfont-archer">&#xe606;</span>
+                Python
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="Scikit Learn">
+                <span class="iconfont-archer">&#xe606;</span>
+                Scikit Learn
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="TensorFlow1">
+                <span class="iconfont-archer">&#xe606;</span>
+                TensorFlow1
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="Math theorem">
+                <span class="iconfont-archer">&#xe606;</span>
+                Math theorem
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="algorithm">
+                <span class="iconfont-archer">&#xe606;</span>
+                algorithm
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="Data structure">
+                <span class="iconfont-archer">&#xe606;</span>
+                Data structure
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="Transfer Learning">
+                <span class="iconfont-archer">&#xe606;</span>
+                Transfer Learning
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="APCS">
+                <span class="iconfont-archer">&#xe606;</span>
+                APCS
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="TensorFlow">
+                <span class="iconfont-archer">&#xe606;</span>
+                TensorFlow
+            </span>
+        
+    </div>
+    <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>
+    <div class="tag-load-fail" style="display: none; color: #ccc; font-size: 0.6rem;">
+        缺失模块，请参考主题文档进行安装配置：https://github.com/fi3ework/hexo-theme-archer#%E5%AE%89%E8%A3%85%E4%B8%BB%E9%A2%98
+    </div> 
+    <div class="sidebar-tags-list"></div>
+</div>
+
+        <div class="sidebar-panel-categories">
+    <div class="sidebar-categories-name">
+    
+    </div>
+    <div class="iconfont-archer sidebar-categories-empty">&#xe678;</div>
+    <div class="sidebar-categories-list"></div>
+</div>
+
+    </div>
+</div>
+
+        <!-- site-meta -->
+        <script>
+    var siteMetaRoot = "/"
+    if (siteMetaRoot === "undefined") {
+        siteMetaRoot = '/'
+    }
+    var siteMeta = {
+        url: "https://maxwutw.github.io",
+        root: siteMetaRoot,
+        author: "Max Wu"
+    }
+</script>
+
+        <!-- import experimental options here -->
+        <!-- Custom Font -->
+
+
+        <!-- main func -->
+        <script src="/scripts/main.js?v=20211217"></script>
+        <!-- dark mode -->
+        <script src="/scripts/dark.js?v=20211217"></script>
+        <!-- fancybox -->
+        <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js" defer></script>
+        <!-- algolia -->
+        
+        <!-- busuanzi -->
+        
+            <script src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" async></script>
+        
+        <!-- CNZZ -->
+        
+        <!-- async load share.js -->
+        
+            <script src="/scripts/share.js?v=20211217" async></script>
+        
+        <!-- mermaid -->
+        
+    </body>
+</html>

@@ -1,0 +1,1558 @@
+<!DOCTYPE html>
+<html lang="en">
+    <!-- title -->
+
+
+    
+
+<!-- keywords -->
+
+
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="author" content="Max Wu">
+    <meta name="renderer" content="webkit">
+    <meta name="copyright" content="Max Wu">
+    
+        <meta name="keywords" content="hexo,hexo-theme,hexo-blog">
+    
+    <meta name="description" content="">
+    <meta property="og:type" content="website">
+<meta property="og:title" content="Hexo">
+<meta property="og:url" content="https://maxwutw.github.io/archives/2021/06/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:locale" content="en_US">
+<meta property="article:author" content="Max Wu">
+<meta name="twitter:card" content="summary">
+    <meta http-equiv="Cache-control" content="no-cache">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <link rel="icon" href="/assets/favicon.ico">
+    
+    <title>Max Coding blog</title>
+    <!-- /*! loadCSS. [c]2017 Filament Group, Inc. MIT License */
+/* This file is meant as a standalone workflow for
+- testing support for link[rel=preload]
+- enabling async CSS loading in browsers that do not support rel=preload
+- applying rel preload css once loaded, whether supported or not.
+*/ -->
+<script>
+    (function (w) {
+        'use strict'
+        // rel=preload support test
+        if (!w.loadCSS) {
+            w.loadCSS = function () {}
+        }
+        // define on the loadCSS obj
+        var rp = (loadCSS.relpreload = {})
+        // rel=preload feature support test
+        // runs once and returns a function for compat purposes
+        rp.support = (function () {
+            var ret
+            try {
+                ret = w.document.createElement('link').relList.supports('preload')
+            } catch (e) {
+                ret = false
+            }
+            return function () {
+                return ret
+            }
+        })()
+
+        // if preload isn't supported, get an asynchronous load by using a non-matching media attribute
+        // then change that media back to its intended value on load
+        rp.bindMediaToggle = function (link) {
+            // remember existing media attr for ultimate state, or default to 'all'
+            var finalMedia = link.media || 'all'
+
+            function enableStylesheet() {
+                link.media = finalMedia
+            }
+
+            // bind load handlers to enable media
+            if (link.addEventListener) {
+                link.addEventListener('load', enableStylesheet)
+            } else if (link.attachEvent) {
+                link.attachEvent('onload', enableStylesheet)
+            }
+
+            // Set rel and non-applicable media type to start an async request
+            // note: timeout allows this to happen async to let rendering continue in IE
+            setTimeout(function () {
+                link.rel = 'stylesheet'
+                link.media = 'only x'
+            })
+            // also enable media after 3 seconds,
+            // which will catch very old browsers (android 2.x, old firefox) that don't support onload on link
+            setTimeout(enableStylesheet, 3000)
+        }
+
+        // loop through link elements in DOM
+        rp.poly = function () {
+            // double check this to prevent external calls from running
+            if (rp.support()) {
+                return
+            }
+            var links = w.document.getElementsByTagName('link')
+            for (var i = 0; i < links.length; i++) {
+                var link = links[i]
+                // qualify links to those with rel=preload and as=style attrs
+                if (
+                    link.rel === 'preload' &&
+                    link.getAttribute('as') === 'style' &&
+                    !link.getAttribute('data-loadcss')
+                ) {
+                    // prevent rerunning on link
+                    link.setAttribute('data-loadcss', true)
+                    // bind listeners to toggle media back
+                    rp.bindMediaToggle(link)
+                }
+            }
+        }
+
+        // if unsupported, run the polyfill
+        if (!rp.support()) {
+            // run once at least
+            rp.poly()
+
+            // rerun poly on an interval until onload
+            var run = w.setInterval(rp.poly, 500)
+            if (w.addEventListener) {
+                w.addEventListener('load', function () {
+                    rp.poly()
+                    w.clearInterval(run)
+                })
+            } else if (w.attachEvent) {
+                w.attachEvent('onload', function () {
+                    rp.poly()
+                    w.clearInterval(run)
+                })
+            }
+        }
+
+        // commonjs
+        if (typeof exports !== 'undefined') {
+            exports.loadCSS = loadCSS
+        } else {
+            w.loadCSS = loadCSS
+        }
+    })(typeof global !== 'undefined' ? global : this)
+</script>
+
+    <style type="text/css">
+    @font-face {
+        font-family: 'Oswald-Regular';
+        src: url("/font/Oswald-Regular.ttf");
+    }
+
+    body {
+        margin: 0;
+    }
+
+    header,
+    footer,
+    .back-top,
+    .sidebar,
+    .container,
+    .site-intro-meta,
+    .toc-wrapper {
+        display: none;
+    }
+
+    .site-intro {
+        position: relative;
+        z-index: 3;
+        width: 100%;
+        /* height: 50vh; */
+        overflow: hidden;
+    }
+
+    .site-intro-placeholder {
+        position: absolute;
+        z-index: -2;
+        top: 0;
+        left: 0;
+        width: calc(100% + 300px);
+        height: 100%;
+        background: repeating-linear-gradient(-45deg, #444 0, #444 80px, #333 80px, #333 160px);
+        background-position: center center;
+        transform: translate3d(-226px, 0, 0);
+        animation: gradient-move 2.5s ease-out 0s infinite;
+    }
+
+    @keyframes gradient-move {
+        0% {
+            transform: translate3d(-226px, 0, 0);
+        }
+        100% {
+            transform: translate3d(0, 0, 0);
+        }
+    }
+</style>
+
+    <link rel="preload" href="/css/style.css?v=20211217" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="preload" href="/css/dark.css?v=20211217" as="style">
+    <link rel="stylesheet" href="/css/dark.css">
+    <link rel="stylesheet" href="/css/mobile.css?v=20211217" media="(max-width: 960px)">
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js" as="script">
+    <link rel="preload" href="/scripts/main.js?v=20211217" as="script">
+    <link rel="preload" href="/scripts/dark.js?v=20211217" as="script">
+    <link rel="preload" href="/font/Oswald-Regular.ttf" as="font" crossorigin>
+    <link rel="preload" href="https://at.alicdn.com/t/font_327081_1dta1rlogw17zaor.woff" as="font" crossorigin>
+    <!-- algolia -->
+    
+    <!-- 百度统计  -->
+    
+    <!-- 谷歌统计  -->
+    
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --><meta name="generator" content="Hexo 6.3.0"></head>
+
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+    <script type="text/javascript">
+        if (typeof window.$ == undefined) {
+            console.warn('jquery load from jsdelivr failed, will load local script')
+            document.write('<script src="/lib/jquery.min.js" />')
+        }
+    </script>
+    
+        <!-- header -->
+        <header class="header header-mobile">
+    <!-- top read progress line -->
+    <div class="header-element">
+        <div class="read-progress"></div>
+    </div>
+    <!-- sidebar menu button -->
+    <div class="header-element">
+        
+            <div class="header-sidebar-menu">
+        
+            
+                <div style="padding-left: 1px;">&#xe775;</div>
+            
+        </div>
+    </div>
+    <!-- header actions -->
+    <div class="header-actions">
+        <!-- theme mode switch button -->
+        <span class="header-theme-btn header-element">
+            <i class="fas fa-adjust"></i>
+        </span>
+        <!-- back to home page text -->
+        <span class="home-link header-element">
+            <a href=/>Max Coding blog</a>
+        </span>
+    </div>
+    <!-- toggle banner for post layout -->
+    
+</header>
+
+        <!-- fixed footer -->
+        <footer class="footer-fixed">
+    <!-- back to top button -->
+    <div class="footer-fixed-element">
+        
+            <div class="back-top back-top-hidden">
+        
+        
+            <div>&#xe639;</div>
+        
+        </div>
+    </div>
+</footer>
+
+        <!-- wrapper -->
+        <div class="wrapper">
+            <div class="site-intro" style="
+
+
+
+
+
+
+
+">
+    
+    <!-- 主页  -->
+    
+    <div class="site-intro-placeholder"></div>
+    <div class="site-intro-img" style="background-image: url(/)"></div>
+    <div class="site-intro-meta">
+        <!-- 标题  -->
+        <h1 class="intro-title">
+            <!-- 主页  -->
+            
+        </h1>
+        <!-- 副标题 -->
+        <p class="intro-subtitle">
+            <!-- 主页副标题  -->
+            
+        </p>
+        <!-- 文章页 meta -->
+        
+    </div>
+</div>
+
+            <script>
+  // get user agent
+  function getBrowserVersions() {
+    var u = window.navigator.userAgent
+    return {
+      userAgent: u,
+      trident: u.indexOf('Trident') > -1, //IE内核
+      presto: u.indexOf('Presto') > -1, //opera内核
+      webKit: u.indexOf('AppleWebKit') > -1, //苹果、谷歌内核
+      gecko: u.indexOf('Gecko') > -1 && u.indexOf('KHTML') == -1, //火狐内核
+      mobile: !!u.match(/AppleWebKit.*Mobile.*/), //是否为移动终端
+      ios: !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/), //ios终端
+      android: u.indexOf('Android') > -1 || u.indexOf('Linux') > -1, //android终端或者uc浏览器
+      iPhone: u.indexOf('iPhone') > -1 || u.indexOf('Mac') > -1, //是否为iPhone或者安卓QQ浏览器
+      iPad: u.indexOf('iPad') > -1, //是否为iPad
+      webApp: u.indexOf('Safari') == -1, //是否为web应用程序，没有头部与底部
+      weixin: u.indexOf('MicroMessenger') == -1, //是否为微信浏览器
+      uc: u.indexOf('UCBrowser') > -1, //是否为android下的UC浏览器
+    }
+  }
+  var browser = {
+    versions: getBrowserVersions(),
+  }
+  console.log('userAgent: ' + browser.versions.userAgent)
+
+  // callback
+  function fontLoaded() {
+    console.log('font loaded')
+    if (document.getElementsByClassName('site-intro-meta')) {
+      document
+        .getElementsByClassName('intro-title')[0]
+        .classList.add('intro-fade-in')
+      document
+        .getElementsByClassName('intro-subtitle')[0]
+        .classList.add('intro-fade-in')
+      var postIntros = document.getElementsByClassName('post-intros')[0]
+      if (postIntros) {
+        postIntros.classList.add('post-fade-in')
+      }
+    }
+  }
+
+  // UC不支持跨域，所以直接显示
+  function asyncCb() {
+    if (browser.versions.uc) {
+      console.log('UCBrowser')
+      fontLoaded()
+    } else {
+      WebFont.load({
+        custom: {
+          families: ['Oswald-Regular'],
+        },
+        loading: function () {
+          // 所有字体开始加载
+          // console.log('font loading');
+        },
+        active: function () {
+          // 所有字体已渲染
+          fontLoaded()
+        },
+        inactive: function () {
+          // 字体预加载失败，无效字体或浏览器不支持加载
+          console.log('inactive: timeout')
+          fontLoaded()
+        },
+        timeout: 5000, // Set the timeout to two seconds
+      })
+    }
+  }
+
+  function asyncErr() {
+    console.warn('script load from CDN failed, will load local script')
+  }
+
+  // load webfont-loader async, and add callback function
+  function async(u, cb, err) {
+    var d = document,
+      t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0]
+    o.src = u
+    if (cb) {
+      o.addEventListener(
+        'load',
+        function (e) {
+          cb(null, e)
+        },
+        false
+      )
+    }
+    if (err) {
+      o.addEventListener(
+        'error',
+        function (e) {
+          err(null, e)
+        },
+        false
+      )
+    }
+    s.parentNode.insertBefore(o, s)
+  }
+
+  var asyncLoadWithFallBack = function (arr, success, reject) {
+    var currReject = function () {
+      reject()
+      arr.shift()
+      if (arr.length) async(arr[0], success, currReject)
+    }
+
+    async(arr[0], success, currReject)
+  }
+
+  asyncLoadWithFallBack(
+    [
+      'https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js',
+      'https://cdn.bootcss.com/webfont/1.6.28/webfontloader.js',
+      "/lib/webfontloader.min.js",
+    ],
+    asyncCb,
+    asyncErr
+  )
+</script>
+
+            <img class="loading" src="/assets/loading.svg" style="display: block; margin: 6rem auto 0 auto; width: 6rem; height: 6rem;" />
+            <div class="container container-unloaded">
+                <main class="main index-page">
+    
+        
+        
+        
+        
+            
+            
+        
+        <article class="index-post">
+            <a class="abstract-title" href="/2021/06/24/%E6%8C%87%E6%A8%99/">
+                
+                <span class="abstract-title-text">指標</span>
+            </a>
+            <div class="abstract-content">
+                <h1 id="指標pointer">指標(pointer)</h1>
+<pre><code>定義:儲存變數的記憶體位置。</code></pre>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="type">int</span> a = <span class="number">10</span>;</span><br><span class="line">    <span class="type">int</span> * p = &amp;a;</span><br><span class="line">    cout &lt;&lt; <span class="string">&quot;a的值:&quot;</span> &lt;&lt; a &lt;&lt; endl;</span><br><span class="line">    cout &lt;&lt; <span class="string">&quot;a的記憶體位置:&quot;</span> &lt;&lt; p &lt;&lt; endl;</span><br><span class="line">    cout &lt;&lt; <span class="string">&quot;從記憶體位置取值:&quot;</span> &lt;&lt; *p &lt;&lt; endl;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="newdelete">new/delete</h2>
+<p>由於指標是儲存記憶體位置，所以今天必須給他一個記憶體位置，如果沒給就要進行值的轉換，例如以下:(以下為錯誤示範)
+</p><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="type">int</span> * a;</span><br><span class="line">    *a = <span class="number">100</span>;</span><br><span class="line">    cout &lt;&lt; *a &lt;&lt; endl;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure> 這樣寫的話會出現Runtime Error(記憶體區段錯誤)
+所以我們應該利用<code>new</code>來配置一個記憶體位置給他 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> * a = <span class="keyword">new</span> <span class="type">int</span>;</span><br><span class="line">cout &lt;&lt; <span class="string">&quot;a的記憶體位置:&quot;</span> &lt;&lt; a &lt;&lt; endl;</span><br><span class="line">*a = <span class="number">100</span>;</span><br><span class="line">cout &lt;&lt; <span class="string">&quot;a的值:&quot;</span> &lt;&lt; *a &lt;&lt; endl;</span><br></pre></td></tr></table></figure>
+如果我們今天要把這個記憶體位置釋放，我們使用<code>delete</code>，這樣這個記憶體空間就被釋放了
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> * a = <span class="keyword">new</span> <span class="type">int</span>;</span><br><span class="line">cout &lt;&lt; <span class="string">&quot;a的記憶體位置:&quot;</span> &lt;&lt; a &lt;&lt; endl;</span><br><span class="line">*a = <span class="number">100</span>;</span><br><span class="line">cout &lt;&lt; <span class="string">&quot;a的值:&quot;</span> &lt;&lt; *a &lt;&lt; endl;</span><br><span class="line"><span class="keyword">delete</span> a;<span class="comment">//此記憶體位置被釋放了</span></span><br><span class="line">cout &lt;&lt; *a &lt;&lt; endl;</span><br><span class="line">cout &lt;&lt; a &lt;&lt; endl;</span><br></pre></td></tr></table></figure>
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2023/04/06">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/06/24</span>
+                </div>
+                <!-- tags -->
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+        
+        
+        
+        
+            
+            
+        
+        <article class="index-post">
+            <a class="abstract-title" href="/2021/06/24/ctime/">
+                
+                <span class="abstract-title-text">ctime</span>
+            </a>
+            <div class="abstract-content">
+                <h1 id="ctime">ctime</h1>
+<h2 id="概述">概述</h2>
+<p>ctime是由C語言的time.h沿用到C++的，也沒什麼好說的，開始使用吧！ ##
+取得現在的時間 <span style="color:green">time_t time (time_t*
+timer);</span> 這個函式會從 1970 年 1 月 1 日 00:00 UTC
+起計算到使用者使用的現在，來看花使用： </p><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;ctime&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="type">time_t</span> a = <span class="built_in">time</span>(<span class="literal">NULL</span>);</span><br><span class="line">    cout &lt;&lt; a &lt;&lt; endl;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+從上述程式碼我們可以得到一個輸出，以我現在為例，我得到的輸出是1623735092，代表我從1970
+年 1 月 1 日 00:00
+UTC到現在的秒數，但我們要的不僅僅是秒數，我們要的是年月日時分秒，所以我們要使用另一個函式來達成這個目標，我們先去C++
+reference看一下如果我們要達成目標該用哪個函式呢？我們可以在ctime裡看到我們可以使用此函式來達到這個目的，但又有另一個問題，就是我們該傳什麼參數進去呢？再去看一次C++
+reference 時看到我們應該傳一個time_t的指標進去， <span style="color:green">char* ctime (const time_t * timer);</span>
+在前面的char*就是一個string，只是在C語言是這個用法，那我們將一個time_t的指標傳入，看看會發生什麼事。
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;ctime&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="type">time_t</span> a = <span class="built_in">time</span>(<span class="literal">NULL</span>);</span><br><span class="line">    cout &lt;&lt; a &lt;&lt; endl;<span class="comment">//output:1623746252</span></span><br><span class="line">	</span><br><span class="line">    <span class="type">char</span> *b = <span class="built_in">ctime</span>(&amp;a);</span><br><span class="line">    cout &lt;&lt; b &lt;&lt; endl;<span class="comment">//output:Tue Jun 15 16:37:32 2021</span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure> 果然輸出我們要的結果，Tue Jun 15 16:37:32 2021。
+但如果我們今天要的只有某一部分的時間，就是說我不要年月日時分秒全部輸出，我只要年月日的話怎麼辦？
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;ctime&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="type">time_t</span> t = <span class="built_in">time</span>(<span class="literal">NULL</span>);</span><br><span class="line">    <span class="keyword">struct</span> <span class="title class_">tm</span> * pt = <span class="built_in">localtime</span>(&amp;t);</span><br><span class="line">    cout &lt;&lt; pt-&gt;tm_year+<span class="number">1900</span> &lt;&lt; <span class="string">&quot;/&quot;</span> &lt;&lt; pt-&gt;tm_mon + <span class="number">1</span> &lt;&lt; <span class="string">&quot;/&quot;</span> &lt;&lt; pt-&gt;tm_mday &lt;&lt;endl;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+這邊就比較難理解了，我們可以看到我們此處使用了一個結構，名叫tm，接著我們去看看C++
+reference，可以看到我們要宣告的名稱需要是一個指標， <span style="color:green">struct tm * localtime (const time_t * timer);</span>
+且在localtime()裡也需要一個time_t的指標，所以我才會這樣做宣告，接著要把年月日輸出，由於我們tm_year是結構裡的成員，所以我們這邊需利用箭號運算子，來求值，故輸出為2021/6/15。<p></p>
+<h5 id="by-中和高中-吳振榮">by 中和高中 吳振榮</h5>
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2023/04/06">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/06/24</span>
+                </div>
+                <!-- tags -->
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+        
+        
+        
+        
+            
+            
+        
+        <article class="index-post">
+            <a class="abstract-title" href="/2021/06/24/Linked-List/">
+                
+                <span class="abstract-title-text">Linked_List</span>
+            </a>
+            <div class="abstract-content">
+                <h1 id="linked-list">Linked list</h1>
+<p>Linked
+list是一種常見的資料結構，利用指標的指向來得到下一個資料，那為什麼要用Linked
+list呢？為何不使用array就好，接下來說說Linked list的優缺點。</p>
+<h2 id="優點">優點：</h2>
+<p>Linked list和array不一樣的地方就是Linked
+list可以動態配置大小，而array的大小是固定的，接著Linked
+list要新增或刪除元素都比較方便快速。</p>
+<h2 id="缺點">缺點：</h2>
+<p>Linked list是沒有index的，所以在搜尋資料中會相對的耗時。</p>
+<p>接著來看看Linked
+list的樣子大概長怎樣，我們每個node都有一個記憶體位置，而它所存取的內容會有資料以及下一個node的記憶體位置，而最後一個node存取的記憶體位置為NULL，這樣一個Linked
+list就結束了，看看圖增加印象吧！</p>
+<h2 id="建立兩個節點">建立兩個節點:</h2>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"><span class="keyword">typedef</span> <span class="keyword">struct</span> <span class="title class_">linked_list</span> *link_ptr;</span><br><span class="line"><span class="keyword">typedef</span> <span class="keyword">struct</span> <span class="title class_">linked_list</span>&#123;</span><br><span class="line">    <span class="type">int</span> data;</span><br><span class="line">    link_ptr add;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">    link_ptr vertex1 = <span class="literal">NULL</span>;</span><br><span class="line">    link_ptr vertex2 = <span class="literal">NULL</span>;</span><br><span class="line">    vertex1 = <span class="built_in">malloc</span>(<span class="built_in">sizeof</span>(linked_list));</span><br><span class="line">    vertex2 = <span class="built_in">malloc</span>(<span class="built_in">sizeof</span>(linked_list));</span><br><span class="line">    vertex2-&gt;add = <span class="literal">NULL</span>;</span><br><span class="line">    vertex2-&gt;data = <span class="number">100</span>;</span><br><span class="line">    vertex1-&gt;add = vertex2;</span><br><span class="line">    vertex1-&gt;data = <span class="number">10</span>;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;%d\n&quot;</span>, vertex1-&gt;add-&gt;data);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;%p\n&quot;</span>, vertex2);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>我們這裡使用C語言撰寫，首先建立一個結構叫linked_list，接著宣告一個結構指標叫做link_ptr，在main裡我們利用link_ptr來宣兩個變數，分別初始化為NULL，由於我們使用link_ptr宣告，代表vertex1和vertex2也是指標結構，同時擁有資料和下一個位置的記憶體位置，接著我們使用malloc()做動態記憶體配置，由於vertex2是最後一個元素，所以它指向NULL，而vertex1則指向vertex2，即完成linked
+list。 ## 例子: </p>
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2023/04/06">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/06/24</span>
+                </div>
+                <!-- tags -->
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+        
+        
+        
+        
+            
+            
+        
+        <article class="index-post">
+            <a class="abstract-title" href="/2021/06/24/Stringstream/">
+                
+                <span class="abstract-title-text">Stringstream</span>
+            </a>
+            <div class="abstract-content">
+                <h1 id="stringstream">Stringstream</h1>
+<p>在C語言的時候處理字串非常麻煩，而且在輸入字串的時候要使用char[]或char*，很不直觀，到了C++的時候多了string這個資料型態，在C++11的時候又有了stringstream，此時要做字串處理變得很方便。
+要使用stringstream前要先引用一個標頭檔，#include
+&lt;sstream&gt;，stringstream專門拿來讀取字串並且處理。 ## 1. int 轉換成
+string </p><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;sstream&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">    stringstream ss;</span><br><span class="line">    string int_to_str;</span><br><span class="line">    <span class="type">int</span> num = <span class="number">12345</span>;</span><br><span class="line">    ss &lt;&lt; num;</span><br><span class="line">    ss &gt;&gt; int_to_str;</span><br><span class="line">    cout &lt;&lt; int_to_str &lt;&lt; endl;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure> ## 2. string 轉換成 int <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;sstream&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">    stringstream ss;</span><br><span class="line">    string int_to_str = <span class="string">&quot;11804&quot;</span>;</span><br><span class="line">    <span class="type">int</span> num;</span><br><span class="line">    ss &lt;&lt; int_to_str;</span><br><span class="line">    ss &gt;&gt; num;</span><br><span class="line">    cout &lt;&lt; num &lt;&lt; endl;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure> ## 3.
+清除stringstream
+如果使用過的stringstream還要繼續使用，必須先清除，如果未清除則會出現無法預測的答案，以下為未清除的時候。
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;sstream&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">    stringstream ss;</span><br><span class="line">    string int_to_str = <span class="string">&quot;11804&quot;</span>;</span><br><span class="line">    <span class="type">int</span> num;</span><br><span class="line">    ss &lt;&lt; int_to_str;</span><br><span class="line">    ss &gt;&gt; num;</span><br><span class="line">    cout &lt;&lt; num &lt;&lt; <span class="string">&quot; &quot;</span>;</span><br><span class="line">    string str = <span class="string">&quot;12345&quot;</span>;</span><br><span class="line">    ss &lt;&lt; str;</span><br><span class="line">    <span class="type">int</span> a;</span><br><span class="line">    ss &gt;&gt; a;</span><br><span class="line">    cout &lt;&lt; a ;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure> 此時的輸出是：11804 0 但我們希望的結果為11804 12345
+所以我們要進行刪除，利用ss.str(""); ss.clear();。 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;sstream&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">    stringstream ss;</span><br><span class="line">    string int_to_str = <span class="string">&quot;11804&quot;</span>;</span><br><span class="line">    <span class="type">int</span> num;</span><br><span class="line">    ss &lt;&lt; int_to_str;</span><br><span class="line">    ss &gt;&gt; num;</span><br><span class="line">    cout &lt;&lt; num &lt;&lt; <span class="string">&quot; &quot;</span>;</span><br><span class="line">    ss.<span class="built_in">str</span>(<span class="string">&quot;&quot;</span>);</span><br><span class="line">    ss.<span class="built_in">clear</span>();</span><br><span class="line">    string str = <span class="string">&quot;12345&quot;</span>;</span><br><span class="line">    ss &lt;&lt; str;</span><br><span class="line">    <span class="type">int</span> a;</span><br><span class="line">    ss &gt;&gt; a;</span><br><span class="line">    cout &lt;&lt; a;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+此時就可以正常輸出了。 ## 4. 利用stringstream進行基本輸出 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;sstream&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="function">stringstream <span class="title">ss1</span><span class="params">(<span class="string">&quot;he&quot;</span>)</span></span>;</span><br><span class="line">    stringstream ss2,ss3,ss4;</span><br><span class="line">    <span class="function">string <span class="title">str</span><span class="params">(<span class="string">&quot;max&quot;</span>)</span></span>;</span><br><span class="line">    ss2.<span class="built_in">str</span>(<span class="string">&quot;hello&quot;</span>);</span><br><span class="line">    ss3.<span class="built_in">str</span>(str);</span><br><span class="line">    ss4 &lt;&lt; <span class="string">&quot;hey&quot;</span>;</span><br><span class="line">    cout &lt;&lt; ss1.<span class="built_in">str</span>() &lt;&lt; endl;<span class="comment">//output = he</span></span><br><span class="line">    cout &lt;&lt; ss2.<span class="built_in">str</span>() &lt;&lt; endl;<span class="comment">//output = hello</span></span><br><span class="line">    cout &lt;&lt; ss3.<span class="built_in">str</span>() &lt;&lt; endl;<span class="comment">//output = max</span></span><br><span class="line">    cout &lt;&lt; ss4.<span class="built_in">str</span>() &lt;&lt; endl;<span class="comment">//output = hey</span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+## 5. 分割stringstream ### 用空格做切割 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;sstream&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="function">stringstream <span class="title">ss1</span><span class="params">(<span class="string">&quot;my name    is max  &quot;</span>)</span></span>;</span><br><span class="line">    <span class="function">string <span class="title">str</span><span class="params">(<span class="string">&quot;&quot;</span>)</span></span>;</span><br><span class="line">    <span class="keyword">while</span>(ss1 &gt;&gt; str)</span><br><span class="line">        cout &lt;&lt; str &lt;&lt; endl;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure> ###
+用getline()把stringstream用特定的string取出
+第一個arguement放stringstream，第二個arguement放string，第三個arguement只能放char，不能放string。
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;sstream&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="function">stringstream <span class="title">ss</span><span class="params">(<span class="string">&quot;hello my name is max&quot;</span>)</span></span>;</span><br><span class="line">    string str;</span><br><span class="line">    <span class="keyword">while</span>(<span class="built_in">getline</span>(ss,str,<span class="string">&#x27;m&#x27;</span>))&#123;</span><br><span class="line">        cout &lt;&lt; str &lt;&lt; endl;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure> output : hello y na e is ax<p></p>
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2023/04/06">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/06/24</span>
+                </div>
+                <!-- tags -->
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+        
+        
+        
+        
+            
+            
+        
+        <article class="index-post">
+            <a class="abstract-title" href="/2021/06/24/%E9%81%8B%E7%AE%97%E5%AD%90%E9%87%8D%E8%BC%89/">
+                
+                <span class="abstract-title-text">運算子重載</span>
+            </a>
+            <div class="abstract-content">
+                <h1 id="運算子重載operator-overloading">運算子重載(operator
+overloading)</h1>
+<p>學完物件導向程式設計後可以來了解重載運算子重載，operator
+overloading也可以叫做運算子覆載，或運算子多載，反正意思差不多，這裡就稱為重載運算子重載，至於為何要使用運算子重載呢?先來看一個例子:
+</p><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">(<span class="type">void</span>)</span></span>&#123;</span><br><span class="line">    <span class="type">int</span> a = <span class="number">4</span>, b = <span class="number">6</span>, c;</span><br><span class="line">    c = a + b;</span><br><span class="line">    std::cout &lt;&lt; c; <span class="comment">//output:10</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+這個例子中可以很清楚的看到我用一個「加號」將a和b相加，這當然沒問題，那下面這個例子呢?
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">data</span>&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="type">int</span> a,b;</span><br><span class="line">    <span class="built_in">data</span>(<span class="type">int</span>,<span class="type">int</span>);</span><br><span class="line">&#125;;</span><br><span class="line">data::<span class="built_in">data</span>(<span class="type">int</span> x = <span class="number">0</span>,<span class="type">int</span> y = <span class="number">0</span>)&#123;</span><br><span class="line">    a = x;</span><br><span class="line">    b = y;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="function">data <span class="title">d1</span><span class="params">(<span class="number">3</span>,<span class="number">4</span>)</span>, <span class="title">d2</span><span class="params">(<span class="number">6</span>,<span class="number">3</span>)</span>, d3</span>;</span><br><span class="line">    d3 = d1 + d2;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+這個例子中會得到一個錯誤，因為此時這個「加號」它不知道該怎麼用，因為在這個class裡有兩個數，程式不知道要加哪一個，此時我們就會用到運算子重載，重新定義一個運算子，那定義方式如下:
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">data</span>&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="type">int</span> a,b;</span><br><span class="line">    <span class="built_in">data</span>(<span class="type">int</span>,<span class="type">int</span>);</span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">print_data</span><span class="params">()</span></span>;</span><br><span class="line">    data <span class="keyword">operator</span>+(data &amp;y_data)&#123;</span><br><span class="line">        <span class="type">int</span> a_plus = a + y_data.a;</span><br><span class="line">        <span class="type">int</span> b_plus = b + y_data.b;</span><br><span class="line">        <span class="function">data <span class="title">z_data</span><span class="params">(a_plus,b_plus)</span></span>;</span><br><span class="line">        <span class="keyword">return</span> z_data;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line">data::<span class="built_in">data</span>(<span class="type">int</span> x = <span class="number">0</span>,<span class="type">int</span> y = <span class="number">0</span>)&#123;</span><br><span class="line">    a = x;</span><br><span class="line">    b = y;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="function">data <span class="title">d1</span><span class="params">(<span class="number">3</span>,<span class="number">4</span>)</span>, <span class="title">d2</span><span class="params">(<span class="number">6</span>,<span class="number">3</span>)</span>, d3</span>;</span><br><span class="line">    d3 = d1 + d2;</span><br><span class="line">    cout &lt;&lt; d3.a &lt;&lt; <span class="string">&quot; &quot;</span> &lt;&lt; d3.b &lt;&lt; endl;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+此時可以完整解決原本的問題，我們將「加號」定義成第一個物件的a加上第二個物件的b，接著我將它存成z_data，並回傳。<p></p>
+<p>在使用sort()函式時也可以使用運算子重載: </p><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;algorithm&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;cstdlib&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;ctime&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">data</span>&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="type">int</span> a,b;</span><br><span class="line">    <span class="built_in">data</span>(<span class="type">int</span>,<span class="type">int</span>);</span><br><span class="line">    <span class="type">bool</span> <span class="keyword">operator</span> &lt; (data &amp;y_data)&#123;</span><br><span class="line">        <span class="keyword">if</span>(b &lt; y_data.b);</span><br><span class="line">        <span class="keyword">else</span> <span class="keyword">return</span> b &lt; y_data.b;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line">data::<span class="built_in">data</span>(<span class="type">int</span> x = <span class="number">0</span>,<span class="type">int</span> y = <span class="number">0</span>)&#123;</span><br><span class="line">    a = x;</span><br><span class="line">    b = y;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">    data arr[<span class="number">5</span>];</span><br><span class="line">    <span class="built_in">srand</span>(<span class="built_in">time</span>(<span class="literal">NULL</span>));</span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">0</span>;i &lt; <span class="number">5</span>;i++)&#123;</span><br><span class="line">        arr[i].a = i;</span><br><span class="line">        arr[i].b = <span class="built_in">rand</span>()%<span class="number">30</span>+<span class="number">1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">0</span>;i &lt; <span class="number">5</span>;i++) cout &lt;&lt; arr[i].a &lt;&lt; <span class="string">&quot; &quot;</span> &lt;&lt; arr[i].b &lt;&lt; endl;</span><br><span class="line">    <span class="built_in">sort</span>(arr,arr+<span class="number">5</span>);</span><br><span class="line">    cout &lt;&lt; <span class="string">&quot;===========&quot;</span> &lt;&lt; endl;</span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">0</span>;i &lt; <span class="number">5</span>;i++)</span><br><span class="line">        cout &lt;&lt; arr[i].b &lt;&lt; <span class="string">&quot; &quot;</span>;</span><br><span class="line">    cout &lt;&lt; endl;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure> 此處我們將
+<code>&lt;</code>
+這個符號重新定義，使我們的sort在比較的時候，能清楚知道如何比較，然而我們這邊這樣定義運算子重載是不太好的，好一點的作法如下:
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">bool</span> <span class="type">const</span> <span class="keyword">operator</span> &lt; (data &amp;y_data) <span class="type">const</span> &#123;</span><br><span class="line">        <span class="keyword">if</span>(b &lt; y_data.b);</span><br><span class="line">        <span class="keyword">else</span> <span class="keyword">return</span> b &lt; y_data.b;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2023/04/06">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/06/24</span>
+                </div>
+                <!-- tags -->
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+        
+        
+        
+        
+            
+            
+        
+        <article class="index-post">
+            <a class="abstract-title" href="/2021/06/24/Web/">
+                
+                <span class="abstract-title-text">Web</span>
+            </a>
+            <div class="abstract-content">
+                <h1 id="web-the-content-is-still-updating">Web (The content is still
+updating)</h1>
+<h2 id="port">port</h2>
+<ol type="1">
+<li>Secure Shell(SSH) : 22</li>
+<li>HTTP : 80</li>
+<li>HTTPS : 443 ## Apache2</li>
+<li>Start our apache : <code>$ sudo service apache2 start</code></li>
+<li>Check the state of apache :
+<code>$ sudo service apache2 status</code></li>
+<li>Stop our apache : <code>$ sudo service apache2 stop</code></li>
+<li>Restart our apache :
+<code>$ sudo service apache2 restart</code></li>
+<li>Start the apache service at boot :
+<code>$ sudo systemctl enable apache2</code></li>
+<li>Stop apache service at boot :
+<code>$ sudo systemctl disable apache2</code> # Firewall</li>
+<li>Open the firewall : <code>$ sudo ufw enable</code></li>
+<li>Check firewall status : <code>$ sudo ufw status</code> Status:
+active Status: inactive</li>
+<li>Default allow all of the connect pass :
+<code>$ sudo ufw default allow</code></li>
+<li>Check incoming/outgoing status :
+<code>$ sudo ufw status verbose</code></li>
+<li>ufw allow ssh(22 port) : <code>$ sudo ufw allow ssh</code></li>
+<li>ufw allow http(80 port) : <code>$ sudo ufw allow http</code></li>
+<li>Remove http connect : <code>$ sudo ufw delete allow http/tcp</code>
+# Mariadb(Mysql)</li>
+<li>Setup our Mariadb :
+<code>$ sudo mysql_secure_installation</code></li>
+<li>Start our server : <code>$ sudo systemctl start mariadb</code></li>
+<li>Check Mariadb status :
+<code>$ sudo systemctl status mariadb</code></li>
+<li>Login database : <code>$ mysql -u root -p</code> ## Get in mysql
+database</li>
+<li>Show the database : <code>&gt; show databases;</code></li>
+<li>Get in the database : <code>&gt; use 'database name'</code></li>
+<li>Show the data : <code>&gt; show tables;</code></li>
+</ol>
+<h5 id="by-chshs-wuzhen-rong">by CHSHS WU,ZHEN-RONG</h5>
+
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2023/04/06">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/06/24</span>
+                </div>
+                <!-- tags -->
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+    <!-- paginator  -->
+    
+</main>
+
+                <!-- profile -->
+                
+            </div>
+            <footer class="footer footer-unloaded">
+    <!-- social  -->
+    
+        <div class="social">
+            
+    
+        
+            
+                <a href="mailto:WuMax13@gmail.com" class="iconfont-archer email" title=email ></a>
+            
+        
+    
+        
+            
+                <a href="https://github.com/MaxWutw" class="iconfont-archer github" target="_blank" title=github></a>
+            
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+            
+                <a href="https://www.facebook.com/profile.php?id=100020738000412" class="iconfont-archer facebook" target="_blank" title=facebook></a>
+            
+        
+    
+        
+    
+        
+            
+                <a href="https://www.instagram.com/_wuzhenlong/" class="iconfont-archer instagram" target="_blank" title=instagram></a>
+            
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+
+
+        </div>
+    
+    <!-- powered by Hexo  -->
+    <div class="copyright">
+        <span id="hexo-power">Powered by <a href="https://hexo.io/" target="_blank">Hexo</a></span><span class="iconfont-archer power">&#xe635;</span><span id="theme-info">theme <a href="https://github.com/fi3ework/hexo-theme-archer" target="_blank">Archer</a></span>
+    </div>
+    <!-- website approve for Chinese user -->
+    
+    <!-- 不蒜子  -->
+    
+        <div class="busuanzi-container">
+            
+             
+                <span id="busuanzi_container_site_pv">PV: <span id="busuanzi_value_site_pv"></span> :)</span>
+            
+        </div>
+    	
+</footer>
+
+        </div>
+        <!-- toc -->
+        
+        <!-- sidebar -->
+        <div class="sidebar sidebar-hide">
+    <ul class="sidebar-tabs sidebar-tabs-active-0">
+        <li class="sidebar-tab-archives"><span class="iconfont-archer">&#xe67d;</span><span class="tab-name">Archive</span></li>
+        <li class="sidebar-tab-tags"><span class="iconfont-archer">&#xe61b;</span><span class="tab-name">Tag</span></li>
+        <li class="sidebar-tab-categories"><span class="iconfont-archer">&#xe666;</span><span class="tab-name">Cate</span></li>
+    </ul>
+    <div class="sidebar-content sidebar-content-show-archive">
+        <div class="sidebar-panel-archives">
+    <!-- 在 ejs 中将 archive 按照时间排序 -->
+    
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+    
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+    
+    
+    
+    
+    <div class="total-and-search">
+        <div class="total-archive">
+        Total : 31
+        </div>
+        <!-- search  -->
+        
+    </div>
+    
+    <div class="post-archive">
+    
+        
+            
+            
+            <div class="archive-year"> 2023 </div>
+            <ul class="year-list">
+            
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/10</span>
+            <a class="archive-post-title" href="/2023/05/10/%E5%9F%BA%E7%A4%8E%E6%95%B8%E8%AB%96/">基礎數論</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/05</span>
+            <a class="archive-post-title" href="/2023/04/05/GIT/">GIT</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/05</span>
+            <a class="archive-post-title" href="/2023/04/05/%E5%BF%AB%E9%80%9F%E5%86%AA%E5%92%8C%E7%9F%A9%E9%99%A3%E5%BF%AB%E9%80%9F%E5%86%AA/">快速冪和矩陣快速冪</a>
+        </li>
+    
+        
+            
+            
+                
+                </ul>
+            
+            <div class="archive-year"> 2021 </div>
+            <ul class="year-list">
+            
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/12</span>
+            <a class="archive-post-title" href="/2021/09/12/%E5%9C%A8Linux%E5%AE%89%E8%A3%9DCUDA/">在Linux安裝CUDA，並在Pytorch進行CUDA訓練</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/29</span>
+            <a class="archive-post-title" href="/2021/08/29/%E5%8F%AF%E8%A7%A3%E9%87%8B%E4%BA%BA%E5%B7%A5%E6%99%BA%E6%85%A7-explainable-ai/">可解釋人工智慧_explainable_ai</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/29</span>
+            <a class="archive-post-title" href="/2021/08/29/%E5%9F%BA%E6%96%BC%E6%B7%B1%E5%BA%A6%E5%AD%B8%E7%BF%92%E9%80%B2%E8%A1%8C%E8%B2%93%E8%88%87%E7%8B%97%E7%9A%84%E8%BE%A8%E8%AA%8D-Pytorch/">基於深度學習進行貓與狗的辨認(Pytorch)</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/28</span>
+            <a class="archive-post-title" href="/2021/08/28/C-%E7%89%A9%E4%BB%B6%E5%B0%8E%E5%90%91/">C++物件導向</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/28</span>
+            <a class="archive-post-title" href="/2021/08/28/%E5%9F%BA%E7%A4%8E%E6%BC%94%E7%AE%97%E6%B3%95-C/">基礎演算法(Algorithm)-C++</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/28</span>
+            <a class="archive-post-title" href="/2021/08/28/%E5%9F%BA%E7%A4%8E%E8%B3%87%E6%96%99%E7%B5%90%E6%A7%8B-C/">基礎資料結構(Data Structure)-C++</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/27</span>
+            <a class="archive-post-title" href="/2021/08/27/CSS/">CSS</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/27</span>
+            <a class="archive-post-title" href="/2021/08/27/HTML/">HTML</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/27</span>
+            <a class="archive-post-title" href="/2021/08/27/Linux%E5%9F%BA%E7%A4%8E%E4%BD%BF%E7%94%A8/">Linux基礎使用</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/27</span>
+            <a class="archive-post-title" href="/2021/08/27/MNIST%E6%89%8B%E5%AF%AB%E8%BE%A8%E8%AD%98-Pytorch-version/">MNIST手寫辨識(Pytorch version)</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/27</span>
+            <a class="archive-post-title" href="/2021/08/27/MNIST%E6%89%8B%E5%AF%AB%E8%BE%A8%E8%AD%98-TensorFlow-version/">MNIST手寫辨識(TensorFlow-version)</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/27</span>
+            <a class="archive-post-title" href="/2021/08/27/Numpy/">Numpy</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/27</span>
+            <a class="archive-post-title" href="/2021/08/27/Pandas/">Pandas</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/27</span>
+            <a class="archive-post-title" href="/2021/08/27/Scikit-Learn/">Scikit Learn</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/27</span>
+            <a class="archive-post-title" href="/2021/08/27/TensorFlow1%E5%9F%BA%E7%A4%8E%E4%BD%BF%E7%94%A8%E6%96%B9%E6%B3%95/">TensorFlow1基礎使用方法</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/27</span>
+            <a class="archive-post-title" href="/2021/08/27/%E9%81%B7%E7%A7%BB%E5%AD%B8%E7%BF%92-%E5%9C%96%E7%89%87%E8%BE%A8%E8%AD%98/">遷移學習-圖片辨識</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/27</span>
+            <a class="archive-post-title" href="/2021/08/27/APCS%E5%AF%A6%E4%BD%9C%E9%A1%8C/">APCS實作題</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/27</span>
+            <a class="archive-post-title" href="/2021/08/27/Matplotlib/">Matplotlib</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/27</span>
+            <a class="archive-post-title" href="/2021/08/27/%E5%9F%BA%E7%A4%8ETensorFlow2%E8%88%87%E6%A9%9F%E5%99%A8%E5%AD%B8%E7%BF%92/">基礎TensorFlow1和2與機器學習</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/27</span>
+            <a class="archive-post-title" href="/2021/08/27/%E5%9F%BA%E7%A4%8Epytorch%E8%88%87%E6%A9%9F%E5%99%A8%E5%AD%B8%E7%BF%92/">基礎pytorch與機器學習</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/24</span>
+            <a class="archive-post-title" href="/2021/08/24/OpenCV/">OpenCV</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/24</span>
+            <a class="archive-post-title" href="/2021/08/24/pipenv/">pipenv</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/24</span>
+            <a class="archive-post-title" href="/2021/06/24/Linked-List/">Linked_List</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/24</span>
+            <a class="archive-post-title" href="/2021/06/24/Stringstream/">Stringstream</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/24</span>
+            <a class="archive-post-title" href="/2021/06/24/Web/">Web</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/24</span>
+            <a class="archive-post-title" href="/2021/06/24/ctime/">ctime</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/24</span>
+            <a class="archive-post-title" href="/2021/06/24/%E6%8C%87%E6%A8%99/">指標</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/24</span>
+            <a class="archive-post-title" href="/2021/06/24/%E9%81%8B%E7%AE%97%E5%AD%90%E9%87%8D%E8%BC%89/">運算子重載</a>
+        </li>
+    
+    </div>
+</div>
+
+        <div class="sidebar-panel-tags">
+    <div class="sidebar-tags-name">
+        
+            <span class="sidebar-tag-name" data-tags="C++">
+                <span class="iconfont-archer">&#xe606;</span>
+                C++
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="OOP">
+                <span class="iconfont-archer">&#xe606;</span>
+                OOP
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="CSS">
+                <span class="iconfont-archer">&#xe606;</span>
+                CSS
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="web dev">
+                <span class="iconfont-archer">&#xe606;</span>
+                web dev
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="HTML">
+                <span class="iconfont-archer">&#xe606;</span>
+                HTML
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="Linux">
+                <span class="iconfont-archer">&#xe606;</span>
+                Linux
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="Pytorch">
+                <span class="iconfont-archer">&#xe606;</span>
+                Pytorch
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="Machine Learning">
+                <span class="iconfont-archer">&#xe606;</span>
+                Machine Learning
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="TensorFlow2">
+                <span class="iconfont-archer">&#xe606;</span>
+                TensorFlow2
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="Python">
+                <span class="iconfont-archer">&#xe606;</span>
+                Python
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="Scikit Learn">
+                <span class="iconfont-archer">&#xe606;</span>
+                Scikit Learn
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="TensorFlow1">
+                <span class="iconfont-archer">&#xe606;</span>
+                TensorFlow1
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="Math theorem">
+                <span class="iconfont-archer">&#xe606;</span>
+                Math theorem
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="algorithm">
+                <span class="iconfont-archer">&#xe606;</span>
+                algorithm
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="Data structure">
+                <span class="iconfont-archer">&#xe606;</span>
+                Data structure
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="Transfer Learning">
+                <span class="iconfont-archer">&#xe606;</span>
+                Transfer Learning
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="APCS">
+                <span class="iconfont-archer">&#xe606;</span>
+                APCS
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="TensorFlow">
+                <span class="iconfont-archer">&#xe606;</span>
+                TensorFlow
+            </span>
+        
+    </div>
+    <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>
+    <div class="tag-load-fail" style="display: none; color: #ccc; font-size: 0.6rem;">
+        缺失模块，请参考主题文档进行安装配置：https://github.com/fi3ework/hexo-theme-archer#%E5%AE%89%E8%A3%85%E4%B8%BB%E9%A2%98
+    </div> 
+    <div class="sidebar-tags-list"></div>
+</div>
+
+        <div class="sidebar-panel-categories">
+    <div class="sidebar-categories-name">
+    
+    </div>
+    <div class="iconfont-archer sidebar-categories-empty">&#xe678;</div>
+    <div class="sidebar-categories-list"></div>
+</div>
+
+    </div>
+</div>
+
+        <!-- site-meta -->
+        <script>
+    var siteMetaRoot = "/"
+    if (siteMetaRoot === "undefined") {
+        siteMetaRoot = '/'
+    }
+    var siteMeta = {
+        url: "https://maxwutw.github.io",
+        root: siteMetaRoot,
+        author: "Max Wu"
+    }
+</script>
+
+        <!-- import experimental options here -->
+        <!-- Custom Font -->
+
+
+        <!-- main func -->
+        <script src="/scripts/main.js?v=20211217"></script>
+        <!-- dark mode -->
+        <script src="/scripts/dark.js?v=20211217"></script>
+        <!-- fancybox -->
+        <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js" defer></script>
+        <!-- algolia -->
+        
+        <!-- busuanzi -->
+        
+            <script src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" async></script>
+        
+        <!-- CNZZ -->
+        
+        <!-- async load share.js -->
+        
+        <!-- mermaid -->
+        
+    </body>
+</html>

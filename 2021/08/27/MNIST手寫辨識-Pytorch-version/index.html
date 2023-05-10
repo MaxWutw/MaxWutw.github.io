@@ -1,0 +1,1512 @@
+<!DOCTYPE html>
+<html lang="en">
+    <!-- title -->
+
+
+    
+
+<!-- keywords -->
+
+
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="author" content="Max Wu">
+    <meta name="renderer" content="webkit">
+    <meta name="copyright" content="Max Wu">
+    
+        <meta name="keywords" content="hexo,hexo-theme,hexo-blog">
+    
+    <meta name="description" content="">
+    <meta name="description" content="此文章是介紹MNIST手寫辨識的作法及知識，分為兩個版本，一個為Pytorch版本，另一個為Tensorflow版本，觀念的部分大致相同，比較不一樣的地會是在實作的部分，那廢話不多說，開始吧！ Contents 我會一步一步的講解每一個步驟，有些步驟是幫助我們做理解的，但對最後實作結果沒有明顯幫助，在文章最後面會有完整程式碼，而某些步驟只是讓我們更了解實作過程的那些程式碼不會被包含在內。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="MNIST手寫辨識(Pytorch version)">
+<meta property="og:url" content="https://maxwutw.github.io/2021/08/27/MNIST%E6%89%8B%E5%AF%AB%E8%BE%A8%E8%AD%98-Pytorch-version/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="此文章是介紹MNIST手寫辨識的作法及知識，分為兩個版本，一個為Pytorch版本，另一個為Tensorflow版本，觀念的部分大致相同，比較不一樣的地會是在實作的部分，那廢話不多說，開始吧！ Contents 我會一步一步的講解每一個步驟，有些步驟是幫助我們做理解的，但對最後實作結果沒有明顯幫助，在文章最後面會有完整程式碼，而某些步驟只是讓我們更了解實作過程的那些程式碼不會被包含在內。">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://i.imgur.com/Roe99YB.png">
+<meta property="og:image" content="https://i.imgur.com/np0pmAr.png">
+<meta property="article:published_time" content="2021-08-27T11:30:14.000Z">
+<meta property="article:modified_time" content="2023-05-10T15:23:56.045Z">
+<meta property="article:author" content="Max Wu">
+<meta property="article:tag" content="Pytorch">
+<meta property="article:tag" content="Machine Learning">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.imgur.com/Roe99YB.png">
+    <meta http-equiv="Cache-control" content="no-cache">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <link rel="icon" href="/assets/favicon.ico">
+    
+    <title>MNIST手寫辨識(Pytorch version) · Max Coding blog</title>
+    <!-- /*! loadCSS. [c]2017 Filament Group, Inc. MIT License */
+/* This file is meant as a standalone workflow for
+- testing support for link[rel=preload]
+- enabling async CSS loading in browsers that do not support rel=preload
+- applying rel preload css once loaded, whether supported or not.
+*/ -->
+<script>
+    (function (w) {
+        'use strict'
+        // rel=preload support test
+        if (!w.loadCSS) {
+            w.loadCSS = function () {}
+        }
+        // define on the loadCSS obj
+        var rp = (loadCSS.relpreload = {})
+        // rel=preload feature support test
+        // runs once and returns a function for compat purposes
+        rp.support = (function () {
+            var ret
+            try {
+                ret = w.document.createElement('link').relList.supports('preload')
+            } catch (e) {
+                ret = false
+            }
+            return function () {
+                return ret
+            }
+        })()
+
+        // if preload isn't supported, get an asynchronous load by using a non-matching media attribute
+        // then change that media back to its intended value on load
+        rp.bindMediaToggle = function (link) {
+            // remember existing media attr for ultimate state, or default to 'all'
+            var finalMedia = link.media || 'all'
+
+            function enableStylesheet() {
+                link.media = finalMedia
+            }
+
+            // bind load handlers to enable media
+            if (link.addEventListener) {
+                link.addEventListener('load', enableStylesheet)
+            } else if (link.attachEvent) {
+                link.attachEvent('onload', enableStylesheet)
+            }
+
+            // Set rel and non-applicable media type to start an async request
+            // note: timeout allows this to happen async to let rendering continue in IE
+            setTimeout(function () {
+                link.rel = 'stylesheet'
+                link.media = 'only x'
+            })
+            // also enable media after 3 seconds,
+            // which will catch very old browsers (android 2.x, old firefox) that don't support onload on link
+            setTimeout(enableStylesheet, 3000)
+        }
+
+        // loop through link elements in DOM
+        rp.poly = function () {
+            // double check this to prevent external calls from running
+            if (rp.support()) {
+                return
+            }
+            var links = w.document.getElementsByTagName('link')
+            for (var i = 0; i < links.length; i++) {
+                var link = links[i]
+                // qualify links to those with rel=preload and as=style attrs
+                if (
+                    link.rel === 'preload' &&
+                    link.getAttribute('as') === 'style' &&
+                    !link.getAttribute('data-loadcss')
+                ) {
+                    // prevent rerunning on link
+                    link.setAttribute('data-loadcss', true)
+                    // bind listeners to toggle media back
+                    rp.bindMediaToggle(link)
+                }
+            }
+        }
+
+        // if unsupported, run the polyfill
+        if (!rp.support()) {
+            // run once at least
+            rp.poly()
+
+            // rerun poly on an interval until onload
+            var run = w.setInterval(rp.poly, 500)
+            if (w.addEventListener) {
+                w.addEventListener('load', function () {
+                    rp.poly()
+                    w.clearInterval(run)
+                })
+            } else if (w.attachEvent) {
+                w.attachEvent('onload', function () {
+                    rp.poly()
+                    w.clearInterval(run)
+                })
+            }
+        }
+
+        // commonjs
+        if (typeof exports !== 'undefined') {
+            exports.loadCSS = loadCSS
+        } else {
+            w.loadCSS = loadCSS
+        }
+    })(typeof global !== 'undefined' ? global : this)
+</script>
+
+    <style type="text/css">
+    @font-face {
+        font-family: 'Oswald-Regular';
+        src: url("/font/Oswald-Regular.ttf");
+    }
+
+    body {
+        margin: 0;
+    }
+
+    header,
+    footer,
+    .back-top,
+    .sidebar,
+    .container,
+    .site-intro-meta,
+    .toc-wrapper {
+        display: none;
+    }
+
+    .site-intro {
+        position: relative;
+        z-index: 3;
+        width: 100%;
+        /* height: 50vh; */
+        overflow: hidden;
+    }
+
+    .site-intro-placeholder {
+        position: absolute;
+        z-index: -2;
+        top: 0;
+        left: 0;
+        width: calc(100% + 300px);
+        height: 100%;
+        background: repeating-linear-gradient(-45deg, #444 0, #444 80px, #333 80px, #333 160px);
+        background-position: center center;
+        transform: translate3d(-226px, 0, 0);
+        animation: gradient-move 2.5s ease-out 0s infinite;
+    }
+
+    @keyframes gradient-move {
+        0% {
+            transform: translate3d(-226px, 0, 0);
+        }
+        100% {
+            transform: translate3d(0, 0, 0);
+        }
+    }
+</style>
+
+    <link rel="preload" href="/css/style.css?v=20211217" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="preload" href="/css/dark.css?v=20211217" as="style">
+    <link rel="stylesheet" href="/css/dark.css">
+    <link rel="stylesheet" href="/css/mobile.css?v=20211217" media="(max-width: 960px)">
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js" as="script">
+    <link rel="preload" href="/scripts/main.js?v=20211217" as="script">
+    <link rel="preload" href="/scripts/dark.js?v=20211217" as="script">
+    <link rel="preload" href="/font/Oswald-Regular.ttf" as="font" crossorigin>
+    <link rel="preload" href="https://at.alicdn.com/t/font_327081_1dta1rlogw17zaor.woff" as="font" crossorigin>
+    <!-- algolia -->
+    
+    <!-- 百度统计  -->
+    
+    <!-- 谷歌统计  -->
+    
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --><meta name="generator" content="Hexo 6.3.0"></head>
+
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+    <script type="text/javascript">
+        if (typeof window.$ == undefined) {
+            console.warn('jquery load from jsdelivr failed, will load local script')
+            document.write('<script src="/lib/jquery.min.js" />')
+        }
+    </script>
+    
+        <body class="post-body">
+    
+        <!-- header -->
+        <header class="header header-mobile">
+    <!-- top read progress line -->
+    <div class="header-element">
+        <div class="read-progress"></div>
+    </div>
+    <!-- sidebar menu button -->
+    <div class="header-element">
+        
+            <div class="header-sidebar-menu">
+        
+            
+                <div style="padding-left: 1px;">&#xe775;</div>
+            
+        </div>
+    </div>
+    <!-- header actions -->
+    <div class="header-actions">
+        <!-- theme mode switch button -->
+        <span class="header-theme-btn header-element">
+            <i class="fas fa-adjust"></i>
+        </span>
+        <!-- back to home page text -->
+        <span class="home-link header-element">
+            <a href=/>Max Coding blog</a>
+        </span>
+    </div>
+    <!-- toggle banner for post layout -->
+    
+        
+            <div class="banner">
+        
+            <div class="blog-title header-element">
+                <a href="/">Max Coding blog</a>
+            </div>
+            <div class="post-title header-element">
+                <a href="#" class="post-name">MNIST手寫辨識(Pytorch version)</a>
+            </div>
+        </div>
+    
+</header>
+
+        <!-- fixed footer -->
+        <footer class="footer-fixed">
+    <!-- back to top button -->
+    <div class="footer-fixed-element">
+        
+            <div class="back-top back-top-hidden">
+        
+        
+            <div>&#xe639;</div>
+        
+        </div>
+    </div>
+</footer>
+
+        <!-- wrapper -->
+        <div class="wrapper">
+            <div class="site-intro" style="
+
+
+
+
+
+
+
+    height:50vh;
+
+">
+    
+    <!-- 主页  -->
+    
+        
+    <!-- 404页  -->
+    
+    <div class="site-intro-placeholder"></div>
+    <div class="site-intro-img" style="background-image: url(/intro/post-bg.jpg)"></div>
+    <div class="site-intro-meta">
+        <!-- 标题  -->
+        <h1 class="intro-title">
+            <!-- 主页  -->
+            
+                MNIST手寫辨識(Pytorch version)
+            <!-- 404 -->
+            
+        </h1>
+        <!-- 副标题 -->
+        <p class="intro-subtitle">
+            <!-- 主页副标题  -->
+            
+                
+            <!-- 404 -->
+            
+        </p>
+        <!-- 文章页 meta -->
+        
+            <div class="post-intros">
+                <!-- 文章页标签  -->
+                
+                    <div class= post-intro-tags >
+    
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="Pytorch">Pytorch</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="Machine Learning">Machine Learning</a>
+    
+</div>
+
+                
+                <!-- 文章字数统计 -->
+                
+                <div class="post-intro-meta">
+                    <!-- 撰写日期 -->
+                    <span class="iconfont-archer post-intro-calander">&#xe676;</span>
+                    <span class="post-intro-time">2021/08/27</span>
+                    <!-- busuanzi -->
+                    
+                        <span id="busuanzi_container_page_pv" class="busuanzi-pv">
+                            <span class="iconfont-archer post-intro-busuanzi">&#xe602;</span>
+                            <span id="busuanzi_value_page_pv"></span>
+                        </span>
+                    
+                    <!-- 文章分享 -->
+                    <span class="share-wrapper">
+                        <span class="iconfont-archer share-icon">&#xe71d;</span>
+                        <span class="share-text">Share</span>
+                        <ul class="share-list">
+                            <li class="iconfont-archer share-qr" data-type="qr">&#xe75b;
+                                <div class="share-qrcode"></div>
+                            </li>
+                            <li class="iconfont-archer" data-type="weibo">&#xe619;</li>
+                            <li class="iconfont-archer" data-type="qzone">&#xe62e;</li>
+                            <li class="iconfont-archer" data-type="twitter">&#xe634;</li>
+                            <li class="iconfont-archer" data-type="facebook">&#xe67a;</li>
+                        </ul>
+                    </span>
+                </div>
+            </div>
+        
+    </div>
+</div>
+
+            <script>
+  // get user agent
+  function getBrowserVersions() {
+    var u = window.navigator.userAgent
+    return {
+      userAgent: u,
+      trident: u.indexOf('Trident') > -1, //IE内核
+      presto: u.indexOf('Presto') > -1, //opera内核
+      webKit: u.indexOf('AppleWebKit') > -1, //苹果、谷歌内核
+      gecko: u.indexOf('Gecko') > -1 && u.indexOf('KHTML') == -1, //火狐内核
+      mobile: !!u.match(/AppleWebKit.*Mobile.*/), //是否为移动终端
+      ios: !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/), //ios终端
+      android: u.indexOf('Android') > -1 || u.indexOf('Linux') > -1, //android终端或者uc浏览器
+      iPhone: u.indexOf('iPhone') > -1 || u.indexOf('Mac') > -1, //是否为iPhone或者安卓QQ浏览器
+      iPad: u.indexOf('iPad') > -1, //是否为iPad
+      webApp: u.indexOf('Safari') == -1, //是否为web应用程序，没有头部与底部
+      weixin: u.indexOf('MicroMessenger') == -1, //是否为微信浏览器
+      uc: u.indexOf('UCBrowser') > -1, //是否为android下的UC浏览器
+    }
+  }
+  var browser = {
+    versions: getBrowserVersions(),
+  }
+  console.log('userAgent: ' + browser.versions.userAgent)
+
+  // callback
+  function fontLoaded() {
+    console.log('font loaded')
+    if (document.getElementsByClassName('site-intro-meta')) {
+      document
+        .getElementsByClassName('intro-title')[0]
+        .classList.add('intro-fade-in')
+      document
+        .getElementsByClassName('intro-subtitle')[0]
+        .classList.add('intro-fade-in')
+      var postIntros = document.getElementsByClassName('post-intros')[0]
+      if (postIntros) {
+        postIntros.classList.add('post-fade-in')
+      }
+    }
+  }
+
+  // UC不支持跨域，所以直接显示
+  function asyncCb() {
+    if (browser.versions.uc) {
+      console.log('UCBrowser')
+      fontLoaded()
+    } else {
+      WebFont.load({
+        custom: {
+          families: ['Oswald-Regular'],
+        },
+        loading: function () {
+          // 所有字体开始加载
+          // console.log('font loading');
+        },
+        active: function () {
+          // 所有字体已渲染
+          fontLoaded()
+        },
+        inactive: function () {
+          // 字体预加载失败，无效字体或浏览器不支持加载
+          console.log('inactive: timeout')
+          fontLoaded()
+        },
+        timeout: 5000, // Set the timeout to two seconds
+      })
+    }
+  }
+
+  function asyncErr() {
+    console.warn('script load from CDN failed, will load local script')
+  }
+
+  // load webfont-loader async, and add callback function
+  function async(u, cb, err) {
+    var d = document,
+      t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0]
+    o.src = u
+    if (cb) {
+      o.addEventListener(
+        'load',
+        function (e) {
+          cb(null, e)
+        },
+        false
+      )
+    }
+    if (err) {
+      o.addEventListener(
+        'error',
+        function (e) {
+          err(null, e)
+        },
+        false
+      )
+    }
+    s.parentNode.insertBefore(o, s)
+  }
+
+  var asyncLoadWithFallBack = function (arr, success, reject) {
+    var currReject = function () {
+      reject()
+      arr.shift()
+      if (arr.length) async(arr[0], success, currReject)
+    }
+
+    async(arr[0], success, currReject)
+  }
+
+  asyncLoadWithFallBack(
+    [
+      'https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js',
+      'https://cdn.bootcss.com/webfont/1.6.28/webfontloader.js',
+      "/lib/webfontloader.min.js",
+    ],
+    asyncCb,
+    asyncErr
+  )
+</script>
+
+            <img class="loading" src="/assets/loading.svg" style="display: block; margin: 6rem auto 0 auto; width: 6rem; height: 6rem;" />
+            <div class="container container-unloaded">
+                <main class="main post-page">
+    <article class="article-entry">
+        <p>此文章是介紹MNIST手寫辨識的作法及知識，分為兩個版本，一個為Pytorch版本，另一個為Tensorflow版本，觀念的部分大致相同，比較不一樣的地會是在實作的部分，那廢話不多說，開始吧！</p>
+<h2 id="contents">Contents</h2>
+<p>我會一步一步的講解每一個步驟，有些步驟是幫助我們做理解的，但對最後實作結果沒有明顯幫助，在文章最後面會有完整程式碼，而某些步驟只是讓我們更了解實作過程的那些程式碼不會被包含在內。
+<span id="more"></span></p>
+<h2 id="查看是否有cuda">1.查看是否有cuda</h2>
+<p>如果要使用cuda，需先有GPUs的電腦，如果有，會大大提升運算速度，檢查方式如以下：
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> torch.cuda.is_available():</span><br><span class="line">  <span class="built_in">print</span>(<span class="literal">True</span>)</span><br><span class="line"><span class="keyword">else</span>:</span><br><span class="line">  <span class="built_in">print</span>(<span class="literal">False</span>)</span><br></pre></td></tr></table></figure>
+輸出如果是True則代表可以使用cuda，反之如果輸出是False，代表只能使用cpu計算。</p>
+<h2 id="引用第三方套件">2. 引用第三方套件</h2>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> torch</span><br><span class="line"><span class="keyword">from</span> torch.utils <span class="keyword">import</span> data <span class="keyword">as</span> data_</span><br><span class="line"><span class="keyword">import</span> torch.nn <span class="keyword">as</span> nn</span><br><span class="line"><span class="keyword">from</span> torch.autograd <span class="keyword">import</span> Variable</span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"><span class="keyword">import</span> torchvision</span><br></pre></td></tr></table></figure>
+<p>首先引入pytorch，接著引入torch.utils.data，由於我們在做影像辨識大多都會用到CNN(Cnvolutional
+Neural Network)，而此時數據量非常大，如果要做fully convolutional
+networks會花很多時間，然而在近代比較沒有這個問題，因為硬體設備的進步，進行運算的速度以及運算量的大小皆大大提升了，但礙於我的Mac和ASUS沒有cuda，也就是gpu計算，所以只能用cpu計算，這樣運算速度還是稍慢了一點，所以這邊會使用batch
+training。然後引用torch.nn，裡面有許多已經寫好的neural
+network和activation
+function。由於我們會使用到變數，這邊引用pytorch的Variable。為了能達成數據可視化，這邊會引用matplotlib。最後引用torchvision，裡面有很多常用的dataset、image
+transform、 Model Architecture等資料。</p>
+<h2 id="hyperparameter">3. hyperparameter</h2>
+<p>所謂的hyperparameter超參數就是給設計者自由設定的參數，而變數名稱通常使用大寫，然而資料和變數名稱皆沒有硬性規定。
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">EPOCH = <span class="number">1</span></span><br><span class="line">BATCH_SIZE = <span class="number">50</span></span><br><span class="line">LR = <span class="number">0.001</span></span><br><span class="line">DOWNLOAD_MNIST = <span class="literal">False</span></span><br></pre></td></tr></table></figure>
+這裡只特別講DOWNLOAD_MNIST，其他超參數的介紹請看前幾篇pytorch與機器學習。我們定義DOWNLOAD_MNIST是一個bool，如果我們的MNIST已經被下載過了就設為False，如果沒有下載過就設為True。</p>
+<h2 id="查看mnist照片">4. 查看MNIST照片</h2>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">train_data = torchvision.datasets.MNIST(root = <span class="string">&#x27;./mnist&#x27;</span>,train = <span class="literal">True</span>,transform = torchvision.transforms.ToTensor(),download = DOWNLOAD_MNIST)</span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(train_data.train_data.size())</span><br><span class="line"><span class="built_in">print</span>(train_data.train_labels.size())</span><br><span class="line">plt.ion()</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">11</span>):</span><br><span class="line">  plt.imshow(train_data.train_data[i].numpy(), cmap = <span class="string">&#x27;gray&#x27;</span>)</span><br><span class="line">  plt.title(<span class="string">&#x27;%i&#x27;</span> % train_data.train_labels[i])</span><br><span class="line">  plt.pause(<span class="number">0.5</span>)</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
+<p>首先我們設一個變數叫train_data，裡面存放MNIST的資料，首先第一個參數是我們MNIST資料存放的位置，第二個參數代表我們要存放哪種資料，在MNIST裡有兩種，一種為training
+data，另一種為testing data，然而training
+data的數量比較多，有60000張，而testing
+data只有10000張，我們當然要選擇資料量大的數據，幫助我們做訓練，第三個參數是將我們的資料轉成Tensor（張量），第四個參數代表我們是否要下載MNIST，這邊就會用到之前DOWNLOAD_MNIST。</p>
+<p>接著將我們的MNIST的大小輸出，可看到我們的MNIST的training
+data有60000張，而每張大小是28乘28。
+接著利用matplotlib將MNIST的圖片輸出，由於我想一次看到10張圖片，所以這邊使用plt.pause(0.5)，這樣它會每0.5秒顯示一張圖片。</p>
+<h3 id="照片樣子">照片樣子</h3>
+<p><img src="https://i.imgur.com/Roe99YB.png" /> <img
+src="https://i.imgur.com/0opvw6H.png" /></p>
+<h2 id="數據處理">5. 數據處理</h2>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">train_loader = data_.DataLoader(dataset = train_data, batch_size = BATCH_SIZE, shuffle = <span class="literal">True</span>,num_workers = <span class="number">2</span>)</span><br><span class="line"></span><br><span class="line">test_data = torchvision.datasets.MNIST(root = <span class="string">&#x27;./mnist/&#x27;</span>, train = <span class="literal">False</span>)</span><br><span class="line">test_x = torch.unsqueeze(test_data.test_data, dim = <span class="number">1</span>).<span class="built_in">type</span>(torch.FloatTensor)[:<span class="number">2000</span>]/<span class="number">255.</span></span><br><span class="line">test_y = test_data.test_labels[:<span class="number">2000</span>]</span><br></pre></td></tr></table></figure>
+<p>我們設一個變數叫train_loader，代表稍後要做batch
+training，那參數的部分可以去看之前的batch
+training，這邊就不多做贅述，接著是我們的testing
+data，我們從剛才下載好的root取資料，接著我社一個變數叫test_x，然後使用unsqueeze來增加一個維度，並將資料轉成TensorFloat的形式，這邊要除以255，代表我要將資料縮小到0和1之間，因為只做黑白判斷，而一個彩色的圖片的最大值是255，這才是我們要除以255的原因。然後建立一個test_y，當作testing的結果。</p>
+<h2 id="建立卷積神經網路cnn">6. 建立卷積神經網路(CNN)</h2>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">CNN</span>(nn.Module):</span><br><span class="line">  <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self</span>):</span><br><span class="line">    <span class="built_in">super</span>(CNN, self).__init__()</span><br><span class="line">    self.conv1 = nn.Sequential(</span><br><span class="line">        nn.Conv2d(in_channels = <span class="number">1</span>, out_channels = <span class="number">16</span>, kernel_size = <span class="number">5</span>, stride = <span class="number">1</span>, padding = <span class="number">2</span>,),<span class="comment"># stride = 1, padding = (kernel_size-1)/2 = (5-1)/2</span></span><br><span class="line">        nn.ReLU(),<span class="comment"># (16, 28, 28)</span></span><br><span class="line">        nn.MaxPool2d(kernel_size = <span class="number">2</span>),<span class="comment"># (16, 14, 14)</span></span><br><span class="line">    )</span><br><span class="line">    self.conv2 = nn.Sequential(<span class="comment"># (16, 14, 14)</span></span><br><span class="line">        nn.Conv2d(<span class="number">16</span>, <span class="number">32</span>, <span class="number">5</span>, <span class="number">1</span>, <span class="number">2</span>),<span class="comment"># (32, 14, 14)</span></span><br><span class="line">        nn.ReLU(),<span class="comment"># (32,14,14)</span></span><br><span class="line">        nn.MaxPool2d(<span class="number">2</span>)<span class="comment"># (32, 7, 7)</span></span><br><span class="line">    )</span><br><span class="line">    self.out = nn.Linear(<span class="number">32</span>*<span class="number">7</span>*<span class="number">7</span>, <span class="number">10</span>)</span><br><span class="line"></span><br><span class="line">  <span class="keyword">def</span> <span class="title function_">forward</span>(<span class="params">self, x</span>):</span><br><span class="line">    x = self.conv1(x)</span><br><span class="line">    x = self.conv2(x)</span><br><span class="line">    x = x.view(x.size(<span class="number">0</span>), -<span class="number">1</span>)</span><br><span class="line">    output = self.out(x)</span><br><span class="line">    <span class="keyword">return</span> output, x</span><br><span class="line"></span><br><span class="line">cnn = CNN()</span><br><span class="line"><span class="built_in">print</span>(cnn)</span><br></pre></td></tr></table></figure>
+<p>來看這部分前請先觀看李宏毅教授介紹關於CNN的教學，教的非常好，清晰易懂。
+https://www.youtube.com/watch?v=OP5HcXJg2Aw&amp;list=PLJV_el3uVTsMhtt7_Y6sgTHGHp1Vb2P2J&amp;index=9
+首先繼承pytorch的nn.Module這個class，接著我們使用Sequential()這個容器搭建我們第一次CNN，而我們在做CNN時有三個主要步驟，第一個是我們的卷積層，而第一個參數代表我們輸入照片的channel有幾個，由於我們在做MNIST時是利用黑白相片在做的，所以這邊的channel數是1，第二個參數代表我們輸出的時候是幾層channel，其實輸入的image會經過filter的判斷，如果我們的filter的數量越多，我們的out_channels會越大。接著是kernel_size，kernel_size是指我們在做pattern的時候的範圍大小，而stride代表我們每次做pattern是要往旁邊幾格，最後是padding，padding是說當我們在做pattern的時候，當kernel超出image的範圍的時候我們要補的數值。
+第二步是進入激勵函數，做一些非線性的調整，第三步也是最後一步，我們要進行pooling的動作，pooling有好幾種，我們這邊使用max
+pooling，所謂的max
+pooling就是找目前數據中的數值最大的為代表，然後取出，其他較小的值就拿掉（不做考慮），此時我們圖像大小可以減小許多。
+我們做兩次上面的動作，只是在conv2的時候有些參數需要微調，由於上一層的out_channels是16，這一層的in_channels就要變成16，那此時out_channels會變成32，關原因和conv1一樣，剩下的參數接不用變，只是要注意，pooling的時候會使圖像大小改變，我們的image也因此從原本的28*28變成7*7，所以在傳資料的時候要注意。
+再來我們將照片的維度打成二維，方便後面做計算，最後在做正向傳遞，我們利用view將原本的batch和tensor做reshape，-1這個參數代表自動判斷，然後傳入out()，最後再output，就完成我們的神經網路了。</p>
+<h3 id="輸出cnn的流程">輸出CNN的流程</h3>
+<p><img src="https://i.imgur.com/np0pmAr.png" />
+這邊只是幫助理解而已，對於整個實作沒有影響。</p>
+<h2 id="optimization-loss-function">7. optimization &amp; loss
+function</h2>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">optimization = torch.optim.Adam(cnn.parameters(), lr = LR)</span><br><span class="line">loss_func = nn.CrossEntropyLoss()</span><br></pre></td></tr></table></figure>
+<p>這裡使用的optimizer是Adam，它的效率比SGD好太多了，接著loss
+function一樣是使用跟classification一樣的cross entropy。</p>
+<h2 id="開始訓練training">8. 開始訓練(training)</h2>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> epoch <span class="keyword">in</span> <span class="built_in">range</span>(EPOCH):</span><br><span class="line">  <span class="keyword">for</span> step, (batch_x, batch_y) <span class="keyword">in</span> <span class="built_in">enumerate</span>(train_loader):</span><br><span class="line">    bx = Variable(batch_x)</span><br><span class="line">    by = Variable(batch_y)</span><br><span class="line">    output = cnn(bx)[<span class="number">0</span>]</span><br><span class="line">    loss = loss_func(output, by)</span><br><span class="line">    optimization.zero_grad()</span><br><span class="line">    loss.backward()</span><br><span class="line">    optimization.step()</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> step % <span class="number">50</span> == <span class="number">0</span>:</span><br><span class="line">        test_output, last_layer = cnn(test_x)</span><br><span class="line">        pred_y = torch.<span class="built_in">max</span>(test_output, <span class="number">1</span>)[<span class="number">1</span>].data.numpy()</span><br><span class="line">        accuracy = <span class="built_in">float</span>((pred_y == test_y.data.numpy()).astype(<span class="built_in">int</span>).<span class="built_in">sum</span>()) / <span class="built_in">float</span>(test_y.size(<span class="number">0</span>))</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&#x27;Epoch: &#x27;</span>, epoch, <span class="string">&#x27;| train loss: %.4f&#x27;</span> % loss.data.numpy(), <span class="string">&#x27;| test accuracy: %.2f&#x27;</span> % accuracy)</span><br></pre></td></tr></table></figure>
+<p>這邊的訓練和之前的訓練作法一樣，這邊就不多贅述了，如果有需要，可以回去看之前的文章。</p>
+<h2 id="testing">9. testing</h2>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">test_output, _ = cnn(test_x[:<span class="number">10</span>])</span><br><span class="line">pred_y = torch.<span class="built_in">max</span>(test_output, <span class="number">1</span>)[<span class="number">1</span>].data.numpy()</span><br><span class="line"><span class="built_in">print</span>(pred_y, <span class="string">&#x27;prediction number&#x27;</span>)</span><br><span class="line"><span class="built_in">print</span>(test_y[:<span class="number">10</span>].numpy(), <span class="string">&#x27;real number&#x27;</span>)</span><br></pre></td></tr></table></figure>
+<p>這邊我將前面已經存好的testing
+data拿10份出來做testing，在predict的時候是使用機率的方式，所以用torch.max()找機率比較大的當答案，最後將predict的結果和答案輸出，就完成這次的實作。</p>
+<h2 id="總程式碼第一次實做版本">總程式碼（第一次實做版本）</h2>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> torch</span><br><span class="line"><span class="keyword">from</span> torch.utils <span class="keyword">import</span> data <span class="keyword">as</span> data_</span><br><span class="line"><span class="keyword">import</span> torch.nn <span class="keyword">as</span> nn</span><br><span class="line"><span class="keyword">from</span> torch.autograd <span class="keyword">import</span> Variable</span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"><span class="keyword">import</span> torchvision</span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line"></span><br><span class="line">EPOCH = <span class="number">1</span></span><br><span class="line">BATCH_SIZE = <span class="number">50</span></span><br><span class="line">LR = <span class="number">0.001</span></span><br><span class="line">DOWNLOAD_MNIST = <span class="literal">False</span></span><br><span class="line"></span><br><span class="line">train_data = torchvision.datasets.MNIST(root = <span class="string">&#x27;./mnist&#x27;</span>,train = <span class="literal">True</span>,transform = torchvision.transforms.ToTensor(),download = DOWNLOAD_MNIST)</span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(train_data.train_data.size())</span><br><span class="line"><span class="built_in">print</span>(train_data.train_labels.size())</span><br><span class="line">plt.ion()</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">11</span>):</span><br><span class="line">  plt.imshow(train_data.train_data[i].numpy(), cmap = <span class="string">&#x27;gray&#x27;</span>)</span><br><span class="line">  plt.title(<span class="string">&#x27;%i&#x27;</span> % train_data.train_labels[i])</span><br><span class="line">  plt.pause(<span class="number">0.5</span>)</span><br><span class="line">plt.show()</span><br><span class="line"></span><br><span class="line">train_loader = data_.DataLoader(dataset = train_data, batch_size = BATCH_SIZE, shuffle = <span class="literal">True</span>,num_workers = <span class="number">2</span>)</span><br><span class="line"></span><br><span class="line">test_data = torchvision.datasets.MNIST(root = <span class="string">&#x27;./mnist/&#x27;</span>, train = <span class="literal">False</span>)</span><br><span class="line">test_x = torch.unsqueeze(test_data.test_data, dim = <span class="number">1</span>).<span class="built_in">type</span>(torch.FloatTensor)[:<span class="number">2000</span>]/<span class="number">255.</span></span><br><span class="line">test_y = test_data.test_labels[:<span class="number">2000</span>]</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">CNN</span>(nn.Module):</span><br><span class="line">  <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self</span>):</span><br><span class="line">    <span class="built_in">super</span>(CNN, self).__init__()</span><br><span class="line">    self.conv1 = nn.Sequential(</span><br><span class="line">        nn.Conv2d(in_channels = <span class="number">1</span>, out_channels = <span class="number">16</span>, kernel_size = <span class="number">5</span>, stride = <span class="number">1</span>, padding = <span class="number">2</span>,),<span class="comment"># stride = 1, padding = (kernel_size-1)/2 = (5-1)/2</span></span><br><span class="line">        nn.ReLU(),</span><br><span class="line">        nn.MaxPool2d(kernel_size = <span class="number">2</span>),</span><br><span class="line">    )</span><br><span class="line">    self.conv2 = nn.Sequential(</span><br><span class="line">        nn.Conv2d(<span class="number">16</span>, <span class="number">32</span>, <span class="number">5</span>, <span class="number">1</span>, <span class="number">2</span>),</span><br><span class="line">        nn.ReLU(),</span><br><span class="line">        nn.MaxPool2d(<span class="number">2</span>)</span><br><span class="line">    )</span><br><span class="line">    self.out = nn.Linear(<span class="number">32</span>*<span class="number">7</span>*<span class="number">7</span>, <span class="number">10</span>)</span><br><span class="line"></span><br><span class="line">  <span class="keyword">def</span> <span class="title function_">forward</span>(<span class="params">self, x</span>):</span><br><span class="line">    x = self.conv1(x)</span><br><span class="line">    x = self.conv2(x)</span><br><span class="line">    x = x.view(x.size(<span class="number">0</span>), -<span class="number">1</span>)</span><br><span class="line">    output = self.out(x)</span><br><span class="line">    <span class="keyword">return</span> output, x</span><br><span class="line"></span><br><span class="line">cnn = CNN()</span><br><span class="line"><span class="built_in">print</span>(cnn)</span><br><span class="line"></span><br><span class="line">optimization = torch.optim.Adam(cnn.parameters(), lr = LR)</span><br><span class="line">loss_func = nn.CrossEntropyLoss()</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> epoch <span class="keyword">in</span> <span class="built_in">range</span>(EPOCH):</span><br><span class="line">  <span class="keyword">for</span> step, (batch_x, batch_y) <span class="keyword">in</span> <span class="built_in">enumerate</span>(train_loader):</span><br><span class="line">    bx = Variable(batch_x)</span><br><span class="line">    by = Variable(batch_y)</span><br><span class="line">    output = cnn(bx)[<span class="number">0</span>]</span><br><span class="line">    loss = loss_func(output, by)</span><br><span class="line">    optimization.zero_grad()</span><br><span class="line">    loss.backward()</span><br><span class="line">    optimization.step()</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> step % <span class="number">50</span> == <span class="number">0</span>:</span><br><span class="line">        test_output, last_layer = cnn(test_x)</span><br><span class="line">        pred_y = torch.<span class="built_in">max</span>(test_output, <span class="number">1</span>)[<span class="number">1</span>].data.numpy()</span><br><span class="line">        accuracy = <span class="built_in">float</span>((pred_y == test_y.data.numpy()).astype(<span class="built_in">int</span>).<span class="built_in">sum</span>()) / <span class="built_in">float</span>(test_y.size(<span class="number">0</span>))</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&#x27;Epoch: &#x27;</span>, epoch, <span class="string">&#x27;| train loss: %.4f&#x27;</span> % loss.data.numpy(), <span class="string">&#x27;| test accuracy: %.2f&#x27;</span> % accuracy)</span><br><span class="line"></span><br><span class="line">test_output, _ = cnn(test_x[:<span class="number">10</span>])</span><br><span class="line">pred_y = torch.<span class="built_in">max</span>(test_output, <span class="number">1</span>)[<span class="number">1</span>].data.numpy()</span><br><span class="line"><span class="built_in">print</span>(pred_y, <span class="string">&#x27;prediction number&#x27;</span>)</span><br><span class="line"><span class="built_in">print</span>(test_y[:<span class="number">10</span>].numpy(), <span class="string">&#x27;real number&#x27;</span>)</span><br></pre></td></tr></table></figure>
+<h5 id="by-中和高中-吳振榮">by 中和高中 吳振榮</h5>
+
+    </article>
+    <!-- license -->
+    
+    <!-- paginator -->
+    <ul class="post-paginator">
+        <li class="next">
+            
+                <div class="nextSlogan">Next Post</div>
+                <a href="/2021/08/27/HTML/" title="HTML">
+                    <div class="nextTitle">HTML</div>
+                </a>
+            
+        </li>
+        <li class="previous">
+            
+                <div class="prevSlogan">Previous Post</div>
+                <a href="/2021/08/27/MNIST%E6%89%8B%E5%AF%AB%E8%BE%A8%E8%AD%98-TensorFlow-version/" title="MNIST手寫辨識(TensorFlow-version)">
+                    <div class="prevTitle">MNIST手寫辨識(TensorFlow-version)</div>
+                </a>
+            
+        </li>
+    </ul>
+    <!-- comment -->
+    
+        <div class="post-comment">
+            <!-- 来必力 City 版安装代码 -->
+
+
+            
+
+            
+
+            
+
+            <!-- utteranc评论 -->
+
+
+            <!-- partial('_partial/comment/changyan') -->
+            <!--PC版-->
+
+
+            
+            
+
+            
+
+        </div>
+    
+    <!-- timeliness note -->
+    <!-- idea from: https://hexo.fluid-dev.com/posts/hexo-injector/#%E6%96%87%E7%AB%A0%E6%97%B6%E6%95%88%E6%80%A7%E6%8F%90%E7%A4%BA -->
+    
+    <!-- Mathjax -->
+    
+        
+    <script>
+        MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+            }
+        };
+    </script>
+
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3.2.0/es5/tex-mml-chtml.js"></script>
+
+
+    
+</main>
+
+                <!-- profile -->
+                
+            </div>
+            <footer class="footer footer-unloaded">
+    <!-- social  -->
+    
+        <div class="social">
+            
+    
+        
+            
+                <a href="mailto:WuMax13@gmail.com" class="iconfont-archer email" title=email ></a>
+            
+        
+    
+        
+            
+                <a href="https://github.com/MaxWutw" class="iconfont-archer github" target="_blank" title=github></a>
+            
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+            
+                <a href="https://www.facebook.com/profile.php?id=100020738000412" class="iconfont-archer facebook" target="_blank" title=facebook></a>
+            
+        
+    
+        
+    
+        
+            
+                <a href="https://www.instagram.com/_wuzhenlong/" class="iconfont-archer instagram" target="_blank" title=instagram></a>
+            
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+
+
+        </div>
+    
+    <!-- powered by Hexo  -->
+    <div class="copyright">
+        <span id="hexo-power">Powered by <a href="https://hexo.io/" target="_blank">Hexo</a></span><span class="iconfont-archer power">&#xe635;</span><span id="theme-info">theme <a href="https://github.com/fi3ework/hexo-theme-archer" target="_blank">Archer</a></span>
+    </div>
+    <!-- website approve for Chinese user -->
+    
+    <!-- 不蒜子  -->
+    
+        <div class="busuanzi-container">
+            
+             
+                <span id="busuanzi_container_site_pv">PV: <span id="busuanzi_value_site_pv"></span> :)</span>
+            
+        </div>
+    	
+</footer>
+
+        </div>
+        <!-- toc -->
+        
+            <div class="toc-wrapper toc-wrapper-loding" style=
+
+
+
+
+
+
+
+    top:50vh;
+
+>
+                <div class="toc-catalog">
+                    <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
+                </div>
+                <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#contents"><span class="toc-number">1.</span> <span class="toc-text">Contents</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9F%A5%E7%9C%8B%E6%98%AF%E5%90%A6%E6%9C%89cuda"><span class="toc-number">2.</span> <span class="toc-text">1.查看是否有cuda</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BC%95%E7%94%A8%E7%AC%AC%E4%B8%89%E6%96%B9%E5%A5%97%E4%BB%B6"><span class="toc-number">3.</span> <span class="toc-text">2. 引用第三方套件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#hyperparameter"><span class="toc-number">4.</span> <span class="toc-text">3. hyperparameter</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9F%A5%E7%9C%8Bmnist%E7%85%A7%E7%89%87"><span class="toc-number">5.</span> <span class="toc-text">4. 查看MNIST照片</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%85%A7%E7%89%87%E6%A8%A3%E5%AD%90"><span class="toc-number">5.1.</span> <span class="toc-text">照片樣子</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%95%B8%E6%93%9A%E8%99%95%E7%90%86"><span class="toc-number">6.</span> <span class="toc-text">5. 數據處理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BB%BA%E7%AB%8B%E5%8D%B7%E7%A9%8D%E7%A5%9E%E7%B6%93%E7%B6%B2%E8%B7%AFcnn"><span class="toc-number">7.</span> <span class="toc-text">6. 建立卷積神經網路(CNN)</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%BC%B8%E5%87%BAcnn%E7%9A%84%E6%B5%81%E7%A8%8B"><span class="toc-number">7.1.</span> <span class="toc-text">輸出CNN的流程</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#optimization-loss-function"><span class="toc-number">8.</span> <span class="toc-text">7. optimization &amp; loss
+function</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%96%8B%E5%A7%8B%E8%A8%93%E7%B7%B4training"><span class="toc-number">9.</span> <span class="toc-text">8. 開始訓練(training)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#testing"><span class="toc-number">10.</span> <span class="toc-text">9. testing</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%B8%BD%E7%A8%8B%E5%BC%8F%E7%A2%BC%E7%AC%AC%E4%B8%80%E6%AC%A1%E5%AF%A6%E5%81%9A%E7%89%88%E6%9C%AC"><span class="toc-number">11.</span> <span class="toc-text">總程式碼（第一次實做版本）</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#by-%E4%B8%AD%E5%92%8C%E9%AB%98%E4%B8%AD-%E5%90%B3%E6%8C%AF%E6%A6%AE"><span class="toc-number">11.0.0.1.</span> <span class="toc-text">by 中和高中 吳振榮</span></a></li></ol></li></ol></li></ol></li></ol>
+            </div>
+        
+        <!-- sidebar -->
+        <div class="sidebar sidebar-hide">
+    <ul class="sidebar-tabs sidebar-tabs-active-0">
+        <li class="sidebar-tab-archives"><span class="iconfont-archer">&#xe67d;</span><span class="tab-name">Archive</span></li>
+        <li class="sidebar-tab-tags"><span class="iconfont-archer">&#xe61b;</span><span class="tab-name">Tag</span></li>
+        <li class="sidebar-tab-categories"><span class="iconfont-archer">&#xe666;</span><span class="tab-name">Cate</span></li>
+    </ul>
+    <div class="sidebar-content sidebar-content-show-archive">
+        <div class="sidebar-panel-archives">
+    <!-- 在 ejs 中将 archive 按照时间排序 -->
+    
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+    
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+    
+    
+    
+    
+    <div class="total-and-search">
+        <div class="total-archive">
+        Total : 31
+        </div>
+        <!-- search  -->
+        
+    </div>
+    
+    <div class="post-archive">
+    
+        
+            
+            
+            <div class="archive-year"> 2023 </div>
+            <ul class="year-list">
+            
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/10</span>
+            <a class="archive-post-title" href="/2023/05/10/%E5%9F%BA%E7%A4%8E%E6%95%B8%E8%AB%96/">基礎數論</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/05</span>
+            <a class="archive-post-title" href="/2023/04/05/GIT/">GIT</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/05</span>
+            <a class="archive-post-title" href="/2023/04/05/%E5%BF%AB%E9%80%9F%E5%86%AA%E5%92%8C%E7%9F%A9%E9%99%A3%E5%BF%AB%E9%80%9F%E5%86%AA/">快速冪和矩陣快速冪</a>
+        </li>
+    
+        
+            
+            
+                
+                </ul>
+            
+            <div class="archive-year"> 2021 </div>
+            <ul class="year-list">
+            
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/12</span>
+            <a class="archive-post-title" href="/2021/09/12/%E5%9C%A8Linux%E5%AE%89%E8%A3%9DCUDA/">在Linux安裝CUDA，並在Pytorch進行CUDA訓練</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/29</span>
+            <a class="archive-post-title" href="/2021/08/29/%E5%8F%AF%E8%A7%A3%E9%87%8B%E4%BA%BA%E5%B7%A5%E6%99%BA%E6%85%A7-explainable-ai/">可解釋人工智慧_explainable_ai</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/29</span>
+            <a class="archive-post-title" href="/2021/08/29/%E5%9F%BA%E6%96%BC%E6%B7%B1%E5%BA%A6%E5%AD%B8%E7%BF%92%E9%80%B2%E8%A1%8C%E8%B2%93%E8%88%87%E7%8B%97%E7%9A%84%E8%BE%A8%E8%AA%8D-Pytorch/">基於深度學習進行貓與狗的辨認(Pytorch)</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/28</span>
+            <a class="archive-post-title" href="/2021/08/28/C-%E7%89%A9%E4%BB%B6%E5%B0%8E%E5%90%91/">C++物件導向</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/28</span>
+            <a class="archive-post-title" href="/2021/08/28/%E5%9F%BA%E7%A4%8E%E6%BC%94%E7%AE%97%E6%B3%95-C/">基礎演算法(Algorithm)-C++</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/28</span>
+            <a class="archive-post-title" href="/2021/08/28/%E5%9F%BA%E7%A4%8E%E8%B3%87%E6%96%99%E7%B5%90%E6%A7%8B-C/">基礎資料結構(Data Structure)-C++</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/27</span>
+            <a class="archive-post-title" href="/2021/08/27/CSS/">CSS</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/27</span>
+            <a class="archive-post-title" href="/2021/08/27/HTML/">HTML</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/27</span>
+            <a class="archive-post-title" href="/2021/08/27/Linux%E5%9F%BA%E7%A4%8E%E4%BD%BF%E7%94%A8/">Linux基礎使用</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/27</span>
+            <a class="archive-post-title" href="/2021/08/27/MNIST%E6%89%8B%E5%AF%AB%E8%BE%A8%E8%AD%98-Pytorch-version/">MNIST手寫辨識(Pytorch version)</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/27</span>
+            <a class="archive-post-title" href="/2021/08/27/MNIST%E6%89%8B%E5%AF%AB%E8%BE%A8%E8%AD%98-TensorFlow-version/">MNIST手寫辨識(TensorFlow-version)</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/27</span>
+            <a class="archive-post-title" href="/2021/08/27/Numpy/">Numpy</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/27</span>
+            <a class="archive-post-title" href="/2021/08/27/Pandas/">Pandas</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/27</span>
+            <a class="archive-post-title" href="/2021/08/27/Scikit-Learn/">Scikit Learn</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/27</span>
+            <a class="archive-post-title" href="/2021/08/27/TensorFlow1%E5%9F%BA%E7%A4%8E%E4%BD%BF%E7%94%A8%E6%96%B9%E6%B3%95/">TensorFlow1基礎使用方法</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/27</span>
+            <a class="archive-post-title" href="/2021/08/27/%E9%81%B7%E7%A7%BB%E5%AD%B8%E7%BF%92-%E5%9C%96%E7%89%87%E8%BE%A8%E8%AD%98/">遷移學習-圖片辨識</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/27</span>
+            <a class="archive-post-title" href="/2021/08/27/APCS%E5%AF%A6%E4%BD%9C%E9%A1%8C/">APCS實作題</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/27</span>
+            <a class="archive-post-title" href="/2021/08/27/Matplotlib/">Matplotlib</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/27</span>
+            <a class="archive-post-title" href="/2021/08/27/%E5%9F%BA%E7%A4%8ETensorFlow2%E8%88%87%E6%A9%9F%E5%99%A8%E5%AD%B8%E7%BF%92/">基礎TensorFlow1和2與機器學習</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/27</span>
+            <a class="archive-post-title" href="/2021/08/27/%E5%9F%BA%E7%A4%8Epytorch%E8%88%87%E6%A9%9F%E5%99%A8%E5%AD%B8%E7%BF%92/">基礎pytorch與機器學習</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/24</span>
+            <a class="archive-post-title" href="/2021/08/24/OpenCV/">OpenCV</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/24</span>
+            <a class="archive-post-title" href="/2021/08/24/pipenv/">pipenv</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/24</span>
+            <a class="archive-post-title" href="/2021/06/24/Linked-List/">Linked_List</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/24</span>
+            <a class="archive-post-title" href="/2021/06/24/Stringstream/">Stringstream</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/24</span>
+            <a class="archive-post-title" href="/2021/06/24/Web/">Web</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/24</span>
+            <a class="archive-post-title" href="/2021/06/24/ctime/">ctime</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/24</span>
+            <a class="archive-post-title" href="/2021/06/24/%E6%8C%87%E6%A8%99/">指標</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/24</span>
+            <a class="archive-post-title" href="/2021/06/24/%E9%81%8B%E7%AE%97%E5%AD%90%E9%87%8D%E8%BC%89/">運算子重載</a>
+        </li>
+    
+    </div>
+</div>
+
+        <div class="sidebar-panel-tags">
+    <div class="sidebar-tags-name">
+        
+            <span class="sidebar-tag-name" data-tags="C++">
+                <span class="iconfont-archer">&#xe606;</span>
+                C++
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="OOP">
+                <span class="iconfont-archer">&#xe606;</span>
+                OOP
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="CSS">
+                <span class="iconfont-archer">&#xe606;</span>
+                CSS
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="web dev">
+                <span class="iconfont-archer">&#xe606;</span>
+                web dev
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="HTML">
+                <span class="iconfont-archer">&#xe606;</span>
+                HTML
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="Linux">
+                <span class="iconfont-archer">&#xe606;</span>
+                Linux
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="Pytorch">
+                <span class="iconfont-archer">&#xe606;</span>
+                Pytorch
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="Machine Learning">
+                <span class="iconfont-archer">&#xe606;</span>
+                Machine Learning
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="TensorFlow2">
+                <span class="iconfont-archer">&#xe606;</span>
+                TensorFlow2
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="Python">
+                <span class="iconfont-archer">&#xe606;</span>
+                Python
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="Scikit Learn">
+                <span class="iconfont-archer">&#xe606;</span>
+                Scikit Learn
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="TensorFlow1">
+                <span class="iconfont-archer">&#xe606;</span>
+                TensorFlow1
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="Math theorem">
+                <span class="iconfont-archer">&#xe606;</span>
+                Math theorem
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="algorithm">
+                <span class="iconfont-archer">&#xe606;</span>
+                algorithm
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="Data structure">
+                <span class="iconfont-archer">&#xe606;</span>
+                Data structure
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="Transfer Learning">
+                <span class="iconfont-archer">&#xe606;</span>
+                Transfer Learning
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="APCS">
+                <span class="iconfont-archer">&#xe606;</span>
+                APCS
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="TensorFlow">
+                <span class="iconfont-archer">&#xe606;</span>
+                TensorFlow
+            </span>
+        
+    </div>
+    <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>
+    <div class="tag-load-fail" style="display: none; color: #ccc; font-size: 0.6rem;">
+        缺失模块，请参考主题文档进行安装配置：https://github.com/fi3ework/hexo-theme-archer#%E5%AE%89%E8%A3%85%E4%B8%BB%E9%A2%98
+    </div> 
+    <div class="sidebar-tags-list"></div>
+</div>
+
+        <div class="sidebar-panel-categories">
+    <div class="sidebar-categories-name">
+    
+    </div>
+    <div class="iconfont-archer sidebar-categories-empty">&#xe678;</div>
+    <div class="sidebar-categories-list"></div>
+</div>
+
+    </div>
+</div>
+
+        <!-- site-meta -->
+        <script>
+    var siteMetaRoot = "/"
+    if (siteMetaRoot === "undefined") {
+        siteMetaRoot = '/'
+    }
+    var siteMeta = {
+        url: "https://maxwutw.github.io",
+        root: siteMetaRoot,
+        author: "Max Wu"
+    }
+</script>
+
+        <!-- import experimental options here -->
+        <!-- Custom Font -->
+
+
+        <!-- main func -->
+        <script src="/scripts/main.js?v=20211217"></script>
+        <!-- dark mode -->
+        <script src="/scripts/dark.js?v=20211217"></script>
+        <!-- fancybox -->
+        <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js" defer></script>
+        <!-- algolia -->
+        
+        <!-- busuanzi -->
+        
+            <script src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" async></script>
+        
+        <!-- CNZZ -->
+        
+        <!-- async load share.js -->
+        
+            <script src="/scripts/share.js?v=20211217" async></script>
+        
+        <!-- mermaid -->
+        
+    </body>
+</html>

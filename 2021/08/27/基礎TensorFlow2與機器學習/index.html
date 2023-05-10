@@ -1,0 +1,1582 @@
+<!DOCTYPE html>
+<html lang="en">
+    <!-- title -->
+
+
+    
+
+<!-- keywords -->
+
+
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="author" content="Max Wu">
+    <meta name="renderer" content="webkit">
+    <meta name="copyright" content="Max Wu">
+    
+        <meta name="keywords" content="hexo,hexo-theme,hexo-blog">
+    
+    <meta name="description" content="">
+    <meta name="description" content="基礎TensorFlow教學大全，看完這篇就學完TensorFlow基礎，以及機器學習基礎觀念，包括Regression、Classification、Tokenizer 等。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="基礎TensorFlow1和2與機器學習">
+<meta property="og:url" content="https://maxwutw.github.io/2021/08/27/%E5%9F%BA%E7%A4%8ETensorFlow2%E8%88%87%E6%A9%9F%E5%99%A8%E5%AD%B8%E7%BF%92/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="基礎TensorFlow教學大全，看完這篇就學完TensorFlow基礎，以及機器學習基礎觀念，包括Regression、Classification、Tokenizer 等。">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://i.imgur.com/1WfQBNa.jpg">
+<meta property="og:image" content="https://i.imgur.com/1qIdaJb.png">
+<meta property="og:image" content="https://i.imgur.com/N7Hde8q.jpg">
+<meta property="article:published_time" content="2021-08-27T10:46:39.000Z">
+<meta property="article:modified_time" content="2023-04-05T23:19:18.000Z">
+<meta property="article:author" content="Max Wu">
+<meta property="article:tag" content="Machine Learning">
+<meta property="article:tag" content="TensorFlow">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.imgur.com/1WfQBNa.jpg">
+    <meta http-equiv="Cache-control" content="no-cache">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <link rel="icon" href="/assets/favicon.ico">
+    
+    <title>基礎TensorFlow1和2與機器學習 · Max Coding blog</title>
+    <!-- /*! loadCSS. [c]2017 Filament Group, Inc. MIT License */
+/* This file is meant as a standalone workflow for
+- testing support for link[rel=preload]
+- enabling async CSS loading in browsers that do not support rel=preload
+- applying rel preload css once loaded, whether supported or not.
+*/ -->
+<script>
+    (function (w) {
+        'use strict'
+        // rel=preload support test
+        if (!w.loadCSS) {
+            w.loadCSS = function () {}
+        }
+        // define on the loadCSS obj
+        var rp = (loadCSS.relpreload = {})
+        // rel=preload feature support test
+        // runs once and returns a function for compat purposes
+        rp.support = (function () {
+            var ret
+            try {
+                ret = w.document.createElement('link').relList.supports('preload')
+            } catch (e) {
+                ret = false
+            }
+            return function () {
+                return ret
+            }
+        })()
+
+        // if preload isn't supported, get an asynchronous load by using a non-matching media attribute
+        // then change that media back to its intended value on load
+        rp.bindMediaToggle = function (link) {
+            // remember existing media attr for ultimate state, or default to 'all'
+            var finalMedia = link.media || 'all'
+
+            function enableStylesheet() {
+                link.media = finalMedia
+            }
+
+            // bind load handlers to enable media
+            if (link.addEventListener) {
+                link.addEventListener('load', enableStylesheet)
+            } else if (link.attachEvent) {
+                link.attachEvent('onload', enableStylesheet)
+            }
+
+            // Set rel and non-applicable media type to start an async request
+            // note: timeout allows this to happen async to let rendering continue in IE
+            setTimeout(function () {
+                link.rel = 'stylesheet'
+                link.media = 'only x'
+            })
+            // also enable media after 3 seconds,
+            // which will catch very old browsers (android 2.x, old firefox) that don't support onload on link
+            setTimeout(enableStylesheet, 3000)
+        }
+
+        // loop through link elements in DOM
+        rp.poly = function () {
+            // double check this to prevent external calls from running
+            if (rp.support()) {
+                return
+            }
+            var links = w.document.getElementsByTagName('link')
+            for (var i = 0; i < links.length; i++) {
+                var link = links[i]
+                // qualify links to those with rel=preload and as=style attrs
+                if (
+                    link.rel === 'preload' &&
+                    link.getAttribute('as') === 'style' &&
+                    !link.getAttribute('data-loadcss')
+                ) {
+                    // prevent rerunning on link
+                    link.setAttribute('data-loadcss', true)
+                    // bind listeners to toggle media back
+                    rp.bindMediaToggle(link)
+                }
+            }
+        }
+
+        // if unsupported, run the polyfill
+        if (!rp.support()) {
+            // run once at least
+            rp.poly()
+
+            // rerun poly on an interval until onload
+            var run = w.setInterval(rp.poly, 500)
+            if (w.addEventListener) {
+                w.addEventListener('load', function () {
+                    rp.poly()
+                    w.clearInterval(run)
+                })
+            } else if (w.attachEvent) {
+                w.attachEvent('onload', function () {
+                    rp.poly()
+                    w.clearInterval(run)
+                })
+            }
+        }
+
+        // commonjs
+        if (typeof exports !== 'undefined') {
+            exports.loadCSS = loadCSS
+        } else {
+            w.loadCSS = loadCSS
+        }
+    })(typeof global !== 'undefined' ? global : this)
+</script>
+
+    <style type="text/css">
+    @font-face {
+        font-family: 'Oswald-Regular';
+        src: url("/font/Oswald-Regular.ttf");
+    }
+
+    body {
+        margin: 0;
+    }
+
+    header,
+    footer,
+    .back-top,
+    .sidebar,
+    .container,
+    .site-intro-meta,
+    .toc-wrapper {
+        display: none;
+    }
+
+    .site-intro {
+        position: relative;
+        z-index: 3;
+        width: 100%;
+        /* height: 50vh; */
+        overflow: hidden;
+    }
+
+    .site-intro-placeholder {
+        position: absolute;
+        z-index: -2;
+        top: 0;
+        left: 0;
+        width: calc(100% + 300px);
+        height: 100%;
+        background: repeating-linear-gradient(-45deg, #444 0, #444 80px, #333 80px, #333 160px);
+        background-position: center center;
+        transform: translate3d(-226px, 0, 0);
+        animation: gradient-move 2.5s ease-out 0s infinite;
+    }
+
+    @keyframes gradient-move {
+        0% {
+            transform: translate3d(-226px, 0, 0);
+        }
+        100% {
+            transform: translate3d(0, 0, 0);
+        }
+    }
+</style>
+
+    <link rel="preload" href="/css/style.css?v=20211217" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="preload" href="/css/dark.css?v=20211217" as="style">
+    <link rel="stylesheet" href="/css/dark.css">
+    <link rel="stylesheet" href="/css/mobile.css?v=20211217" media="(max-width: 960px)">
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js" as="script">
+    <link rel="preload" href="/scripts/main.js?v=20211217" as="script">
+    <link rel="preload" href="/scripts/dark.js?v=20211217" as="script">
+    <link rel="preload" href="/font/Oswald-Regular.ttf" as="font" crossorigin>
+    <link rel="preload" href="https://at.alicdn.com/t/font_327081_1dta1rlogw17zaor.woff" as="font" crossorigin>
+    <!-- algolia -->
+    
+    <!-- 百度统计  -->
+    
+    <!-- 谷歌统计  -->
+    
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --><meta name="generator" content="Hexo 6.3.0"></head>
+
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+    <script type="text/javascript">
+        if (typeof window.$ == undefined) {
+            console.warn('jquery load from jsdelivr failed, will load local script')
+            document.write('<script src="/lib/jquery.min.js" />')
+        }
+    </script>
+    
+        <body class="post-body">
+    
+        <!-- header -->
+        <header class="header header-mobile">
+    <!-- top read progress line -->
+    <div class="header-element">
+        <div class="read-progress"></div>
+    </div>
+    <!-- sidebar menu button -->
+    <div class="header-element">
+        
+            <div class="header-sidebar-menu">
+        
+            
+                <div style="padding-left: 1px;">&#xe775;</div>
+            
+        </div>
+    </div>
+    <!-- header actions -->
+    <div class="header-actions">
+        <!-- theme mode switch button -->
+        <span class="header-theme-btn header-element">
+            <i class="fas fa-adjust"></i>
+        </span>
+        <!-- back to home page text -->
+        <span class="home-link header-element">
+            <a href=/>Max Coding blog</a>
+        </span>
+    </div>
+    <!-- toggle banner for post layout -->
+    
+        
+            <div class="banner">
+        
+            <div class="blog-title header-element">
+                <a href="/">Max Coding blog</a>
+            </div>
+            <div class="post-title header-element">
+                <a href="#" class="post-name">基礎TensorFlow1和2與機器學習</a>
+            </div>
+        </div>
+    
+</header>
+
+        <!-- fixed footer -->
+        <footer class="footer-fixed">
+    <!-- back to top button -->
+    <div class="footer-fixed-element">
+        
+            <div class="back-top back-top-hidden">
+        
+        
+            <div>&#xe639;</div>
+        
+        </div>
+    </div>
+</footer>
+
+        <!-- wrapper -->
+        <div class="wrapper">
+            <div class="site-intro" style="
+
+
+
+
+
+
+
+    height:50vh;
+
+">
+    
+    <!-- 主页  -->
+    
+        
+    <!-- 404页  -->
+    
+    <div class="site-intro-placeholder"></div>
+    <div class="site-intro-img" style="background-image: url(/intro/post-bg.jpg)"></div>
+    <div class="site-intro-meta">
+        <!-- 标题  -->
+        <h1 class="intro-title">
+            <!-- 主页  -->
+            
+                基礎TensorFlow1和2與機器學習
+            <!-- 404 -->
+            
+        </h1>
+        <!-- 副标题 -->
+        <p class="intro-subtitle">
+            <!-- 主页副标题  -->
+            
+                
+            <!-- 404 -->
+            
+        </p>
+        <!-- 文章页 meta -->
+        
+            <div class="post-intros">
+                <!-- 文章页标签  -->
+                
+                    <div class= post-intro-tags >
+    
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="Machine Learning">Machine Learning</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="TensorFlow">TensorFlow</a>
+    
+</div>
+
+                
+                <!-- 文章字数统计 -->
+                
+                <div class="post-intro-meta">
+                    <!-- 撰写日期 -->
+                    <span class="iconfont-archer post-intro-calander">&#xe676;</span>
+                    <span class="post-intro-time">2021/08/27</span>
+                    <!-- busuanzi -->
+                    
+                        <span id="busuanzi_container_page_pv" class="busuanzi-pv">
+                            <span class="iconfont-archer post-intro-busuanzi">&#xe602;</span>
+                            <span id="busuanzi_value_page_pv"></span>
+                        </span>
+                    
+                    <!-- 文章分享 -->
+                    <span class="share-wrapper">
+                        <span class="iconfont-archer share-icon">&#xe71d;</span>
+                        <span class="share-text">Share</span>
+                        <ul class="share-list">
+                            <li class="iconfont-archer share-qr" data-type="qr">&#xe75b;
+                                <div class="share-qrcode"></div>
+                            </li>
+                            <li class="iconfont-archer" data-type="weibo">&#xe619;</li>
+                            <li class="iconfont-archer" data-type="qzone">&#xe62e;</li>
+                            <li class="iconfont-archer" data-type="twitter">&#xe634;</li>
+                            <li class="iconfont-archer" data-type="facebook">&#xe67a;</li>
+                        </ul>
+                    </span>
+                </div>
+            </div>
+        
+    </div>
+</div>
+
+            <script>
+  // get user agent
+  function getBrowserVersions() {
+    var u = window.navigator.userAgent
+    return {
+      userAgent: u,
+      trident: u.indexOf('Trident') > -1, //IE内核
+      presto: u.indexOf('Presto') > -1, //opera内核
+      webKit: u.indexOf('AppleWebKit') > -1, //苹果、谷歌内核
+      gecko: u.indexOf('Gecko') > -1 && u.indexOf('KHTML') == -1, //火狐内核
+      mobile: !!u.match(/AppleWebKit.*Mobile.*/), //是否为移动终端
+      ios: !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/), //ios终端
+      android: u.indexOf('Android') > -1 || u.indexOf('Linux') > -1, //android终端或者uc浏览器
+      iPhone: u.indexOf('iPhone') > -1 || u.indexOf('Mac') > -1, //是否为iPhone或者安卓QQ浏览器
+      iPad: u.indexOf('iPad') > -1, //是否为iPad
+      webApp: u.indexOf('Safari') == -1, //是否为web应用程序，没有头部与底部
+      weixin: u.indexOf('MicroMessenger') == -1, //是否为微信浏览器
+      uc: u.indexOf('UCBrowser') > -1, //是否为android下的UC浏览器
+    }
+  }
+  var browser = {
+    versions: getBrowserVersions(),
+  }
+  console.log('userAgent: ' + browser.versions.userAgent)
+
+  // callback
+  function fontLoaded() {
+    console.log('font loaded')
+    if (document.getElementsByClassName('site-intro-meta')) {
+      document
+        .getElementsByClassName('intro-title')[0]
+        .classList.add('intro-fade-in')
+      document
+        .getElementsByClassName('intro-subtitle')[0]
+        .classList.add('intro-fade-in')
+      var postIntros = document.getElementsByClassName('post-intros')[0]
+      if (postIntros) {
+        postIntros.classList.add('post-fade-in')
+      }
+    }
+  }
+
+  // UC不支持跨域，所以直接显示
+  function asyncCb() {
+    if (browser.versions.uc) {
+      console.log('UCBrowser')
+      fontLoaded()
+    } else {
+      WebFont.load({
+        custom: {
+          families: ['Oswald-Regular'],
+        },
+        loading: function () {
+          // 所有字体开始加载
+          // console.log('font loading');
+        },
+        active: function () {
+          // 所有字体已渲染
+          fontLoaded()
+        },
+        inactive: function () {
+          // 字体预加载失败，无效字体或浏览器不支持加载
+          console.log('inactive: timeout')
+          fontLoaded()
+        },
+        timeout: 5000, // Set the timeout to two seconds
+      })
+    }
+  }
+
+  function asyncErr() {
+    console.warn('script load from CDN failed, will load local script')
+  }
+
+  // load webfont-loader async, and add callback function
+  function async(u, cb, err) {
+    var d = document,
+      t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0]
+    o.src = u
+    if (cb) {
+      o.addEventListener(
+        'load',
+        function (e) {
+          cb(null, e)
+        },
+        false
+      )
+    }
+    if (err) {
+      o.addEventListener(
+        'error',
+        function (e) {
+          err(null, e)
+        },
+        false
+      )
+    }
+    s.parentNode.insertBefore(o, s)
+  }
+
+  var asyncLoadWithFallBack = function (arr, success, reject) {
+    var currReject = function () {
+      reject()
+      arr.shift()
+      if (arr.length) async(arr[0], success, currReject)
+    }
+
+    async(arr[0], success, currReject)
+  }
+
+  asyncLoadWithFallBack(
+    [
+      'https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js',
+      'https://cdn.bootcss.com/webfont/1.6.28/webfontloader.js',
+      "/lib/webfontloader.min.js",
+    ],
+    asyncCb,
+    asyncErr
+  )
+</script>
+
+            <img class="loading" src="/assets/loading.svg" style="display: block; margin: 6rem auto 0 auto; width: 6rem; height: 6rem;" />
+            <div class="container container-unloaded">
+                <main class="main post-page">
+    <article class="article-entry">
+        <h2 id="心情抒發">心情抒發</h2>
+<p>了解基礎numpy、pandas、matplotlib後我們就要進入深度學習了，我在進行深度學習的訓練的時候有時是使用linux作業系統，因為我的mac
+M1在下載tensorflow的時候遇到很多問題，因為mac
+M1和之前intel版本的mac不太一樣，之前的intel版本是x86架構的，但是mac
+M1是arm架構的，我花了三天還是沒辦法在我的mac上下載tensorflow，因此我在做機器學習時有兩種做法，第一種是使用google的Colaboratory，另一種是使用linux，所以我幫我的ASUS灌雙系統，為何不直接用windows10呢？因為我比較喜歡mac，所以我有時會在mac上寫程式，再透過ssh的方式在linux上進行，在這裡不得不讚嘆mac的界面設計，光看到就很舒服，而linux的界面有點太舊了，看了有點不習慣，那廢話不多說就進入我們的Machine
+Learning。 ## Linear Regression（線性回歸）design
+所謂的線性回歸就是在觀察和歸納樣本的過程中向量和函數值呈現線性的關係，那這種關係可以用一個關係式來表達：
+<span style="color:red">Formula: Y = X1*W1 + X2*W2 + B</span>
+其中W和X都是矩陣，代表我們的參數可以不只一個，W代表Weights（權重），B代表Bias（偏移量）。
+而運用這個公式有一個缺點，就是它的數值會介於正無限大到負無限大，所以這時候會加入活化函數，這個我稍後再提。</p>
+<p>然而我們在進行機器學習有一個很重要的目標，就是讓Loss變小，什麼是Loss呢？我來粗略的介紹一下，在解釋前先看看這兩個關係式:
+1. MSE（Mean-Square Error） <img
+src="https://i.imgur.com/EanPjB1.jpg" /> 2. MAE（Mean-Absolute Error）
+<img src="https://i.imgur.com/1WfQBNa.jpg" /></p>
+<p>我們在做機器學習的時候希望計算機幫我們做預測的時候誤差值越低越好，總不能我們叫它預測一個一次函數，結果它算出來的答案是三次函數吧，所以Loss是在計算電腦在進行運算時的誤差值，我們稱之為loss
+function，loss function有很多種，而我目前只略懂這兩種。</p>
+<p>首先來說MSE（Mean-Square
+Error），MSE顧名思義，均方誤差（MSE）計算的是預測值和實際觀測值間差的平方的均值。它只考慮誤差的平均大小，不考慮其向量，前面有提到y
+= f(x) =
+wx+b，這個y是我們預測的值，而我們要減去真實數據，即可得到差值，但為何要平方？因為我們的差值有可能是負的，怕會到時相消，所以這裡將它平方，可以保證為正值，但MSE方法仍然有個小問題，在「單位的解釋」上我們有點難以解釋數據，例如身高的平方的意義是?此時我們會使用RMSE(Root
+Mean Squared Error)將它開根號。</p>
+<p>接著來說MAE（Mean-Absolute
+Error），其實MAE和MSE觀念很像，那觀念一樣的地方我就不多做贅述，MAE和MSE的關係上只差在一個是平方，另一個則是取絕對值，既然如此為何要分這兩種呢？老實說我也不太能理解，我在網路上看資料的時候他是這樣說的，「會有「在等於0時」不可微分的問題，不可微分會有什麼問題?
+簡單來說，我們會沒辦法透過微分決定ML模型的修正方向。」對於微分我不是很理解，因為正在寫此篇的我還是小高一，但也無妨，實際上在做微分這運算的不是我，而是計算機，所以我也不用太著急，但MAE完全不能使用嗎?
+倒也不完全是不能用，它也是有他的優勢的，那優勢在哪，有機會再來說吧！</p>
+<h2 id="處理機器學習的三大步驟">處理機器學習的三大步驟</h2>
+<p>在進行ML的時候常常會因為其中的一個步驟做的不好而導致訓練失敗，所以每個環節都是非常重要的。
+首先第一個步驟是設定一個未知的函式，就如同Linear
+regression那邊一樣，設定一個函式，再把參數加進去，算出y。
+第二步，定義loss function，就如同前面所說的，後續會深入介紹。
+第三步，optimization，這個步驟是很容易被遺忘的，而這個會在後面的例子中說到。
+## nonlinear regression（非線性函數）
+前面有提到活化函式，這個活化函式是用在線性回歸之後，這邊我使用sigmoid()函式做介紹，故公式會變成下面那個：
+<span style="color:red">Formula: Y = Sigmoid(X1*W1 + X2*W2 + B)</span>
+sigmoid()是一個非線性函數，它的作用是在於使整個輸出保持在0~1之間。 ##
+函數數值訓練 ### 首先先看個code: <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> tensorflow.compat.v1 <span class="keyword">as</span> tf</span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"></span><br><span class="line">tf.disable_v2_behavior()</span><br><span class="line"></span><br><span class="line">x = np.random.rand(<span class="number">200</span>).astype(np.float32)</span><br><span class="line">y = x*<span class="number">0.5</span>+<span class="number">0.8</span></span><br><span class="line">plt.plot(x,y,color = <span class="string">&#x27;red&#x27;</span>)</span><br><span class="line">weights = tf.Variable(tf.random.uniform([<span class="number">1</span>],-<span class="number">1.0</span>,<span class="number">1.0</span>))</span><br><span class="line">biases = tf.Variable(tf.zeros([<span class="number">1</span>]))</span><br><span class="line"></span><br><span class="line">func = weights*x + biases</span><br><span class="line"></span><br><span class="line">loss = tf.reduce_mean(tf.square(func - y)) <span class="comment"># MSE</span></span><br><span class="line"></span><br><span class="line">optimization = tf.train.GradientDescentOptimizer(<span class="number">0.5</span>)</span><br><span class="line">train = optimization.minimize(loss)</span><br><span class="line"></span><br><span class="line">init = tf.global_variables_initializer()</span><br><span class="line"></span><br><span class="line">sess = tf.Session()</span><br><span class="line">sess.run(init)</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">201</span>):</span><br><span class="line">    sess.run(train)</span><br><span class="line">    <span class="keyword">if</span> i % <span class="number">10</span> == <span class="number">0</span>:</span><br><span class="line">        plt.scatter(x,x*sess.run(weights)+sess.run(biases))</span><br><span class="line">        <span class="built_in">print</span>(i,sess.run(weights),sess.run(biases))</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure> ### output : 0
+[0.96190155] [0.7515451] 10 [0.69052416] [0.6988468] 20 [0.5954242]
+[0.7493372] 30 [0.5477933] [0.7746255] 40 [0.5239374] [0.7872911] 50
+[0.5119891] [0.7936347] 60 [0.50600475] [0.79681194] 70 [0.50300753]
+[0.79840326] 80 [0.50150627] [0.7992003] 90 [0.5007544] [0.79959947] 100
+[0.5003779] [0.7997994] 110 [0.50018924] [0.7998995] 120 [0.5000948]
+[0.7999497] 130 [0.50004745] [0.7999748] 140 [0.5000238] [0.7999874] 150
+[0.50001186] [0.7999937] 160 [0.50000596] [0.79999685] 170 [0.50000304]
+[0.7999984] 180 [0.50000155] [0.7999992] 190 [0.5000008] [0.7999996] 200
+[0.5000004] [0.7999998]
+注意：此輸出不是固定的！由於我們是設計這個程式讓計算機去學習，所以它每次的學習效果都不一樣，因此它每次的輸出會不一樣。</p>
+<h3 id="接著來看函式圖形">接著來看函式圖形:</h3>
+<p><img src="https://i.imgur.com/1qIdaJb.png" />
+其中紅色那條線是我們正確的直線。
+在這個圖面中可以看出電腦一開始的誤差很大，由藍色那條線可以知道，但經過200次的學習後可以使誤差變得非常小，趨近於我們正確的直線方程式:f(x)
+= y = 0.5*x + 0.8，這個現象也可以從輸出資料中看到這個現象。
+接著來了解程式碼，這邊介紹程式碼不會講到各個函式的細節，若要看細節請去我另一篇筆記:tensorflow，這篇會傾向實作神經網路，所以基礎要先打好再來看這篇。
+### code introduction
+一開始我們先import套件，由於我是自學機器學習，而tensorflow2.x有點太新，所以網路上可以學習的資源比較少，這邊才引用tensorflow
+1.x版本，接著import numpy方便生成數據，然後import
+matplotlib.pyplot，此套件是方便進行數據可視化。 雖然我們已經import
+tensorflow
+1.x版本，但是還是有可能和tensorflow2.x版本撞到，所以加入tf.disable_v2_behavior()來避免這個問題。
+引用完套件後就來生成資料，首先運用numpy的生成亂數，由於在tensorflow在運算的時候大多是利用float32，所以我們這邊設定生成的變數也要是float32，由於要生成一個直線，所以要有一個直線方程式，所以我們這邊上一個方程式叫做f(x)
+= y = 0.5*x +
+0.8，而當我們把大量的x帶入後畫成直線即是我們要的函式圖形，而我們這次的目標是訓練計算機能預測我們的weight和bias，以達到和我們的直線最相近的值，接著我們用Variable宣告我們的weight和bias，接著將weight和bias帶入直線方程式，func
+= weights*x +
+biases，在前面有說過我們希望我們訓練的值和實際的值的差距能越小越好，所以我們使用loss函式來計算訓練的值和實際的值的差距，這邊使用的方式是MSE，前面說過MSE這邊就不多贅述了。
+做完loss
+function後就可以進行我們的optimization，由於我不會手刻神經網路，所以這邊直接使用函式，而這邊要做的optimization是使用梯度下降(GradientDescent)，那什麼是梯度下降這個議題有機會我會在後面提到，所以這邊就直接引用，而他的參數我只放一個，這個參數代表他的learning_rate，而learning_rate越高或越低會造成什麼狀況我還不太明白，所以這邊就直接選擇中間值0.5來做優化。接著為了讓我們的loss變小，所以我們要進行優化減小，這裡引用minimize()來減小。
+接著為了使用Variable，我們必須初始化所有Variable，接著用Session去跑，最後讓迴圈去跑，看使用者希望執行幾次，我這邊設定200次，然後每隔十次讓他輸出資料和圖形，這邊使用plt.scatter()顯示出點，最後plt.show()讓他顯示，我們就完成我們的函數數值訓練了!
+## 建造一個神經網路(create a neural network) ### 首先先看code:
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> tensorflow.compat.v1 <span class="keyword">as</span> tf</span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line">tf.disable_v2_behavior()</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">add_layer</span>(<span class="params">inputs,input_size,output_size,activation_function = <span class="literal">None</span></span>):</span><br><span class="line">    weight = tf.Variable(tf.random_normal([input_size,output_size]))</span><br><span class="line">    bias = tf.Variable(tf.zeros([<span class="number">1</span>,output_size])+<span class="number">0.1</span>)</span><br><span class="line">    y0 = tf.matmul(inputs,weight) + bias</span><br><span class="line">    <span class="keyword">if</span> activation_function <span class="keyword">is</span> <span class="literal">None</span>:</span><br><span class="line">        output = y0</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        output = activation_function(y0)</span><br><span class="line">    <span class="keyword">return</span> output</span><br><span class="line"></span><br><span class="line">x = np.linspace(-<span class="number">1</span>,<span class="number">1</span>,<span class="number">300</span>)[:,np.newaxis]</span><br><span class="line">noise = np.random.normal(<span class="number">0</span>,<span class="number">0.05</span>,x.shape)</span><br><span class="line">y = np.square(x) - <span class="number">0.5</span> + noise</span><br><span class="line"></span><br><span class="line">x_data = tf.placeholder(tf.float32,[<span class="literal">None</span>,<span class="number">1</span>])</span><br><span class="line">y_data = tf.placeholder(tf.float32,[<span class="literal">None</span>,<span class="number">1</span>])</span><br><span class="line"></span><br><span class="line">layer1 = add_layer(x_data,<span class="number">1</span>,<span class="number">10</span>,activation_function = tf.nn.relu)</span><br><span class="line">predict = add_layer(layer1,<span class="number">10</span>,<span class="number">1</span>,activation_function = <span class="literal">None</span>)</span><br><span class="line"></span><br><span class="line">loss = tf.reduce_mean(tf.reduce_sum(tf.square(y_data-predict),reduction_indices = [<span class="number">1</span>]))</span><br><span class="line">trainning = tf.train.GradientDescentOptimizer(<span class="number">0.1</span>).minimize(loss)</span><br><span class="line">sess = tf.Session()</span><br><span class="line">sess.run(tf.global_variables_initializer())</span><br><span class="line"></span><br><span class="line">fig = plt.figure()</span><br><span class="line">ax = fig.add_subplot(<span class="number">1</span>,<span class="number">1</span>,<span class="number">1</span>)</span><br><span class="line">ax.scatter(x,y)</span><br><span class="line">plt.ion()</span><br><span class="line">plt.show()</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1000</span>):</span><br><span class="line">    sess.run(trainning,feed_dict = &#123;x_data:x,y_data:y&#125;)</span><br><span class="line">    <span class="keyword">if</span> i % <span class="number">50</span> == <span class="number">0</span>:</span><br><span class="line">        <span class="built_in">print</span>(sess.run(loss,feed_dict = &#123;x_data:x,y_data:y&#125;))</span><br><span class="line">        <span class="keyword">try</span>:</span><br><span class="line">            ax.lines.remove(lines[<span class="number">0</span>])</span><br><span class="line">        <span class="keyword">except</span> Exception:</span><br><span class="line">            <span class="keyword">pass</span></span><br><span class="line">        predict_val = sess.run(predict,feed_dict = &#123;x_data:x&#125;)</span><br><span class="line">        lines = ax.plot(x,predict_val,<span class="string">&#x27;r-&#x27;</span>,lw = <span class="number">5</span>)</span><br><span class="line">        plt.pause(<span class="number">0.1</span>)</span><br></pre></td></tr></table></figure> ### output: 0.29719043 0.008188563 0.005622979
+0.0047432035 0.0042990027 0.0040122583 0.0038019188 0.003706917
+0.0035503162 0.00343985 0.003398858 0.003354532 0.0033004875
+0.0032468617 0.0032003152 0.0031578606 0.0031319312 0.0031033608
+0.003071908 0.0030463308 ### 函數圖形 <img
+src="https://i.imgur.com/7EoqIQS.png" /></p>
+<h3 id="神經網路">神經網路</h3>
+<p><img src="https://i.imgur.com/N7Hde8q.jpg" />
+我們基本的神經網路構造是由三種層組合而成的，分別為input layer、hidden
+layer、output layer，我在這邊設定我們的hidden layer有10個。 ### code
+introduction
+首先要定義一個神經層，名稱叫做add_layer()，要傳入的參數有4個，為了滿足函數關係，我們的函數式為:y
+=
+wx+b，第一個參數是我們的x，第二個參數是我們神經元的輸入層數量，第三個參數是我們神經元輸出層數量，第四個是我們要加入的激勵函數，常見的激勵函數有:sigmoid、tanh、ReLU，負責做非線性的調整，使我們的神經元在某個部位較為特別。
+接著定義我們weight和bias，我們的weight是給予亂數，而bias是給予0.1，接著算出我們的y，所以我們的y
+=
+wx+b的所有數字都齊全了，接著將他傳入激勵函數，所以要先判斷使用者是否有給予激勵函數，如果沒有，則使用預設值None，使用原本的線性函數，而如果有給予激勵函數，則會將y傳入激勵函數，最後再將結果回傳。</p>
+<p>由於要訓練電腦做出最佳的判斷，我們必須先有一個函數式，將x輸入可得到y，而我們y不見得是完全落在我們函式圖形上，應該會有偏差，所以我們這邊加入noise，使數據有些偏差，這樣會更像真實數據。
+接著建造兩個placeholder，一個是x_data另一個是y_data，而x_data是代表我們一開始生成的x，y_data是代表我們實際數據的y，將此placeholder加入我們的add_layer()，由於我們隱藏層有10個所以輸入10，且我希望我的x_data可以運用激勵函數數值縮減到0~1之間，所以這邊使用ReLU，簡單說一下ReLU是什麼ReLU是一種激勵函數，能讓原本大於1的數變成縮到0~1之間，而小於0的數自動變成0。</p>
+<p>接著寫出loss
+function，這邊使用的方法是MSE，這邊比較不一樣的是reduce_sum()裡的reduction_indices是指說我們希望對哪一個維度做加總，默認值是把所有數據做加總也就是一維，而如果給予的參數是0代表是對第0維的位置做加總，以此類推。
+再來是要做optimization，這裡是用的方法是Gradient
+Descent(梯度下降)，接著將結果的loss盡可能取較小的，所以取minimize()。</p>
+<p>由於我們希望能有數據可視化的效果，所以這邊先利用plt.figure()建立一個新的圖形，接著使用fig.add_subplot()來建造一個子圖，接著將我們實際的點用scatter()畫出散佈圖，再來用迴圈去跑，由於我不希望將所有的線條都畫出來，所以我要將前一份刪除，但在第一份資料顯示的時候沒有前一份，此時會出現error，所以這裡使用try語句，如果出現error就pass，如果沒有就將它刪除。
+最後用sess.run()來跑tranning，並分別給予x_data和y_data值，同時等候0.1秒輸出一個圖，並每隔50次輸出一次結果，而我們可以看到數值下降的趨向，以及函數圖的紅色曲線越來越接近我們的真實值，代表電腦已經經過訓練了，我們的結果也完成了。
+## 存取已訓練好的資料 ### 程式碼 #### 儲存： <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> tensorflow.compat.v1 <span class="keyword">as</span> tf</span><br><span class="line"></span><br><span class="line">tf.disable_v2_behavior()</span><br><span class="line"></span><br><span class="line">w = tf.Variable([[<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>],[<span class="number">4</span>,<span class="number">5</span>,<span class="number">6</span>]], dtype = tf.float32, name = <span class="string">&#x27;weight&#x27;</span>)</span><br><span class="line">b = tf.Variable([[<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>]], dtype = tf.float32, name = <span class="string">&#x27;bias&#x27;</span>)</span><br><span class="line"></span><br><span class="line">init = tf.global_variables_initializer()</span><br><span class="line"></span><br><span class="line">saver = tf.train.Saver()</span><br><span class="line"></span><br><span class="line"><span class="keyword">with</span> tf.Session <span class="keyword">as</span> sess:</span><br><span class="line">  sess.run(init)</span><br><span class="line">  save_path = saver.save(sess, <span class="string">&#x27;my_net/save_net.ckpt&#x27;</span>)</span><br><span class="line">  <span class="built_in">print</span>(<span class="string">&#x27;Save path: &#x27;</span>, save_path)</span><br></pre></td></tr></table></figure> #### 提取：
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> tensorflow.compat.v1 <span class="keyword">as</span> tf</span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"></span><br><span class="line">tf.disable_v2_behavior()</span><br><span class="line"></span><br><span class="line">w = tf.Variable(np.arange(<span class="number">6</span>).reshape((<span class="number">2</span>, <span class="number">3</span>)),dtype = tf.float32, name = <span class="string">&#x27;weight&#x27;</span>)</span><br><span class="line">b = tf.Variable(np.arange(<span class="number">3</span>).reshape((<span class="number">1</span>,<span class="number">3</span>)), dtype = tf.float32, name = <span class="string">&#x27;bias&#x27;</span>)</span><br><span class="line"></span><br><span class="line">saver = tf.train.Saver()</span><br><span class="line"><span class="keyword">with</span> tf.Session() <span class="keyword">as</span> sess:</span><br><span class="line">  saver.restore(sess, <span class="string">&#x27;my_net/save_net.ckpt&#x27;</span>)</span><br><span class="line">  <span class="built_in">print</span>(<span class="string">&quot;weight: &quot;</span>, sess.run(w))</span><br><span class="line">  <span class="built_in">print</span>(<span class="string">&#x27;bias: &#x27;</span>, sess.run(b))</span><br></pre></td></tr></table></figure>
+在tensorflow1.x只提供變數的存取和提取，不提供存取整個神經網路，而這邊的程式十分易懂，所以這邊就不多做介紹了。
+## CNN ### 程式碼 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"><span class="keyword">import</span> pandas <span class="keyword">as</span> pd</span><br><span class="line"><span class="keyword">from</span> tensorflow.keras.utils <span class="keyword">import</span> to_categorical</span><br><span class="line"><span class="keyword">from</span> tensorflow.keras.models <span class="keyword">import</span> Sequential</span><br><span class="line"><span class="keyword">from</span> tensorflow.keras.layers <span class="keyword">import</span> Conv2D, MaxPooling2D</span><br><span class="line"><span class="keyword">from</span> tensorflow.keras.layers <span class="keyword">import</span> Dense, Flatten</span><br><span class="line"><span class="keyword">from</span> tensorflow.keras.optimizers <span class="keyword">import</span> SGD</span><br><span class="line"><span class="keyword">from</span> tensorflow.keras.datasets <span class="keyword">import</span> mnist</span><br><span class="line"></span><br><span class="line">(x_train, y_train), (x_test, y_test) = mnist.load_data()</span><br><span class="line">x_train = x_train.reshape(<span class="number">60000</span>, <span class="number">28</span>, <span class="number">28</span>, <span class="number">1</span>) / <span class="number">255</span></span><br><span class="line">x_test = x_test.reshape(<span class="number">10000</span>, <span class="number">28</span>, <span class="number">28</span>, <span class="number">1</span>) / <span class="number">255</span></span><br><span class="line">y_train = to_categorical(y_train, <span class="number">10</span>)</span><br><span class="line">y_test = to_categorical(y_test, <span class="number">10</span>)</span><br><span class="line"></span><br><span class="line">model = Sequential()</span><br><span class="line">model.add(Conv2D(<span class="number">16</span>, (<span class="number">3</span>,<span class="number">3</span>), padding=<span class="string">&#x27;same&#x27;</span>, input_shape=(<span class="number">28</span>,<span class="number">28</span>,<span class="number">1</span>),activation = <span class="string">&#x27;relu&#x27;</span>))</span><br><span class="line">model.add(MaxPooling2D(pool_size=(<span class="number">2</span>,<span class="number">2</span>)))</span><br><span class="line">model.add(Conv2D(<span class="number">32</span>, (<span class="number">3</span>,<span class="number">3</span>), padding=<span class="string">&#x27;same&#x27;</span>, activation = <span class="string">&#x27;relu&#x27;</span>))</span><br><span class="line">model.add(MaxPooling2D(pool_size=(<span class="number">2</span>,<span class="number">2</span>)))</span><br><span class="line">model.add(Conv2D(<span class="number">64</span>, (<span class="number">3</span>,<span class="number">3</span>), padding=<span class="string">&#x27;same&#x27;</span>, activation = <span class="string">&#x27;relu&#x27;</span>))</span><br><span class="line">model.add(MaxPooling2D(pool_size=(<span class="number">2</span>,<span class="number">2</span>)))</span><br><span class="line">model.add(Flatten())</span><br><span class="line">model.add(Dense(<span class="number">60</span>, activation = <span class="string">&#x27;relu&#x27;</span>))</span><br><span class="line">model.add(Dense(<span class="number">10</span>, activation = <span class="string">&#x27;softmax&#x27;</span>))</span><br><span class="line">model.summary()</span><br><span class="line"></span><br><span class="line">model.<span class="built_in">compile</span>(loss = <span class="string">&#x27;mse&#x27;</span>, optimizer = SGD(lr=<span class="number">0.087</span>), metrics = [<span class="string">&#x27;accuracy&#x27;</span>])</span><br><span class="line">model.fit(x_train, y_train, batch_size = <span class="number">128</span>, epochs = <span class="number">12</span>)</span><br><span class="line">result = model.predict_classes(x_test)</span><br><span class="line"><span class="comment"># result = np.argmax(model.predict(x_test), axis = -1)</span></span><br><span class="line">loss, acc = model.evaluate(x_test, y_test)</span><br><span class="line"><span class="built_in">print</span>(<span class="string">f&#x27;accuracy: <span class="subst">&#123;acc*<span class="number">100</span>:<span class="number">.2</span>f&#125;</span>%&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">my_predict</span>(<span class="params">n</span>):</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&#x27;CNN predict: &#x27;</span>, result[n])</span><br><span class="line">    X = x_test[n].reshape(<span class="number">28</span>,<span class="number">28</span>)</span><br><span class="line">    plt.imshow(X, cmap=<span class="string">&#x27;Greys&#x27;</span>)</span><br><span class="line">n = <span class="number">893</span></span><br><span class="line">my_predict(n)</span><br><span class="line">plt.show()</span><br><span class="line">model.save(<span class="string">&#x27;CNNmodel.h5&#x27;</span>)</span><br></pre></td></tr></table></figure> ### 輸出 <img
+src="https://i.imgur.com/vmoHQFo.png" /> <img
+src="https://i.imgur.com/vWWndr2.png" /> ### 程式介紹
+首先引入基本的套件，接著引入to_categorical，to_categorical的功用是將資料變成one-hot
+encoding，然後是Sequential，幫助我們建立神經網路，再來引入Keras寫好的神經層，我們會用到卷積層和池化層，以及會使用到fully
+connected，所以引入Dense，還有我們會將資料打平成向量，所以引入Flatten，在optimization的時候是使用SGD，最後我們會運用到MNIST資料集。
+我們將MNIST的資料讀取，分別把training data和testing
+data取出並存取，這裡的imshow()只是單純想要觀看MNIST的圖片，再來將我們x
+data做處理，由於我們的training data有60000份，testing
+data有10000份，且每張圖片都是28*28，所以這邊reshape，將資料變成784維的向量，然後我們784筆資料的值是0~255，我們偏向將資料值能在0~1之間，所以這邊我們除以255，再來是y
+data，我們將y data轉成one-hot encoding ，為10維的向量。
+我們使用Sequential建造神經網路，使用add()函式增加神經層，Conv2D()是我們的卷積層，共三層卷積層，第一層卷積層我們設定16個filter，filter是我們每次進行篩選的時候會運用到的篩選器，而當我們有幾個filter就會有幾個channel第二個參數是擺入我們filter的大小，而padding代表我們是否要在我們的image外添加0，這裡選擇same，代表我們希望做完卷積層之後的大小和原圖一樣，至於添加幾層0，會由電腦自行計算，由於第一層卷積層不知道我們輸入的圖形樣式，所以這邊我們告訴它是28*28*1，記得channel數也要加，最後選擇我們的激勵函數，這邊選擇ReLU，其他卷積層的作法和此層相同，所以這邊就不多做贅述，再來介紹一下池化層，這裡是使用max
+pooling，我們的pooling大小設為2*2，所以我們會像filiter一樣進行掃描，在2*\2的範圍內找最大值，並做紀錄，此時我們的image會縮小。再來我們將此model進行flatten()，將資料全部打平成向量，並添加兩層Dense，來進行fully
+connected，這裡的model.summary()只是單純看神經網路的架構。再來使用compile來配置訓練model，我們的model使用MSE來計算loss
+function，優化器使用SGD，learning
+rate調整為0.09，而metrics這個參數是判斷訓練和測試時的成效。此處的fit()函數是我們訓練的模型，第一和二個參數是我們的數據，第三個是我們每次做批量訓練的數量，因為我們不可能直接將所有training
+data一次全部訓練，這樣數據量太大，所以要做batch
+training，epochs是我們要訓練幾次。用Keras做預測的時候有兩種方法，一種是使用predict()，這種回傳的是機率，另一種是predict_classes()，這種則會回傳向量中數值最大的index，如果使用predict()想要達到相同效果的話，需再加上argmax()，這邊就選擇使用predict_classes()，我們會這樣做是因為我們使用的是one-hot
+encoding
+，所以得到index時即可找到預測的數值，再來使用model.evaluate()計算model的loss
+和
+accuracy，而最後那個函數是幫我們輸入編號並輸出預測數字已行實際圖片，完成以上後即完成此次實作。</p>
+<h2 id="resnet50">ResNet50</h2>
+<h3 id="程式碼">程式碼</h3>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> pandas <span class="keyword">as</span> pd</span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"><span class="keyword">from</span> tensorflow.keras.applications <span class="keyword">import</span> ResNet50</span><br><span class="line"><span class="keyword">from</span> tensorflow.keras.applications.resnet50 <span class="keyword">import</span> preprocess_input</span><br><span class="line"><span class="keyword">from</span> tensorflow.keras.preprocessing.image <span class="keyword">import</span> load_img, img_to_array</span><br><span class="line"><span class="keyword">from</span> urllib.request <span class="keyword">import</span> urlretrieve</span><br><span class="line"></span><br><span class="line">urlretrieve(<span class="string">&quot;https://raw.githubusercontent.com/yenlung/Deep-Learning-Basics/master/data/imagnet-classes.txt&quot;</span>, <span class="string">&quot;imagnet-classes.txt&quot;</span>)</span><br><span class="line"></span><br><span class="line">cooper=[]</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1</span>,<span class="number">7</span>):</span><br><span class="line">  urlretrieve(<span class="string">f&quot;https://github.com/yenlung/Deep-Learning-Basics/raw/master/data/cooper/cooper0<span class="subst">&#123;i&#125;</span>.jpg&quot;</span>, <span class="string">f&quot;cooper0<span class="subst">&#123;i&#125;</span>.jpg&quot;</span>)</span><br><span class="line">  cooper.append(<span class="string">f&quot;cooper0<span class="subst">&#123;i&#125;</span>.jpg&quot;</span>)</span><br><span class="line">img = load_img(cooper[<span class="number">2</span>], target_size = (<span class="number">224</span>,<span class="number">224</span>))</span><br><span class="line">x = img_to_array(img)</span><br><span class="line">plt.axis(<span class="string">&#x27;off&#x27;</span>)</span><br><span class="line">plt.imshow(x/<span class="number">255</span>)</span><br><span class="line">resnet = ResNet50()</span><br><span class="line"><span class="keyword">with</span> <span class="built_in">open</span>(<span class="string">&#x27;imagnet-classes.txt&#x27;</span>) <span class="keyword">as</span> f:</span><br><span class="line">  labels = [line.strip() <span class="keyword">for</span> line <span class="keyword">in</span> f.readlines()]</span><br><span class="line">x = x.reshape(<span class="number">1</span>, <span class="number">224</span>, <span class="number">224</span>, <span class="number">3</span>)</span><br><span class="line">inp = preprocess_input(x)</span><br><span class="line">[k] = np.argmax(resnet.predict(inp), axis=-<span class="number">1</span>)</span><br><span class="line"><span class="built_in">print</span>(<span class="string">f&quot;ResNet 覺得是 <span class="subst">&#123;labels[k]&#125;</span>&quot;</span>)</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
+<h2 id="影像辨識">影像辨識</h2>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> pandas <span class="keyword">as</span> pd</span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"><span class="keyword">from</span> urllib.request <span class="keyword">import</span> urlretrieve</span><br><span class="line"><span class="keyword">import</span> pickle</span><br><span class="line"><span class="keyword">from</span> tensorflow.keras.utils <span class="keyword">import</span> to_categorical</span><br><span class="line"><span class="keyword">from</span> tensorflow.keras.applications.resnet50 <span class="keyword">import</span> preprocess_input</span><br><span class="line"><span class="keyword">from</span> tensorflow.keras.applications <span class="keyword">import</span> ResNet50V2</span><br><span class="line"><span class="keyword">from</span> tensorflow.keras.models <span class="keyword">import</span> Sequential</span><br><span class="line"><span class="keyword">from</span> tensorflow.keras.layers <span class="keyword">import</span> Dense</span><br><span class="line"></span><br><span class="line">urlretrieve(<span class="string">&quot;https://github.com/yenlung/Deep-Learning-Basics/raw/master/data/myna/myna_input.pickle&quot;</span>, <span class="string">&quot;myna_input.pickle&quot;</span>)</span><br><span class="line">urlretrieve(<span class="string">&quot;https://github.com/yenlung/Deep-Learning-Basics/raw/master/data/myna/myna_output.pickle&quot;</span>, <span class="string">&quot;myna_output.pickle&quot;</span>)</span><br><span class="line">file = <span class="built_in">open</span>(<span class="string">&#x27;myna_input.pickle&#x27;</span>, <span class="string">&#x27;rb&#x27;</span>)</span><br><span class="line">data = pickle.load(file)</span><br><span class="line">file.close()</span><br><span class="line">file = <span class="built_in">open</span>(<span class="string">&#x27;myna_output.pickle&#x27;</span>, <span class="string">&#x27;rb&#x27;</span>)</span><br><span class="line">target = pickle.load(file)</span><br><span class="line">file.close()</span><br><span class="line"></span><br><span class="line">n=<span class="number">1</span></span><br><span class="line">plt.axis(<span class="string">&#x27;off&#x27;</span>)</span><br><span class="line">plt.imshow(data[n])</span><br><span class="line"></span><br><span class="line">x_train = preprocess_input(data)</span><br><span class="line">plt.axis(<span class="string">&#x27;off&#x27;</span>)</span><br><span class="line">plt.imshow(x_train[n])</span><br><span class="line"></span><br><span class="line">y_train = to_categorical(target-<span class="number">1</span>, <span class="number">3</span>)</span><br><span class="line">y_train[n]</span><br><span class="line"></span><br><span class="line">resnet = ResNet50V2(include_top=<span class="literal">False</span>, pooling=<span class="string">&quot;avg&quot;</span>)</span><br><span class="line">resnet.trainable = <span class="literal">False</span></span><br><span class="line"></span><br><span class="line">model = Sequential()</span><br><span class="line">model.add(resnet)</span><br><span class="line">model.add(Dense(<span class="number">3</span>, activation=<span class="string">&#x27;softmax&#x27;</span>))</span><br><span class="line">model.<span class="built_in">compile</span>(loss=<span class="string">&#x27;categorical_crossentropy&#x27;</span>, optimizer=<span class="string">&#x27;adam&#x27;</span>, metrics=[<span class="string">&#x27;accuracy&#x27;</span>])</span><br><span class="line">model.summary()</span><br><span class="line">model.fit(x_train, y_train, batch_size=<span class="number">9</span>, epochs=<span class="number">25</span>)</span><br><span class="line"></span><br><span class="line">y_predict = np.argmax(model.predict(x_train), -<span class="number">1</span>)</span><br><span class="line">labels=[<span class="string">&quot;白尾八哥&quot;</span>, <span class="string">&quot;家八哥&quot;</span>, <span class="string">&quot;(土)八哥&quot;</span>]</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">classify_image</span>(<span class="params">inp</span>):</span><br><span class="line">  inp = inp.reshape((-<span class="number">1</span>, <span class="number">256</span>, <span class="number">256</span>, <span class="number">3</span>))</span><br><span class="line">  inp = preprocess_input(inp)</span><br><span class="line">  prediction = model.predict(inp).flatten()</span><br><span class="line">  <span class="keyword">return</span> &#123;labels[i]: <span class="built_in">float</span>(prediction[i]) <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">3</span>)&#125;</span><br><span class="line"></span><br><span class="line">image = gr.inputs.Image(shape=(<span class="number">256</span>, <span class="number">256</span>), label=<span class="string">&quot;八哥照片&quot;</span>)</span><br><span class="line">label = gr.outputs.Label(num_top_classes=<span class="number">3</span>, label=<span class="string">&quot;AI辨識結果&quot;</span>)</span><br></pre></td></tr></table></figure>
+<h2 id="rnn情意分析">RNN(情意分析)</h2>
+<h3 id="程式碼-1">程式碼</h3>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> pandas <span class="keyword">as</span> pd</span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"><span class="keyword">from</span> tensorflow.keras.preprocessing <span class="keyword">import</span> sequence</span><br><span class="line"><span class="keyword">from</span> tensorflow.keras.models <span class="keyword">import</span> Sequential</span><br><span class="line"><span class="keyword">from</span> tensorflow.keras.layers <span class="keyword">import</span> Dense, Embedding</span><br><span class="line"><span class="keyword">from</span> tensorflow.keras.layers <span class="keyword">import</span> LSTM</span><br><span class="line"><span class="keyword">from</span> tensorflow.keras.datasets <span class="keyword">import</span> imdb</span><br><span class="line"><span class="keyword">from</span> tensorflow.keras.datasets.imdb <span class="keyword">import</span> get_word_index</span><br><span class="line"></span><br><span class="line">(x_train, y_train), (x_test, y_test) = imdb.load_data(num_words=<span class="number">10000</span>)</span><br><span class="line">x_train = sequence.pad_sequences(x_train, maxlen=<span class="number">100</span>)</span><br><span class="line">x_test = sequence.pad_sequences(x_test, maxlen=<span class="number">100</span>)</span><br><span class="line"></span><br><span class="line">model = Sequential()</span><br><span class="line">model.add(Embedding(<span class="number">10000</span>, <span class="number">128</span>))</span><br><span class="line">model.add(LSTM(<span class="number">128</span>))</span><br><span class="line">model.add(Dense(<span class="number">1</span>, activation=<span class="string">&#x27;sigmoid&#x27;</span>))</span><br><span class="line">model.<span class="built_in">compile</span>(loss=<span class="string">&#x27;binary_crossentropy&#x27;</span>, optimizer=<span class="string">&#x27;adam&#x27;</span>, metrics=[<span class="string">&#x27;accuracy&#x27;</span>])</span><br><span class="line">model.summary()</span><br><span class="line"></span><br><span class="line">model.fit(x_train, y_train, batch_size=<span class="number">32</span>, epochs=<span class="number">10</span>, validation_data=(x_test, y_test))</span><br><span class="line"></span><br><span class="line">word_index = get_word_index()</span><br><span class="line"><span class="built_in">print</span>(word_index[<span class="string">&#x27;this&#x27;</span>])</span><br><span class="line"></span><br><span class="line">text = <span class="string">&quot;this movie is bad&quot;</span></span><br><span class="line">seq = [word_index[x] <span class="keyword">for</span> x <span class="keyword">in</span> text.split()]</span><br><span class="line"><span class="built_in">print</span>(model.predict([seq]))</span><br><span class="line"></span><br><span class="line">text = <span class="string">&quot;this movie is good&quot;</span></span><br><span class="line">seq = [word_index[i] <span class="keyword">for</span> i <span class="keyword">in</span> text.split()]</span><br><span class="line"><span class="built_in">print</span>(model.predict([seq]))</span><br><span class="line"></span><br><span class="line">model_json = model.to_json()</span><br><span class="line"><span class="built_in">open</span>(<span class="string">&#x27;imdb_model_architecture.json&#x27;</span>, <span class="string">&#x27;w&#x27;</span>).write(model_json)</span><br><span class="line">model.save_weights(<span class="string">&#x27;ismdb_model_weights.h5&#x27;</span>)</span><br></pre></td></tr></table></figure>
+<h3 id="程式碼介紹">程式碼介紹</h3>
+<p>首先引入基本套件，再來引入sequence套件，這個套件是對我們的文字做處理的，再來是Sequential，這個就是架設神經網路的框架，然後引入Dense做全連結的神經網路，這邊比較特別的是Embedding，這個是Keras很貼心的地方，這個神經層是負責降維度，再來到了RNN的重頭戲，LSTM(Long
+Short-Term
+Momory)是RNN的一種，其實還有另一種叫做GRU，這邊不會解釋LSTM，因為LSTM非常複雜，反正這邊就把它當作一種RNN的神經層，然後我們引入imdb，這個是網路電影資料庫，我們要從裡面提取資料，最後是get_word_index，這個是imdb裡支援的，它可以給我們得到單字的index。
+再來要取得數據，我們從imdb裡提取，我們只提取10000個數字，太多數字數據會太大，然後將此向量做分割，100個數字算一組，如果未滿100個數字就補0。
+再來建造神經網路和訓練與往常一樣，這邊就不多贅述了，只是這邊要注意，用colaby做的時候要開gpu，或者盡量使用有gpu運算的電腦，不然會訓練非常久。
+然後我們來看看'this'這個字的index是多少，輸出時可以知道是11，然後我們輸入一個對電影的評價，並將每個字做分割並傳入做預測，此時得到的數字越大代表電腦判斷這句話是正向的，越接近0時代表這句話是反面的，最後再做儲存就完成這次的實作了。
+## Tokenizer ### 程式碼 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> pandas <span class="keyword">as</span> pd</span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"><span class="keyword">from</span> tensorflow.keras.preprocessing.text <span class="keyword">import</span> Tokenizer</span><br><span class="line"><span class="keyword">from</span> urllib.request <span class="keyword">import</span> urlretrieve</span><br><span class="line"><span class="keyword">import</span> pickle</span><br><span class="line"></span><br><span class="line">urlretrieve(<span class="string">&quot;https://github.com/yenlung/Deep-Learning-Basics/raw/master/data/dream.txt&quot;</span>, <span class="string">&quot;dream.txt&quot;</span>)</span><br><span class="line">f = <span class="built_in">open</span>(<span class="string">&#x27;dream.txt&#x27;</span>, <span class="string">&#x27;r&#x27;</span>)</span><br><span class="line">lines = f.readlines()</span><br><span class="line">f.close()</span><br><span class="line">text_lines = [x.lstrip(<span class="string">&#x27;\u3000\u3000&#x27;</span>) <span class="keyword">for</span> x <span class="keyword">in</span> lines]</span><br><span class="line">text = <span class="string">&#x27;&#x27;</span>.join(text_lines)</span><br><span class="line">tokenizer = Tokenizer(char_level=<span class="literal">True</span>)</span><br><span class="line">tokenizer.fit_on_texts([text])</span><br><span class="line"><span class="built_in">print</span>(tokenizer.texts_to_sequences([<span class="string">&quot;人生短暫，珍惜當下&quot;</span>]))</span><br><span class="line"><span class="built_in">print</span>(tokenizer.sequences_to_texts([[<span class="number">12</span>, <span class="number">131</span>, <span class="number">804</span>, <span class="number">792</span>, <span class="number">1</span>, <span class="number">261</span>, <span class="number">403</span>, <span class="number">203</span>, <span class="number">59</span>]]))</span><br><span class="line">f = <span class="built_in">open</span>(<span class="string">&#x27;MyTokenizer.pkl&#x27;</span>, <span class="string">&#x27;wb&#x27;</span>)</span><br><span class="line">pickle.dump(tokenizer, f)</span><br><span class="line">f.close()</span><br><span class="line"></span><br><span class="line"><span class="comment"># 開啟檔案方式：</span></span><br><span class="line"><span class="comment"># f = open(&#x27;tokenizer.pkl&#x27;, &#x27;rb&#x27;)</span></span><br><span class="line"><span class="comment"># tokenizer = pickle.load(f)</span></span><br><span class="line"><span class="comment"># f.close()</span></span><br></pre></td></tr></table></figure> ### 輸出 [[12, 131, 804, 792, 1,
+261, 403, 203, 59]] ['人 生 短 暫 ， 珍 惜 當 下'] ### 程式碼介紹
+這邊只會稍微講解一下，這邊引入套件的部分有一個是我們的主題，就是Keras底下的Tokenizer。
+我們先從蔡炎龍教授的github下載紅樓夢，並將紅樓夢逐一讀行存進lines裡，各位可以將其中一句輸出，會看到000000這個亂碼，所以我們要用lstrip()進行刪除，這裡會用迭代將每一行都移除此符號，再來用join將全部串起來，在join前面的空字串代表串起來的中間不要加字元，再來建造我們的tokenizer，裡面的參數char_level如果是True代表我們要每一個字都進行理解，反之則否，再來進行tokenizer的訓練，訓練完後我們將字串轉成數值，跟將數值轉成字串，即可得到我們的結果。</p>
+<h5 id="by-中和高中-吳振榮">by 中和高中 吳振榮</h5>
+
+    </article>
+    <!-- license -->
+    
+    <!-- paginator -->
+    <ul class="post-paginator">
+        <li class="next">
+            
+                <div class="nextSlogan">Next Post</div>
+                <a href="/2021/08/27/TensorFlow1%E5%9F%BA%E7%A4%8E%E4%BD%BF%E7%94%A8%E6%96%B9%E6%B3%95/" title="TensorFlow1基礎使用方法">
+                    <div class="nextTitle">TensorFlow1基礎使用方法</div>
+                </a>
+            
+        </li>
+        <li class="previous">
+            
+                <div class="prevSlogan">Previous Post</div>
+                <a href="/2021/08/27/%E5%9F%BA%E7%A4%8Epytorch%E8%88%87%E6%A9%9F%E5%99%A8%E5%AD%B8%E7%BF%92/" title="基礎pytorch與機器學習">
+                    <div class="prevTitle">基礎pytorch與機器學習</div>
+                </a>
+            
+        </li>
+    </ul>
+    <!-- comment -->
+    
+        <div class="post-comment">
+            <!-- 来必力 City 版安装代码 -->
+
+
+            
+
+            
+
+            
+
+            <!-- utteranc评论 -->
+
+
+            <!-- partial('_partial/comment/changyan') -->
+            <!--PC版-->
+
+
+            
+            
+
+            
+
+        </div>
+    
+    <!-- timeliness note -->
+    <!-- idea from: https://hexo.fluid-dev.com/posts/hexo-injector/#%E6%96%87%E7%AB%A0%E6%97%B6%E6%95%88%E6%80%A7%E6%8F%90%E7%A4%BA -->
+    
+    <!-- Mathjax -->
+    
+        
+    <script>
+        MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+            }
+        };
+    </script>
+
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3.2.0/es5/tex-mml-chtml.js"></script>
+
+
+    
+</main>
+
+                <!-- profile -->
+                
+            </div>
+            <footer class="footer footer-unloaded">
+    <!-- social  -->
+    
+        <div class="social">
+            
+    
+        
+            
+                <a href="mailto:WuMax13@gmail.com" class="iconfont-archer email" title=email ></a>
+            
+        
+    
+        
+            
+                <a href="https://github.com/MaxWutw" class="iconfont-archer github" target="_blank" title=github></a>
+            
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+            
+                <a href="https://www.facebook.com/profile.php?id=100020738000412" class="iconfont-archer facebook" target="_blank" title=facebook></a>
+            
+        
+    
+        
+    
+        
+            
+                <a href="https://www.instagram.com/_wuzhenlong/" class="iconfont-archer instagram" target="_blank" title=instagram></a>
+            
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+
+
+        </div>
+    
+    <!-- powered by Hexo  -->
+    <div class="copyright">
+        <span id="hexo-power">Powered by <a href="https://hexo.io/" target="_blank">Hexo</a></span><span class="iconfont-archer power">&#xe635;</span><span id="theme-info">theme <a href="https://github.com/fi3ework/hexo-theme-archer" target="_blank">Archer</a></span>
+    </div>
+    <!-- website approve for Chinese user -->
+    
+    <!-- 不蒜子  -->
+    
+        <div class="busuanzi-container">
+            
+             
+                <span id="busuanzi_container_site_pv">PV: <span id="busuanzi_value_site_pv"></span> :)</span>
+            
+        </div>
+    	
+</footer>
+
+        </div>
+        <!-- toc -->
+        
+            <div class="toc-wrapper toc-wrapper-loding" style=
+
+
+
+
+
+
+
+    top:50vh;
+
+>
+                <div class="toc-catalog">
+                    <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
+                </div>
+                <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BF%83%E6%83%85%E6%8A%92%E7%99%BC"><span class="toc-number">1.</span> <span class="toc-text">心情抒發</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%99%95%E7%90%86%E6%A9%9F%E5%99%A8%E5%AD%B8%E7%BF%92%E7%9A%84%E4%B8%89%E5%A4%A7%E6%AD%A5%E9%A9%9F"><span class="toc-number">2.</span> <span class="toc-text">處理機器學習的三大步驟</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%8E%A5%E8%91%97%E4%BE%86%E7%9C%8B%E5%87%BD%E5%BC%8F%E5%9C%96%E5%BD%A2"><span class="toc-number">2.1.</span> <span class="toc-text">接著來看函式圖形:</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%A5%9E%E7%B6%93%E7%B6%B2%E8%B7%AF"><span class="toc-number">2.2.</span> <span class="toc-text">神經網路</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#resnet50"><span class="toc-number">3.</span> <span class="toc-text">ResNet50</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%A8%8B%E5%BC%8F%E7%A2%BC"><span class="toc-number">3.1.</span> <span class="toc-text">程式碼</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BD%B1%E5%83%8F%E8%BE%A8%E8%AD%98"><span class="toc-number">4.</span> <span class="toc-text">影像辨識</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#rnn%E6%83%85%E6%84%8F%E5%88%86%E6%9E%90"><span class="toc-number">5.</span> <span class="toc-text">RNN(情意分析)</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%A8%8B%E5%BC%8F%E7%A2%BC-1"><span class="toc-number">5.1.</span> <span class="toc-text">程式碼</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%A8%8B%E5%BC%8F%E7%A2%BC%E4%BB%8B%E7%B4%B9"><span class="toc-number">5.2.</span> <span class="toc-text">程式碼介紹</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#by-%E4%B8%AD%E5%92%8C%E9%AB%98%E4%B8%AD-%E5%90%B3%E6%8C%AF%E6%A6%AE"><span class="toc-number">5.2.0.1.</span> <span class="toc-text">by 中和高中 吳振榮</span></a></li></ol></li></ol></li></ol></li></ol>
+            </div>
+        
+        <!-- sidebar -->
+        <div class="sidebar sidebar-hide">
+    <ul class="sidebar-tabs sidebar-tabs-active-0">
+        <li class="sidebar-tab-archives"><span class="iconfont-archer">&#xe67d;</span><span class="tab-name">Archive</span></li>
+        <li class="sidebar-tab-tags"><span class="iconfont-archer">&#xe61b;</span><span class="tab-name">Tag</span></li>
+        <li class="sidebar-tab-categories"><span class="iconfont-archer">&#xe666;</span><span class="tab-name">Cate</span></li>
+    </ul>
+    <div class="sidebar-content sidebar-content-show-archive">
+        <div class="sidebar-panel-archives">
+    <!-- 在 ejs 中将 archive 按照时间排序 -->
+    
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+    
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+    
+    
+    
+    
+    <div class="total-and-search">
+        <div class="total-archive">
+        Total : 31
+        </div>
+        <!-- search  -->
+        
+    </div>
+    
+    <div class="post-archive">
+    
+        
+            
+            
+            <div class="archive-year"> 2023 </div>
+            <ul class="year-list">
+            
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/10</span>
+            <a class="archive-post-title" href="/2023/05/10/%E5%9F%BA%E7%A4%8E%E6%95%B8%E8%AB%96/">基礎數論</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/05</span>
+            <a class="archive-post-title" href="/2023/04/05/GIT/">GIT</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/05</span>
+            <a class="archive-post-title" href="/2023/04/05/%E5%BF%AB%E9%80%9F%E5%86%AA%E5%92%8C%E7%9F%A9%E9%99%A3%E5%BF%AB%E9%80%9F%E5%86%AA/">快速冪和矩陣快速冪</a>
+        </li>
+    
+        
+            
+            
+                
+                </ul>
+            
+            <div class="archive-year"> 2021 </div>
+            <ul class="year-list">
+            
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/12</span>
+            <a class="archive-post-title" href="/2021/09/12/%E5%9C%A8Linux%E5%AE%89%E8%A3%9DCUDA/">在Linux安裝CUDA，並在Pytorch進行CUDA訓練</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/29</span>
+            <a class="archive-post-title" href="/2021/08/29/%E5%8F%AF%E8%A7%A3%E9%87%8B%E4%BA%BA%E5%B7%A5%E6%99%BA%E6%85%A7-explainable-ai/">可解釋人工智慧_explainable_ai</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/29</span>
+            <a class="archive-post-title" href="/2021/08/29/%E5%9F%BA%E6%96%BC%E6%B7%B1%E5%BA%A6%E5%AD%B8%E7%BF%92%E9%80%B2%E8%A1%8C%E8%B2%93%E8%88%87%E7%8B%97%E7%9A%84%E8%BE%A8%E8%AA%8D-Pytorch/">基於深度學習進行貓與狗的辨認(Pytorch)</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/28</span>
+            <a class="archive-post-title" href="/2021/08/28/C-%E7%89%A9%E4%BB%B6%E5%B0%8E%E5%90%91/">C++物件導向</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/28</span>
+            <a class="archive-post-title" href="/2021/08/28/%E5%9F%BA%E7%A4%8E%E6%BC%94%E7%AE%97%E6%B3%95-C/">基礎演算法(Algorithm)-C++</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/28</span>
+            <a class="archive-post-title" href="/2021/08/28/%E5%9F%BA%E7%A4%8E%E8%B3%87%E6%96%99%E7%B5%90%E6%A7%8B-C/">基礎資料結構(Data Structure)-C++</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/27</span>
+            <a class="archive-post-title" href="/2021/08/27/CSS/">CSS</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/27</span>
+            <a class="archive-post-title" href="/2021/08/27/HTML/">HTML</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/27</span>
+            <a class="archive-post-title" href="/2021/08/27/Linux%E5%9F%BA%E7%A4%8E%E4%BD%BF%E7%94%A8/">Linux基礎使用</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/27</span>
+            <a class="archive-post-title" href="/2021/08/27/MNIST%E6%89%8B%E5%AF%AB%E8%BE%A8%E8%AD%98-Pytorch-version/">MNIST手寫辨識(Pytorch version)</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/27</span>
+            <a class="archive-post-title" href="/2021/08/27/MNIST%E6%89%8B%E5%AF%AB%E8%BE%A8%E8%AD%98-TensorFlow-version/">MNIST手寫辨識(TensorFlow-version)</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/27</span>
+            <a class="archive-post-title" href="/2021/08/27/Numpy/">Numpy</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/27</span>
+            <a class="archive-post-title" href="/2021/08/27/Pandas/">Pandas</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/27</span>
+            <a class="archive-post-title" href="/2021/08/27/Scikit-Learn/">Scikit Learn</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/27</span>
+            <a class="archive-post-title" href="/2021/08/27/TensorFlow1%E5%9F%BA%E7%A4%8E%E4%BD%BF%E7%94%A8%E6%96%B9%E6%B3%95/">TensorFlow1基礎使用方法</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/27</span>
+            <a class="archive-post-title" href="/2021/08/27/%E9%81%B7%E7%A7%BB%E5%AD%B8%E7%BF%92-%E5%9C%96%E7%89%87%E8%BE%A8%E8%AD%98/">遷移學習-圖片辨識</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/27</span>
+            <a class="archive-post-title" href="/2021/08/27/APCS%E5%AF%A6%E4%BD%9C%E9%A1%8C/">APCS實作題</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/27</span>
+            <a class="archive-post-title" href="/2021/08/27/Matplotlib/">Matplotlib</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/27</span>
+            <a class="archive-post-title" href="/2021/08/27/%E5%9F%BA%E7%A4%8ETensorFlow2%E8%88%87%E6%A9%9F%E5%99%A8%E5%AD%B8%E7%BF%92/">基礎TensorFlow1和2與機器學習</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/27</span>
+            <a class="archive-post-title" href="/2021/08/27/%E5%9F%BA%E7%A4%8Epytorch%E8%88%87%E6%A9%9F%E5%99%A8%E5%AD%B8%E7%BF%92/">基礎pytorch與機器學習</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/24</span>
+            <a class="archive-post-title" href="/2021/08/24/OpenCV/">OpenCV</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/24</span>
+            <a class="archive-post-title" href="/2021/08/24/pipenv/">pipenv</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/24</span>
+            <a class="archive-post-title" href="/2021/06/24/Linked-List/">Linked_List</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/24</span>
+            <a class="archive-post-title" href="/2021/06/24/Stringstream/">Stringstream</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/24</span>
+            <a class="archive-post-title" href="/2021/06/24/Web/">Web</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/24</span>
+            <a class="archive-post-title" href="/2021/06/24/ctime/">ctime</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/24</span>
+            <a class="archive-post-title" href="/2021/06/24/%E6%8C%87%E6%A8%99/">指標</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/24</span>
+            <a class="archive-post-title" href="/2021/06/24/%E9%81%8B%E7%AE%97%E5%AD%90%E9%87%8D%E8%BC%89/">運算子重載</a>
+        </li>
+    
+    </div>
+</div>
+
+        <div class="sidebar-panel-tags">
+    <div class="sidebar-tags-name">
+        
+            <span class="sidebar-tag-name" data-tags="C++">
+                <span class="iconfont-archer">&#xe606;</span>
+                C++
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="OOP">
+                <span class="iconfont-archer">&#xe606;</span>
+                OOP
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="CSS">
+                <span class="iconfont-archer">&#xe606;</span>
+                CSS
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="web dev">
+                <span class="iconfont-archer">&#xe606;</span>
+                web dev
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="HTML">
+                <span class="iconfont-archer">&#xe606;</span>
+                HTML
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="Linux">
+                <span class="iconfont-archer">&#xe606;</span>
+                Linux
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="Pytorch">
+                <span class="iconfont-archer">&#xe606;</span>
+                Pytorch
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="Machine Learning">
+                <span class="iconfont-archer">&#xe606;</span>
+                Machine Learning
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="TensorFlow2">
+                <span class="iconfont-archer">&#xe606;</span>
+                TensorFlow2
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="Python">
+                <span class="iconfont-archer">&#xe606;</span>
+                Python
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="Scikit Learn">
+                <span class="iconfont-archer">&#xe606;</span>
+                Scikit Learn
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="TensorFlow1">
+                <span class="iconfont-archer">&#xe606;</span>
+                TensorFlow1
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="Math theorem">
+                <span class="iconfont-archer">&#xe606;</span>
+                Math theorem
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="algorithm">
+                <span class="iconfont-archer">&#xe606;</span>
+                algorithm
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="Data structure">
+                <span class="iconfont-archer">&#xe606;</span>
+                Data structure
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="Transfer Learning">
+                <span class="iconfont-archer">&#xe606;</span>
+                Transfer Learning
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="APCS">
+                <span class="iconfont-archer">&#xe606;</span>
+                APCS
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="TensorFlow">
+                <span class="iconfont-archer">&#xe606;</span>
+                TensorFlow
+            </span>
+        
+    </div>
+    <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>
+    <div class="tag-load-fail" style="display: none; color: #ccc; font-size: 0.6rem;">
+        缺失模块，请参考主题文档进行安装配置：https://github.com/fi3ework/hexo-theme-archer#%E5%AE%89%E8%A3%85%E4%B8%BB%E9%A2%98
+    </div> 
+    <div class="sidebar-tags-list"></div>
+</div>
+
+        <div class="sidebar-panel-categories">
+    <div class="sidebar-categories-name">
+    
+    </div>
+    <div class="iconfont-archer sidebar-categories-empty">&#xe678;</div>
+    <div class="sidebar-categories-list"></div>
+</div>
+
+    </div>
+</div>
+
+        <!-- site-meta -->
+        <script>
+    var siteMetaRoot = "/"
+    if (siteMetaRoot === "undefined") {
+        siteMetaRoot = '/'
+    }
+    var siteMeta = {
+        url: "https://maxwutw.github.io",
+        root: siteMetaRoot,
+        author: "Max Wu"
+    }
+</script>
+
+        <!-- import experimental options here -->
+        <!-- Custom Font -->
+
+
+        <!-- main func -->
+        <script src="/scripts/main.js?v=20211217"></script>
+        <!-- dark mode -->
+        <script src="/scripts/dark.js?v=20211217"></script>
+        <!-- fancybox -->
+        <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js" defer></script>
+        <!-- algolia -->
+        
+        <!-- busuanzi -->
+        
+            <script src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" async></script>
+        
+        <!-- CNZZ -->
+        
+        <!-- async load share.js -->
+        
+            <script src="/scripts/share.js?v=20211217" async></script>
+        
+        <!-- mermaid -->
+        
+    </body>
+</html>

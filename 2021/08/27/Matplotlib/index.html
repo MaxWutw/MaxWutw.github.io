@@ -1,0 +1,1531 @@
+<!DOCTYPE html>
+<html lang="en">
+    <!-- title -->
+
+
+    
+
+<!-- keywords -->
+
+
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="author" content="Max Wu">
+    <meta name="renderer" content="webkit">
+    <meta name="copyright" content="Max Wu">
+    
+        <meta name="keywords" content="hexo,hexo-theme,hexo-blog">
+    
+    <meta name="description" content="">
+    <meta name="description" content="matplotlib 數據可視化 參考資料：https:&#x2F;&#x2F;matplotlib.org&#x2F;stable&#x2F;index.html ### matplotlib.pyplot.cla() &amp; matplotlib.pyplot.clf() &amp; matplotlib.pyplot.close() matplotlib.pyplot.cla():清除當前座標軸。 matplotlib.pyp">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Matplotlib">
+<meta property="og:url" content="https://maxwutw.github.io/2021/08/27/Matplotlib/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="matplotlib 數據可視化 參考資料：https:&#x2F;&#x2F;matplotlib.org&#x2F;stable&#x2F;index.html ### matplotlib.pyplot.cla() &amp; matplotlib.pyplot.clf() &amp; matplotlib.pyplot.close() matplotlib.pyplot.cla():清除當前座標軸。 matplotlib.pyp">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://i.imgur.com/9TR3rBw.png">
+<meta property="og:image" content="https://i.imgur.com/lUSFAOV.png">
+<meta property="og:image" content="https://i.imgur.com/hJM8tHr.png">
+<meta property="og:image" content="https://i.imgur.com/kN3kQZD.png">
+<meta property="og:image" content="https://i.imgur.com/RJ8KO41.png">
+<meta property="og:image" content="https://i.imgur.com/mmwus8j.jpg">
+<meta property="og:image" content="https://i.imgur.com/GzWE2Pu.png">
+<meta property="og:image" content="https://i.imgur.com/RUlxd9p.png">
+<meta property="og:image" content="https://i.imgur.com/QzVenGI.png">
+<meta property="og:image" content="https://i.imgur.com/6yKsbyn.jpg">
+<meta property="og:image" content="https://i.imgur.com/CM1f0Ju.jpg">
+<meta property="article:published_time" content="2021-08-27T11:27:29.000Z">
+<meta property="article:modified_time" content="2023-04-05T23:23:50.000Z">
+<meta property="article:author" content="Max Wu">
+<meta property="article:tag" content="Python">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.imgur.com/9TR3rBw.png">
+    <meta http-equiv="Cache-control" content="no-cache">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <link rel="icon" href="/assets/favicon.ico">
+    
+    <title>Matplotlib · Max Coding blog</title>
+    <!-- /*! loadCSS. [c]2017 Filament Group, Inc. MIT License */
+/* This file is meant as a standalone workflow for
+- testing support for link[rel=preload]
+- enabling async CSS loading in browsers that do not support rel=preload
+- applying rel preload css once loaded, whether supported or not.
+*/ -->
+<script>
+    (function (w) {
+        'use strict'
+        // rel=preload support test
+        if (!w.loadCSS) {
+            w.loadCSS = function () {}
+        }
+        // define on the loadCSS obj
+        var rp = (loadCSS.relpreload = {})
+        // rel=preload feature support test
+        // runs once and returns a function for compat purposes
+        rp.support = (function () {
+            var ret
+            try {
+                ret = w.document.createElement('link').relList.supports('preload')
+            } catch (e) {
+                ret = false
+            }
+            return function () {
+                return ret
+            }
+        })()
+
+        // if preload isn't supported, get an asynchronous load by using a non-matching media attribute
+        // then change that media back to its intended value on load
+        rp.bindMediaToggle = function (link) {
+            // remember existing media attr for ultimate state, or default to 'all'
+            var finalMedia = link.media || 'all'
+
+            function enableStylesheet() {
+                link.media = finalMedia
+            }
+
+            // bind load handlers to enable media
+            if (link.addEventListener) {
+                link.addEventListener('load', enableStylesheet)
+            } else if (link.attachEvent) {
+                link.attachEvent('onload', enableStylesheet)
+            }
+
+            // Set rel and non-applicable media type to start an async request
+            // note: timeout allows this to happen async to let rendering continue in IE
+            setTimeout(function () {
+                link.rel = 'stylesheet'
+                link.media = 'only x'
+            })
+            // also enable media after 3 seconds,
+            // which will catch very old browsers (android 2.x, old firefox) that don't support onload on link
+            setTimeout(enableStylesheet, 3000)
+        }
+
+        // loop through link elements in DOM
+        rp.poly = function () {
+            // double check this to prevent external calls from running
+            if (rp.support()) {
+                return
+            }
+            var links = w.document.getElementsByTagName('link')
+            for (var i = 0; i < links.length; i++) {
+                var link = links[i]
+                // qualify links to those with rel=preload and as=style attrs
+                if (
+                    link.rel === 'preload' &&
+                    link.getAttribute('as') === 'style' &&
+                    !link.getAttribute('data-loadcss')
+                ) {
+                    // prevent rerunning on link
+                    link.setAttribute('data-loadcss', true)
+                    // bind listeners to toggle media back
+                    rp.bindMediaToggle(link)
+                }
+            }
+        }
+
+        // if unsupported, run the polyfill
+        if (!rp.support()) {
+            // run once at least
+            rp.poly()
+
+            // rerun poly on an interval until onload
+            var run = w.setInterval(rp.poly, 500)
+            if (w.addEventListener) {
+                w.addEventListener('load', function () {
+                    rp.poly()
+                    w.clearInterval(run)
+                })
+            } else if (w.attachEvent) {
+                w.attachEvent('onload', function () {
+                    rp.poly()
+                    w.clearInterval(run)
+                })
+            }
+        }
+
+        // commonjs
+        if (typeof exports !== 'undefined') {
+            exports.loadCSS = loadCSS
+        } else {
+            w.loadCSS = loadCSS
+        }
+    })(typeof global !== 'undefined' ? global : this)
+</script>
+
+    <style type="text/css">
+    @font-face {
+        font-family: 'Oswald-Regular';
+        src: url("/font/Oswald-Regular.ttf");
+    }
+
+    body {
+        margin: 0;
+    }
+
+    header,
+    footer,
+    .back-top,
+    .sidebar,
+    .container,
+    .site-intro-meta,
+    .toc-wrapper {
+        display: none;
+    }
+
+    .site-intro {
+        position: relative;
+        z-index: 3;
+        width: 100%;
+        /* height: 50vh; */
+        overflow: hidden;
+    }
+
+    .site-intro-placeholder {
+        position: absolute;
+        z-index: -2;
+        top: 0;
+        left: 0;
+        width: calc(100% + 300px);
+        height: 100%;
+        background: repeating-linear-gradient(-45deg, #444 0, #444 80px, #333 80px, #333 160px);
+        background-position: center center;
+        transform: translate3d(-226px, 0, 0);
+        animation: gradient-move 2.5s ease-out 0s infinite;
+    }
+
+    @keyframes gradient-move {
+        0% {
+            transform: translate3d(-226px, 0, 0);
+        }
+        100% {
+            transform: translate3d(0, 0, 0);
+        }
+    }
+</style>
+
+    <link rel="preload" href="/css/style.css?v=20211217" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="preload" href="/css/dark.css?v=20211217" as="style">
+    <link rel="stylesheet" href="/css/dark.css">
+    <link rel="stylesheet" href="/css/mobile.css?v=20211217" media="(max-width: 960px)">
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js" as="script">
+    <link rel="preload" href="/scripts/main.js?v=20211217" as="script">
+    <link rel="preload" href="/scripts/dark.js?v=20211217" as="script">
+    <link rel="preload" href="/font/Oswald-Regular.ttf" as="font" crossorigin>
+    <link rel="preload" href="https://at.alicdn.com/t/font_327081_1dta1rlogw17zaor.woff" as="font" crossorigin>
+    <!-- algolia -->
+    
+    <!-- 百度统计  -->
+    
+    <!-- 谷歌统计  -->
+    
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --><meta name="generator" content="Hexo 6.3.0"></head>
+
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+    <script type="text/javascript">
+        if (typeof window.$ == undefined) {
+            console.warn('jquery load from jsdelivr failed, will load local script')
+            document.write('<script src="/lib/jquery.min.js" />')
+        }
+    </script>
+    
+        <body class="post-body">
+    
+        <!-- header -->
+        <header class="header header-mobile">
+    <!-- top read progress line -->
+    <div class="header-element">
+        <div class="read-progress"></div>
+    </div>
+    <!-- sidebar menu button -->
+    <div class="header-element">
+        
+            <div class="header-sidebar-menu">
+        
+            
+                <div style="padding-left: 1px;">&#xe775;</div>
+            
+        </div>
+    </div>
+    <!-- header actions -->
+    <div class="header-actions">
+        <!-- theme mode switch button -->
+        <span class="header-theme-btn header-element">
+            <i class="fas fa-adjust"></i>
+        </span>
+        <!-- back to home page text -->
+        <span class="home-link header-element">
+            <a href=/>Max Coding blog</a>
+        </span>
+    </div>
+    <!-- toggle banner for post layout -->
+    
+        
+            <div class="banner">
+        
+            <div class="blog-title header-element">
+                <a href="/">Max Coding blog</a>
+            </div>
+            <div class="post-title header-element">
+                <a href="#" class="post-name">Matplotlib</a>
+            </div>
+        </div>
+    
+</header>
+
+        <!-- fixed footer -->
+        <footer class="footer-fixed">
+    <!-- back to top button -->
+    <div class="footer-fixed-element">
+        
+            <div class="back-top back-top-hidden">
+        
+        
+            <div>&#xe639;</div>
+        
+        </div>
+    </div>
+</footer>
+
+        <!-- wrapper -->
+        <div class="wrapper">
+            <div class="site-intro" style="
+
+
+
+
+
+
+
+    height:50vh;
+
+">
+    
+    <!-- 主页  -->
+    
+        
+    <!-- 404页  -->
+    
+    <div class="site-intro-placeholder"></div>
+    <div class="site-intro-img" style="background-image: url(/intro/post-bg.jpg)"></div>
+    <div class="site-intro-meta">
+        <!-- 标题  -->
+        <h1 class="intro-title">
+            <!-- 主页  -->
+            
+                Matplotlib
+            <!-- 404 -->
+            
+        </h1>
+        <!-- 副标题 -->
+        <p class="intro-subtitle">
+            <!-- 主页副标题  -->
+            
+                
+            <!-- 404 -->
+            
+        </p>
+        <!-- 文章页 meta -->
+        
+            <div class="post-intros">
+                <!-- 文章页标签  -->
+                
+                    <div class= post-intro-tags >
+    
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="Python">Python</a>
+    
+</div>
+
+                
+                <!-- 文章字数统计 -->
+                
+                <div class="post-intro-meta">
+                    <!-- 撰写日期 -->
+                    <span class="iconfont-archer post-intro-calander">&#xe676;</span>
+                    <span class="post-intro-time">2021/08/27</span>
+                    <!-- busuanzi -->
+                    
+                        <span id="busuanzi_container_page_pv" class="busuanzi-pv">
+                            <span class="iconfont-archer post-intro-busuanzi">&#xe602;</span>
+                            <span id="busuanzi_value_page_pv"></span>
+                        </span>
+                    
+                    <!-- 文章分享 -->
+                    <span class="share-wrapper">
+                        <span class="iconfont-archer share-icon">&#xe71d;</span>
+                        <span class="share-text">Share</span>
+                        <ul class="share-list">
+                            <li class="iconfont-archer share-qr" data-type="qr">&#xe75b;
+                                <div class="share-qrcode"></div>
+                            </li>
+                            <li class="iconfont-archer" data-type="weibo">&#xe619;</li>
+                            <li class="iconfont-archer" data-type="qzone">&#xe62e;</li>
+                            <li class="iconfont-archer" data-type="twitter">&#xe634;</li>
+                            <li class="iconfont-archer" data-type="facebook">&#xe67a;</li>
+                        </ul>
+                    </span>
+                </div>
+            </div>
+        
+    </div>
+</div>
+
+            <script>
+  // get user agent
+  function getBrowserVersions() {
+    var u = window.navigator.userAgent
+    return {
+      userAgent: u,
+      trident: u.indexOf('Trident') > -1, //IE内核
+      presto: u.indexOf('Presto') > -1, //opera内核
+      webKit: u.indexOf('AppleWebKit') > -1, //苹果、谷歌内核
+      gecko: u.indexOf('Gecko') > -1 && u.indexOf('KHTML') == -1, //火狐内核
+      mobile: !!u.match(/AppleWebKit.*Mobile.*/), //是否为移动终端
+      ios: !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/), //ios终端
+      android: u.indexOf('Android') > -1 || u.indexOf('Linux') > -1, //android终端或者uc浏览器
+      iPhone: u.indexOf('iPhone') > -1 || u.indexOf('Mac') > -1, //是否为iPhone或者安卓QQ浏览器
+      iPad: u.indexOf('iPad') > -1, //是否为iPad
+      webApp: u.indexOf('Safari') == -1, //是否为web应用程序，没有头部与底部
+      weixin: u.indexOf('MicroMessenger') == -1, //是否为微信浏览器
+      uc: u.indexOf('UCBrowser') > -1, //是否为android下的UC浏览器
+    }
+  }
+  var browser = {
+    versions: getBrowserVersions(),
+  }
+  console.log('userAgent: ' + browser.versions.userAgent)
+
+  // callback
+  function fontLoaded() {
+    console.log('font loaded')
+    if (document.getElementsByClassName('site-intro-meta')) {
+      document
+        .getElementsByClassName('intro-title')[0]
+        .classList.add('intro-fade-in')
+      document
+        .getElementsByClassName('intro-subtitle')[0]
+        .classList.add('intro-fade-in')
+      var postIntros = document.getElementsByClassName('post-intros')[0]
+      if (postIntros) {
+        postIntros.classList.add('post-fade-in')
+      }
+    }
+  }
+
+  // UC不支持跨域，所以直接显示
+  function asyncCb() {
+    if (browser.versions.uc) {
+      console.log('UCBrowser')
+      fontLoaded()
+    } else {
+      WebFont.load({
+        custom: {
+          families: ['Oswald-Regular'],
+        },
+        loading: function () {
+          // 所有字体开始加载
+          // console.log('font loading');
+        },
+        active: function () {
+          // 所有字体已渲染
+          fontLoaded()
+        },
+        inactive: function () {
+          // 字体预加载失败，无效字体或浏览器不支持加载
+          console.log('inactive: timeout')
+          fontLoaded()
+        },
+        timeout: 5000, // Set the timeout to two seconds
+      })
+    }
+  }
+
+  function asyncErr() {
+    console.warn('script load from CDN failed, will load local script')
+  }
+
+  // load webfont-loader async, and add callback function
+  function async(u, cb, err) {
+    var d = document,
+      t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0]
+    o.src = u
+    if (cb) {
+      o.addEventListener(
+        'load',
+        function (e) {
+          cb(null, e)
+        },
+        false
+      )
+    }
+    if (err) {
+      o.addEventListener(
+        'error',
+        function (e) {
+          err(null, e)
+        },
+        false
+      )
+    }
+    s.parentNode.insertBefore(o, s)
+  }
+
+  var asyncLoadWithFallBack = function (arr, success, reject) {
+    var currReject = function () {
+      reject()
+      arr.shift()
+      if (arr.length) async(arr[0], success, currReject)
+    }
+
+    async(arr[0], success, currReject)
+  }
+
+  asyncLoadWithFallBack(
+    [
+      'https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js',
+      'https://cdn.bootcss.com/webfont/1.6.28/webfontloader.js',
+      "/lib/webfontloader.min.js",
+    ],
+    asyncCb,
+    asyncErr
+  )
+</script>
+
+            <img class="loading" src="/assets/loading.svg" style="display: block; margin: 6rem auto 0 auto; width: 6rem; height: 6rem;" />
+            <div class="container container-unloaded">
+                <main class="main post-page">
+    <article class="article-entry">
+        <h2 id="matplotlib-數據可視化">matplotlib 數據可視化</h2>
+<p>參考資料：https://matplotlib.org/stable/index.html ###
+matplotlib.pyplot.cla() &amp; matplotlib.pyplot.clf() &amp;
+matplotlib.pyplot.close() matplotlib.pyplot.cla():清除當前座標軸。
+matplotlib.pyplot.clf():清除當前圖形。
+matplotlib.pyplot.close():關閉整個視窗。 ### 做出一個簡易的一次函數圖形
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line">x = np.linspace(-<span class="number">1</span>, <span class="number">1</span>,<span class="number">50</span>)</span><br><span class="line">y = <span class="number">2</span>*x+<span class="number">1</span></span><br><span class="line">plt.plot(x,y)</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure> <img src="https://i.imgur.com/9TR3rBw.png" /> <span id="more"></span>
+而若要做出檢簡易的二次函數，則只需更改y的值，將值設為二次方的數字</p>
+<h3 id="同時顯示兩個figure">同時顯示兩個figure</h3>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line">x = np.linspace(-<span class="number">3</span>,<span class="number">3</span>,<span class="number">50</span>)</span><br><span class="line">y1 = <span class="number">2</span>*x+<span class="number">1</span></span><br><span class="line">y2 = x**<span class="number">2</span></span><br><span class="line">plt.figure()</span><br><span class="line">plt.plot(x,y1)</span><br><span class="line">plt.figure(num = <span class="number">3</span>,figsize = (<span class="number">8</span>,<span class="number">5</span>))</span><br><span class="line">plt.plot(x,y2)</span><br><span class="line">plt.plot(x,y1,color = <span class="string">&#x27;yellow&#x27;</span>,linewidth = <span class="number">1.0</span>,linestyle = <span class="string">&#x27;-&#x27;</span>)</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
+<p>plt.figure(num = 3,figsize =
+(8,5))裡第一個參數是figure的編號，第二個參數是調整視窗大小，plt.plot()的第一個參數是x座標，第二個參數是y座標，第三個參數是線條顏色，第四個參數是線條寬度，地五個參數是線條外觀。
+### subplot()
+subplot()的功能就是在同一個figure裡創造子圖，參數可放三個數字，分別代表「列數、行數、圖形編號」。
+### 顯示出自己限定的x和y的範圍 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line">x = np.linspace(<span class="number">3</span>, -<span class="number">3</span>,<span class="number">50</span>)</span><br><span class="line">y1 = <span class="number">2</span>*x+<span class="number">1</span></span><br><span class="line">y2 = x**<span class="number">2</span></span><br><span class="line">plt.figure()</span><br><span class="line">plt.plot(x,y2)</span><br><span class="line">plt.plot(x,y1,color = <span class="string">&#x27;red&#x27;</span>,linewidth = <span class="number">1.0</span>,linestyle = <span class="string">&#x27;-&#x27;</span>)</span><br><span class="line">plt.xlim((-<span class="number">1</span>,<span class="number">2</span>))</span><br><span class="line">plt.ylim((-<span class="number">2</span>,<span class="number">3</span>))</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
+x座標顯示-1到2的範圍，y座標顯示-2到3的範圍 ### 顯示x和y的標籤 <span
+style="color:red">xlabel</span> <span style="color:red">ylabel</span>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line">x = np.linspace(<span class="number">3</span>, -<span class="number">3</span>,<span class="number">50</span>)</span><br><span class="line">y1 = <span class="number">2</span>*x+<span class="number">1</span></span><br><span class="line">y2 = x**<span class="number">2</span></span><br><span class="line">plt.figure()</span><br><span class="line">plt.plot(x,y2)</span><br><span class="line">plt.plot(x,y1,color = <span class="string">&#x27;red&#x27;</span>,linewidth = <span class="number">1.0</span>,linestyle = <span class="string">&#x27;-&#x27;</span>)</span><br><span class="line">plt.xlim((-<span class="number">1</span>,<span class="number">2</span>))</span><br><span class="line">plt.ylim((-<span class="number">2</span>,<span class="number">3</span>))</span><br><span class="line">plt.xlabel(<span class="string">&#x27;long&#x27;</span>)</span><br><span class="line">plt.ylabel(<span class="string">&#x27;length&#x27;</span>)</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure> <img src="https://i.imgur.com/lUSFAOV.png" /> ### 更換單位
+<span style="color:red">xticks</span> <span
+style="color:red">yticks</span> <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line">x = np.linspace(<span class="number">3</span>, -<span class="number">3</span>,<span class="number">50</span>)</span><br><span class="line">y1 = <span class="number">2</span>*x+<span class="number">1</span></span><br><span class="line">y2 = x**<span class="number">2</span></span><br><span class="line">plt.figure()</span><br><span class="line">plt.plot(x,y2)</span><br><span class="line">plt.plot(x,y1,color = <span class="string">&#x27;red&#x27;</span>,linewidth = <span class="number">1.0</span>,linestyle = <span class="string">&#x27;-&#x27;</span>)</span><br><span class="line">plt.xlim((-<span class="number">1</span>,<span class="number">2</span>))</span><br><span class="line">plt.ylim((-<span class="number">2</span>,<span class="number">3</span>))</span><br><span class="line">plt.xlabel(<span class="string">&#x27;long&#x27;</span>)</span><br><span class="line">plt.ylabel(<span class="string">&#x27;length&#x27;</span>)</span><br><span class="line">new_ticks = np.linspace(-<span class="number">1</span>,<span class="number">2</span>,<span class="number">5</span>)</span><br><span class="line"><span class="built_in">print</span>(new_ticks)</span><br><span class="line">plt.xticks(new_ticks)</span><br><span class="line">plt.yticks([-<span class="number">2</span>,-<span class="number">1.5</span>,-<span class="number">1</span>,<span class="number">1.2</span>,<span class="number">3</span>],[<span class="string">&#x27;worst&#x27;</span>,<span class="string">&#x27;bad&#x27;</span>,<span class="string">&#x27;normal&#x27;</span>,<span class="string">&#x27;good&#x27;</span>,<span class="string">&#x27;best&#x27;</span>])</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure> <img
+src="https://i.imgur.com/5uAAdvv.png" /> ### 更改字體&amp;特別符號
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line">x = np.linspace(<span class="number">3</span>, -<span class="number">3</span>,<span class="number">50</span>)</span><br><span class="line">y1 = <span class="number">2</span>*x+<span class="number">1</span></span><br><span class="line">y2 = x**<span class="number">2</span></span><br><span class="line">plt.figure()</span><br><span class="line">plt.plot(x,y2)</span><br><span class="line">plt.plot(x,y1,color = <span class="string">&#x27;red&#x27;</span>,linewidth = <span class="number">1.0</span>,linestyle = <span class="string">&#x27;-&#x27;</span>)</span><br><span class="line">plt.xlim((-<span class="number">1</span>,<span class="number">2</span>))</span><br><span class="line">plt.ylim((-<span class="number">2</span>,<span class="number">3</span>))</span><br><span class="line">plt.xlabel(<span class="string">&#x27;long&#x27;</span>)</span><br><span class="line">plt.ylabel(<span class="string">&#x27;length&#x27;</span>)</span><br><span class="line">new_ticks = np.linspace(-<span class="number">1</span>,<span class="number">2</span>,<span class="number">5</span>)</span><br><span class="line"><span class="built_in">print</span>(new_ticks)</span><br><span class="line">plt.xticks(new_ticks)</span><br><span class="line">plt.yticks([-<span class="number">2</span>,-<span class="number">1.5</span>,-<span class="number">1</span>,<span class="number">1.2</span>,<span class="number">3</span>],[<span class="string">r&#x27;$worst$&#x27;</span>,<span class="string">r&#x27;$bad$&#x27;</span>,<span class="string">r&#x27;$\alpha$&#x27;</span>,<span class="string">r&#x27;$good$&#x27;</span>,<span class="string">r&#x27;$best$&#x27;</span>])</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
+第16行的r為前置字元，且第三個為數學符號alpha，在alpha前加一個跳脫字元即可顯示希臘字母α。</p>
+<h3 id="顯示座標軸">顯示座標軸</h3>
+<p>會使用到gca(get current axis) <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line">x = np.linspace(<span class="number">3</span>, -<span class="number">3</span>,<span class="number">50</span>)</span><br><span class="line">y1 = <span class="number">2</span>*x+<span class="number">1</span></span><br><span class="line">y2 = x**<span class="number">2</span></span><br><span class="line">plt.figure()</span><br><span class="line">plt.plot(x,y2)</span><br><span class="line">plt.plot(x,y1,color = <span class="string">&#x27;red&#x27;</span>,linewidth = <span class="number">1.0</span>,linestyle = <span class="string">&#x27;-&#x27;</span>)</span><br><span class="line">plt.xlim((-<span class="number">1</span>,<span class="number">2</span>))</span><br><span class="line">plt.ylim((-<span class="number">2</span>,<span class="number">3</span>))</span><br><span class="line">plt.xlabel(<span class="string">&#x27;long&#x27;</span>)</span><br><span class="line">plt.ylabel(<span class="string">&#x27;length&#x27;</span>)</span><br><span class="line">new_ticks = np.linspace(-<span class="number">1</span>,<span class="number">2</span>,<span class="number">5</span>)</span><br><span class="line"><span class="built_in">print</span>(new_ticks)</span><br><span class="line">plt.xticks(new_ticks)</span><br><span class="line">plt.yticks([-<span class="number">2</span>,-<span class="number">1.5</span>,-<span class="number">1</span>,<span class="number">0</span>,<span class="number">1.2</span>,<span class="number">3</span>],[<span class="string">r&#x27;$worst$&#x27;</span>,<span class="string">r&#x27;$bad$&#x27;</span>,<span class="string">r&#x27;$\alpha$&#x27;</span>,<span class="string">r&#x27;$o$&#x27;</span>,<span class="string">r&#x27;$good$&#x27;</span>,<span class="string">r&#x27;$best$&#x27;</span>])</span><br><span class="line">ax = plt.gca()</span><br><span class="line">ax.spines[<span class="string">&#x27;right&#x27;</span>].set_color(<span class="string">&#x27;none&#x27;</span>)</span><br><span class="line">ax.spines[<span class="string">&#x27;top&#x27;</span>].set_color(<span class="string">&#x27;none&#x27;</span>)</span><br><span class="line">ax.xaxis.set_ticks_position(<span class="string">&#x27;bottom&#x27;</span>)</span><br><span class="line">ax.spines[<span class="string">&#x27;bottom&#x27;</span>].set_position((<span class="string">&#x27;data&#x27;</span>,<span class="number">0</span>))</span><br><span class="line">ax.yaxis.set_ticks_position(<span class="string">&#x27;left&#x27;</span>)</span><br><span class="line">ax.spines[<span class="string">&#x27;left&#x27;</span>].set_position((<span class="string">&#x27;data&#x27;</span>,<span class="number">0</span>))</span><br><span class="line"></span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
+set_position語法：set_position(type=位置類型,amount=數量) outward:place
+the spine out from the data area by the specified number of points.
+axes: place the spine at the specified Axes coordinate (from 0.0-1.0)
+data:place the spine at the specified data coordinat</p>
+<h3 id="加圖例">加圖例</h3>
+<p><span style="color:red">plt.legend()</span> <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"></span><br><span class="line">x = np.linspace(-<span class="number">3</span>,<span class="number">3</span>,<span class="number">50</span>)</span><br><span class="line">y1 = <span class="number">2</span>*x+<span class="number">1</span></span><br><span class="line">y2 = x**<span class="number">2</span></span><br><span class="line"></span><br><span class="line">plt.xlim((-<span class="number">1</span>,<span class="number">2</span>))</span><br><span class="line">plt.ylim((-<span class="number">2</span>,<span class="number">3</span>))</span><br><span class="line">plt.xlabel(<span class="string">&#x27;x coordinate&#x27;</span>)</span><br><span class="line">plt.ylabel(<span class="string">&#x27;y coordinate&#x27;</span>)</span><br><span class="line"></span><br><span class="line">new_ticks = np.linspace(-<span class="number">1</span>,<span class="number">2</span>,<span class="number">5</span>)</span><br><span class="line">plt.xticks(new_ticks)</span><br><span class="line">plt.yticks([-<span class="number">2</span>,-<span class="number">1.5</span>,-<span class="number">1</span>,<span class="number">0</span>,<span class="number">1.2</span>,<span class="number">3</span>],[<span class="string">r&#x27;$worst$&#x27;</span>,<span class="string">r&#x27;$bad$&#x27;</span>,<span class="string">r&#x27;$\alpha$&#x27;</span>,<span class="string">r&#x27;$o$&#x27;</span>,<span class="string">r&#x27;$good$&#x27;</span>,<span class="string">r&#x27;$best$&#x27;</span>])</span><br><span class="line"></span><br><span class="line">plt.figure()</span><br><span class="line">line1, = plt.plot(x,y2,label = <span class="string">&#x27;up&#x27;</span>) <span class="comment"># plt.plot() actually have a returns</span></span><br><span class="line">line2, = plt.plot(x,y1,color = <span class="string">&#x27;green&#x27;</span>,linewidth = <span class="number">1</span>,linestyle = <span class="string">&#x27;--&#x27;</span>,label = <span class="string">&#x27;down&#x27;</span>)</span><br><span class="line">plt.legend(handles = [line1,line2],labels = [<span class="string">&#x27;Quadratic function&#x27;</span>,<span class="string">&#x27;linear function&#x27;</span>],loc = <span class="string">&#x27;best&#x27;</span>)</span><br><span class="line"><span class="comment"># if you just want to have one legend you can change the parameter of labels,for examples:labels = [&#x27;Quadratic function,&#x27;] ,remember to add a comma after the first label</span></span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure> <img
+src="https://i.imgur.com/F2F0Dxw.png" /> ###
+圖像做局部的註釋(annotation)
+plt.plot()是將整個函式圖形用線畫出來，若使用plt.scatter()則會將使用者提供的點繪出，不會自動將他話成一個直線，所以我們這邊使用plt.scatter()來做局部點的顯現，plt.scatter()的第一個參數放X座標，第二個放Y座標，第三個參數可以放尺寸，s
+=
+尺寸，第四個參數可以放顏色，然而plt.scatter()還有更多參數，這邊只先用這幾個。接著我們再為圖像增加更多輔助，我們加入plt.plot([x0,x0],[y0,0],'k--',lw
+= 2.5)、plt.plot([0,x0],[y0,y0],'k--',lw = 2,color =
+'purple')是為了輔助觀看，在圖中為點做延伸，第一個參數是放x座標的起點到終點，第二個參數是放y座標的起點和終點，第三個參數是放線條的樣式，第四個是放線條的尺寸。
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line">x = np.linspace(-<span class="number">3</span>,<span class="number">3</span>,<span class="number">50</span>)</span><br><span class="line">y = <span class="number">2</span>*x+<span class="number">1</span></span><br><span class="line">plt.figure()</span><br><span class="line">plt.plot(x,y,color = <span class="string">&#x27;r&#x27;</span>)</span><br><span class="line"></span><br><span class="line">ax = plt.gca()</span><br><span class="line">ax.spines[<span class="string">&#x27;right&#x27;</span>].set_color(<span class="string">&#x27;none&#x27;</span>)</span><br><span class="line">ax.spines[<span class="string">&#x27;top&#x27;</span>].set_color(<span class="string">&#x27;none&#x27;</span>)</span><br><span class="line">ax.xaxis.set_ticks_position(<span class="string">&#x27;bottom&#x27;</span>)</span><br><span class="line">ax.yaxis.set_ticks_position(<span class="string">&#x27;left&#x27;</span>)</span><br><span class="line">ax.spines[<span class="string">&#x27;bottom&#x27;</span>].set_position((<span class="string">&#x27;data&#x27;</span>,<span class="number">0</span>))</span><br><span class="line">ax.spines[<span class="string">&#x27;left&#x27;</span>].set_position((<span class="string">&#x27;data&#x27;</span>,<span class="number">0</span>))</span><br><span class="line"></span><br><span class="line">x0 = <span class="number">1</span></span><br><span class="line">y0 = <span class="number">2</span>*x0+<span class="number">1</span></span><br><span class="line">plt.scatter(x0,y0,s = <span class="number">50</span>,color = <span class="string">&#x27;b&#x27;</span>)</span><br><span class="line">plt.plot([x0,x0],[y0,<span class="number">0</span>],<span class="string">&#x27;k--&#x27;</span>,lw = <span class="number">2</span>)</span><br><span class="line">plt.plot([<span class="number">0</span>,x0],[y0,y0],<span class="string">&#x27;k--&#x27;</span>,lw = <span class="number">2</span>,color = <span class="string">&#x27;purple&#x27;</span>)</span><br><span class="line"></span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure> <img src="https://i.imgur.com/hJM8tHr.png" />
+接著進入註釋的部分，這裡會用到一個函式，plt.annotate()，先來看範例：
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line">x = np.linspace(-<span class="number">3</span>,<span class="number">3</span>,<span class="number">50</span>)</span><br><span class="line">y = <span class="number">2</span>*x+<span class="number">1</span></span><br><span class="line">plt.figure()</span><br><span class="line">plt.plot(x,y,color = <span class="string">&#x27;r&#x27;</span>)</span><br><span class="line"></span><br><span class="line">ax = plt.gca()</span><br><span class="line">ax.spines[<span class="string">&#x27;right&#x27;</span>].set_color(<span class="string">&#x27;none&#x27;</span>)</span><br><span class="line">ax.spines[<span class="string">&#x27;top&#x27;</span>].set_color(<span class="string">&#x27;none&#x27;</span>)</span><br><span class="line">ax.xaxis.set_ticks_position(<span class="string">&#x27;bottom&#x27;</span>)</span><br><span class="line">ax.yaxis.set_ticks_position(<span class="string">&#x27;left&#x27;</span>)</span><br><span class="line">ax.spines[<span class="string">&#x27;bottom&#x27;</span>].set_position((<span class="string">&#x27;data&#x27;</span>,<span class="number">0</span>))</span><br><span class="line">ax.spines[<span class="string">&#x27;left&#x27;</span>].set_position((<span class="string">&#x27;data&#x27;</span>,<span class="number">0</span>))</span><br><span class="line"></span><br><span class="line">x0 = <span class="number">1</span></span><br><span class="line">y0 = <span class="number">2</span>*x0+<span class="number">1</span></span><br><span class="line">plt.scatter(x0,y0,s = <span class="number">50</span>,color = <span class="string">&#x27;b&#x27;</span>)</span><br><span class="line">plt.plot([x0,x0],[y0,<span class="number">0</span>],<span class="string">&#x27;k--&#x27;</span>,lw = <span class="number">2</span>)</span><br><span class="line">plt.plot([<span class="number">0</span>,x0],[y0,y0],<span class="string">&#x27;y--&#x27;</span>,lw = <span class="number">2</span>)</span><br><span class="line">plt.annotate(<span class="string">r&#x27;2x+1 = %s&#x27;</span> % y0,xy = (x0,y0),xycoords = <span class="string">&#x27;data&#x27;</span>,xytext = (+<span class="number">30</span>,-<span class="number">30</span>),textcoords = <span class="string">&#x27;offset points&#x27;</span>,fontsize = <span class="number">20</span>,arrowprops = <span class="built_in">dict</span>(arrowstyle = <span class="string">&#x27;-&gt;&#x27;</span>,connectionstyle = <span class="string">&#x27;arc3,rad = .2&#x27;</span>))</span><br><span class="line"></span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
+把目光放在21行，那行的參數就是控制我們到時輸出的樣式，我先將程式碼寫出來：
+<span style="color:blue">plt.annotate(r'2x+1 = %s' % y0,xy =
+(x0,y0),xycoords = 'data',xytext = (+30,-30),textcoords = 'offset
+points',fontsize = 20,arrowprops = dict(arrowstyle =
+'-&gt;',connectionstyle = 'arc3,rad = .2'))</span>
+可以看到這段程式碼很大一串，但實際上不難理解，我們慢慢來看。
+首先看到第一個參數，我們輸入一段文字，這段文字將會顯示於我們的figure上，我們利用%s，在後面加入一個變數，代表%s的地方就是y0，有學過C語言的應該對這邊不陌生吧！
+接著看到第二個參數，xy，這個部分代表我們的文字要放在哪個座標上，我輸入x0和y0代表我的文字要在(x0,y0)上。
+第三個參數就是我們被註釋點的座標系屬性，雖然它裡面可以放許多屬性，但這裡只使用data這個屬性，代表以被註釋的xy為參考。
+第四個參數代表我的文字的位置更改，如果單純使用座標來定義位置的話可能會擋到我的圖像，或者在位置定義上不是那麼方便清楚，所以我們使用xytext()來調整我們文字的位置要在我們原本定義的座標的正、負多少的位置。
+第五個參數是做字的調整。 第六個參數就是字體大小。
+第七個參數是改變箭頭的形式，要注意這裡是一個字典(dict)，而我這邊第一個參數是箭頭的樣式，第二個參數connectionstyle是我的箭頭有沒有弧度或者有其他的樣式，我這邊是調整使他有弧度。
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line">x = np.linspace(-<span class="number">3</span>,<span class="number">3</span>,<span class="number">50</span>)</span><br><span class="line">y = <span class="number">2</span>*x+<span class="number">1</span></span><br><span class="line">plt.figure()</span><br><span class="line">plt.plot(x,y,color = <span class="string">&#x27;r&#x27;</span>)</span><br><span class="line"></span><br><span class="line">ax = plt.gca()</span><br><span class="line">ax.spines[<span class="string">&#x27;right&#x27;</span>].set_color(<span class="string">&#x27;none&#x27;</span>)</span><br><span class="line">ax.spines[<span class="string">&#x27;top&#x27;</span>].set_color(<span class="string">&#x27;none&#x27;</span>)</span><br><span class="line">ax.xaxis.set_ticks_position(<span class="string">&#x27;bottom&#x27;</span>)</span><br><span class="line">ax.yaxis.set_ticks_position(<span class="string">&#x27;left&#x27;</span>)</span><br><span class="line">ax.spines[<span class="string">&#x27;bottom&#x27;</span>].set_position((<span class="string">&#x27;data&#x27;</span>,<span class="number">0</span>))</span><br><span class="line">ax.spines[<span class="string">&#x27;left&#x27;</span>].set_position((<span class="string">&#x27;data&#x27;</span>,<span class="number">0</span>))</span><br><span class="line"></span><br><span class="line">x0 = <span class="number">1</span></span><br><span class="line">y0 = <span class="number">2</span>*x0+<span class="number">1</span></span><br><span class="line">plt.scatter(x0,y0,s = <span class="number">50</span>,color = <span class="string">&#x27;b&#x27;</span>)</span><br><span class="line">plt.plot([x0,x0],[y0,<span class="number">0</span>],<span class="string">&#x27;k--&#x27;</span>,lw = <span class="number">2</span>)</span><br><span class="line">plt.plot([<span class="number">0</span>,x0],[y0,y0],<span class="string">&#x27;y--&#x27;</span>,lw = <span class="number">2</span>)</span><br><span class="line">plt.annotate(<span class="string">&#x27;2x+1 = %s&#x27;</span> % y0,xy = (x0,y0),xycoords = <span class="string">&#x27;data&#x27;</span>,xytext = (+<span class="number">30</span>,-<span class="number">30</span>),textcoords = <span class="string">&#x27;offset points&#x27;</span>,fontsize = <span class="number">20</span>,arrowprops = <span class="built_in">dict</span>(arrowstyle = <span class="string">&#x27;-&gt;&#x27;</span>,connectionstyle = <span class="string">&#x27;arc3,rad = .2&#x27;</span>))</span><br><span class="line">plt.text(-<span class="number">3</span>,<span class="number">3</span>,<span class="string">r&#x27;$I\ am\ a\ text$&#x27;</span>,color = <span class="string">&quot;red&quot;</span>,fontsize = <span class="number">20</span>)</span><br><span class="line"></span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
+我們也可以像第22行一樣使用plt.text()來做註釋，首先第一和二個參數是xy的座標，接下來得參數可以擺字體的調整，也可以直接使用fontdicr{'size':20,'color':'r'}來當參數引用。
+輸出的圖： <img src="https://i.imgur.com/kN3kQZD.png" /> ###
+單位ticks被擋住（ticks能見度） <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line">x = np.linspace(-<span class="number">3</span>,<span class="number">3</span>,<span class="number">50</span>)</span><br><span class="line">y = <span class="number">2</span>*x+<span class="number">1</span></span><br><span class="line">plt.figure()</span><br><span class="line">plt.plot(x,y,color = <span class="string">&#x27;r&#x27;</span>,linewidth = <span class="number">20</span>,zorder = <span class="number">1</span>)</span><br><span class="line"></span><br><span class="line">ax = plt.gca()</span><br><span class="line">ax.spines[<span class="string">&#x27;right&#x27;</span>].set_color(<span class="string">&#x27;none&#x27;</span>)</span><br><span class="line">ax.spines[<span class="string">&#x27;top&#x27;</span>].set_color(<span class="string">&#x27;none&#x27;</span>)</span><br><span class="line">ax.xaxis.set_ticks_position(<span class="string">&#x27;bottom&#x27;</span>)</span><br><span class="line">ax.spines[<span class="string">&#x27;bottom&#x27;</span>].set_position((<span class="string">&#x27;data&#x27;</span>,<span class="number">0</span>))</span><br><span class="line">ax.yaxis.set_ticks_position(<span class="string">&#x27;left&#x27;</span>)</span><br><span class="line">ax.spines[<span class="string">&#x27;left&#x27;</span>].set_position((<span class="string">&#x27;data&#x27;</span>,<span class="number">0</span>))</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> label <span class="keyword">in</span> ax.get_xticklabels() + ax.get_yticklabels():</span><br><span class="line">    label.set_fontsize(<span class="number">12</span>)</span><br><span class="line">    label.set_bbox(<span class="built_in">dict</span>(facecolor = <span class="string">&#x27;yellow&#x27;</span>,edgecolor = <span class="string">&#x27;black&#x27;</span>,alpha = <span class="number">0.7</span>))</span><br><span class="line"></span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
+當你的單位被擋住了，可以使用16~18行這幾行程式碼來使ticks更讓人看的更清楚，然後要注意第6行的plt.plot()要加zorder這個參數，這個參數的作用是控制圖層順序，簡單的說就是順序調整，接這看回16~18行，這裡用一個迴圈跑，保證x和y的ticks都有被設定到，17行set_fontsize()是設定字體大小，而set_bbox()是設定ticks的一些資料，記得這裡是一個字典，首先第一個參數的作用是ticks的背景顏色，而第二個參數是邊框顏色，第三個參數是ticks的能見度。
+<img src="https://i.imgur.com/RJ8KO41.png" /> ### scatter散點圖
+今天如果要畫一個點狀散佈圖，可以使用scatter()函式，而我要的是隨機散佈圖，所以這邊使用random函式。
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line">data_size = <span class="number">1024</span></span><br><span class="line">x = np.random.normal(<span class="number">0</span>,<span class="number">1</span>,data_size)</span><br><span class="line">y = np.random.normal(<span class="number">0</span>,<span class="number">1</span>,data_size)</span><br><span class="line">dot_color = np.arctan2(x,y)</span><br><span class="line"></span><br><span class="line">plt.scatter(x,y,s = <span class="number">60</span>,c = dot_color,alpha = <span class="number">0.5</span>)</span><br><span class="line">plt.xlim((-<span class="number">2</span>,<span class="number">2</span>))</span><br><span class="line">plt.ylim((-<span class="number">2</span>,<span class="number">2</span>))</span><br><span class="line">plt.xticks(())</span><br><span class="line">plt.yticks(())</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure> <img src="https://i.imgur.com/mmwus8j.jpg" />
+而如果是要畫連續的點，則可以用arange()創造出連續的點。 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line">x = np.arange(<span class="number">10</span>)</span><br><span class="line">y = np.arange(<span class="number">10</span>)</span><br><span class="line">plt.scatter(x,y)</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
+<img src="https://i.imgur.com/GzWE2Pu.png" /> ### 繪製長條圖
+我們如果畫長條圖，可以使用plt.bar()，首先我們要有x座標和y座標，製造出xy座標後將座標加入bar裡，而bar裡的facecolor和edgecolor分別代表長條圖背景顏色和邊框顏色，最後再用一個迴圈將每一個值輸出即可。
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"></span><br><span class="line">n = <span class="number">12</span></span><br><span class="line">x = np.arange(n)</span><br><span class="line">y = (<span class="number">1</span>-x/<span class="built_in">float</span>(n))*np.random.uniform(<span class="number">0.5</span>,<span class="number">1.0</span>,n)</span><br><span class="line"></span><br><span class="line">plt.bar(x,y,facecolor = <span class="string">&#x27;#9999ff&#x27;</span>,edgecolor = <span class="string">&#x27;black&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> i,j <span class="keyword">in</span> <span class="built_in">zip</span>(x,y):</span><br><span class="line">    plt.text(i,j+<span class="number">0.01</span>,<span class="string">&#x27;%.2f&#x27;</span> % j,ha = <span class="string">&#x27;center&#x27;</span>,va = <span class="string">&#x27;bottom&#x27;</span>)</span><br><span class="line"></span><br><span class="line">plt.xticks(())</span><br><span class="line">plt.yticks(())</span><br><span class="line">plt.ylim((<span class="number">0</span>,<span class="number">1.1</span>))</span><br><span class="line"></span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure> <img src="https://i.imgur.com/RUlxd9p.png" /> ###
+繪出等高線圖
+在matplotlib有許多函式可以繪出等高線圖，例如contour()、contourf()、tricontour()、tricontourf()，contour()、contourf()在帶入參數的時候是要帶入一個網格，而tricontour()、tricontourf()在帶入的時候只需帶入xlist、ylist、zlist即可，但contour()、contourf()的效果比較好，所以這邊會使用contour()、contourf()來繪製。
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">def</span> <span class="title function_">height</span>(<span class="params">x,y</span>):</span><br><span class="line">    <span class="keyword">return</span> (<span class="number">1</span>-x/<span class="number">2</span>+x**<span class="number">5</span>+y**<span class="number">3</span>)*np.exp(-x**<span class="number">2</span>-y**<span class="number">2</span>)</span><br><span class="line"></span><br><span class="line">n = <span class="number">512</span></span><br><span class="line">x = np.linspace(-<span class="number">5</span>, <span class="number">5</span>, n)</span><br><span class="line">y = np.linspace(-<span class="number">5</span>, <span class="number">5</span>, n)</span><br><span class="line">x1, y1 = np.meshgrid(x,y)</span><br><span class="line"></span><br><span class="line">plt.contourf(x1, y1, height(x1,y1),<span class="number">10</span>,alpha = <span class="number">0.75</span>,cmap = plt.cm.cool)</span><br><span class="line">c = plt.contour(x1,y1,height(x1,y1),<span class="number">10</span>,colors = <span class="string">&#x27;black&#x27;</span>,linewidth = <span class="number">0.5</span>)</span><br><span class="line"></span><br><span class="line">plt.clabel(c,inline = <span class="literal">True</span>,fontsize = <span class="number">10</span>)</span><br><span class="line"></span><br><span class="line">plt.xticks(())</span><br><span class="line">plt.xlim((<span class="number">3</span>,-<span class="number">3</span>))</span><br><span class="line">plt.ylim((<span class="number">3</span>,-<span class="number">3</span>))</span><br><span class="line">plt.yticks(())</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
+首先我們可以看到我定義一個function，這個function可以自訂，作用是算出高度，所以我們將xy帶入，它可以算出等高線高度，不同function有不同效果。接定義一個n代表xy的數量，然後我為了製造出網格的形式，所以使用meshgrid()，它可以把我的list變成網格，所以將x,y帶入，而x1,y1就成了網格，接著將我的網格帶入contour()、contourf()，contourf()的第三個參數是放等高線的高度，所以我們用自訂函式來回傳數值，第四個參數是說我們的圖片要分割成幾塊，越多塊的時候越密集，第五個參數是透明度，最後一個參數控制我們等高線圖的顏色，運用到cmap，意思是說當我數值是a，會對應到b的顏色，就像是dict。接著是contour的部分，這邊是控制線條，且他會有數值的回傳值，所以我們用一個變數c來做存取，而它的參數跟contourf類似，這邊就不多做贅述。
+最後的clabel是我們等高線上的數值，第一個參數要傳入數值，所以我們將剛剛的c傳入，第二個參數是說我們的數字要顯示在等高線條上，還是有數字的地方不要有線條經過，True代表不要有線條經過，False代表要有線條經過，最後一個參數是數字大小，做完後即完成等高線圖。
+<img src="https://i.imgur.com/QzVenGI.png" /> ### 製作出顏色圖片
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line">a = np.array([<span class="number">0.33759320</span>,<span class="number">0.63967205</span>,<span class="number">0.40184628</span>,<span class="number">0.64918592</span>,<span class="number">0.49503721</span>,<span class="number">0.44839065</span>,<span class="number">0.35820281</span>,<span class="number">0.53840583</span>,<span class="number">0.38305164</span>]).reshape(<span class="number">3</span>,<span class="number">3</span>)</span><br><span class="line"></span><br><span class="line">plt.imshow(a,interpolation = <span class="string">&#x27;spline36&#x27;</span>,cmap = <span class="string">&#x27;bone&#x27;</span>,origin = <span class="string">&#x27;upper&#x27;</span>)</span><br><span class="line">plt.colorbar(shrink = <span class="number">0.9</span>)</span><br><span class="line"></span><br><span class="line">plt.xticks(())</span><br><span class="line">plt.yticks(())</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure> <img src="https://i.imgur.com/6yKsbyn.jpg" />
+首先我們要建造一個array裡面存放一些數據，這些數據是為了建造出深淺不一的顏色，接著用reshape()來更改它的維度，接著使用imshow()來顯示出圖片，我們在imshow()的第一個參數加入剛剛設定好的array，第二個參數輸入你想要的顯示方式，有許多種，可以參考<a
+target="_blank" rel="noopener" href="https://matplotlib.org/2.0.2/examples/images_contours_and_fields/interpolation_methods.html">這裡</a>來查看其他種形式，第三個輸入你要的顏色形式，第四個加入你顏色的大小排序。
+最後輸入plt.colorbar()可以顯示旁邊的顏色數值對照圖，加入的第一個參數是將對照圖的大小進行壓縮。
+### 製作3D圖片 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">from</span> mpl_toolkits.mplot3d <span class="keyword">import</span> Axes3D</span><br><span class="line">fig = plt.figure()</span><br><span class="line">ax = Axes3D(fig)</span><br><span class="line">x = np.arange(-<span class="number">4</span>,<span class="number">4</span>,<span class="number">0.25</span>)</span><br><span class="line">y = np.arange(-<span class="number">4</span>,<span class="number">4</span>,<span class="number">0.25</span>)</span><br><span class="line">x,y = np.meshgrid(x,y)</span><br><span class="line">tmp = np.sqrt(x**<span class="number">2</span>+y**<span class="number">2</span>)</span><br><span class="line">z = np.sin(tmp)</span><br><span class="line"></span><br><span class="line">ax.plot_surface(x,y,z,rstride = <span class="number">1</span>,cstride = <span class="number">1</span>,cmap = plt.get_cmap(<span class="string">&#x27;rainbow&#x27;</span>))</span><br><span class="line">ax.contourf(x,y,z,zdir = <span class="string">&#x27;z&#x27;</span>,offset = -<span class="number">2</span>,cmap = <span class="string">&#x27;rainbow&#x27;</span>)</span><br><span class="line">ax.set_zlim(-<span class="number">2</span>,<span class="number">2</span>)</span><br><span class="line"></span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure> 繪製3D圖需先引入一個第三方套件，from
+mpl_toolkits.mplot3d import
+Axes3D，接著先製作出一個空的figure，我將它存入fig，然後把他傳入Axis3D()，而Axis3D()有一個回傳值，我將它存入ax，接著建造x和y，接著的tmp和z是為了達成三維空間，所以要建造出一個z座標，然後ax.plot_surface()的第一和二和三個參數加入xyz值，第四和五個參數是說它橫跨的寬度是多少，注意，這邊一定要填入整數。ax.contourf()就像是建造等高線一樣，只是這邊要加入z值，最後設置一下視野就完成了，這個圖可以移動來看不同角度喔！
+<img src="https://i.imgur.com/CM1f0Ju.jpg" /> <img
+src="https://i.imgur.com/MhnXcu4.png" /></p>
+<h5 id="by-中和高中-吳振榮">by 中和高中 吳振榮</h5>
+
+    </article>
+    <!-- license -->
+    
+    <!-- paginator -->
+    <ul class="post-paginator">
+        <li class="next">
+            
+                <div class="nextSlogan">Next Post</div>
+                <a href="/2021/08/27/Linux%E5%9F%BA%E7%A4%8E%E4%BD%BF%E7%94%A8/" title="Linux基礎使用">
+                    <div class="nextTitle">Linux基礎使用</div>
+                </a>
+            
+        </li>
+        <li class="previous">
+            
+                <div class="prevSlogan">Previous Post</div>
+                <a href="/2021/08/27/Pandas/" title="Pandas">
+                    <div class="prevTitle">Pandas</div>
+                </a>
+            
+        </li>
+    </ul>
+    <!-- comment -->
+    
+        <div class="post-comment">
+            <!-- 来必力 City 版安装代码 -->
+
+
+            
+
+            
+
+            
+
+            <!-- utteranc评论 -->
+
+
+            <!-- partial('_partial/comment/changyan') -->
+            <!--PC版-->
+
+
+            
+            
+
+            
+
+        </div>
+    
+    <!-- timeliness note -->
+    <!-- idea from: https://hexo.fluid-dev.com/posts/hexo-injector/#%E6%96%87%E7%AB%A0%E6%97%B6%E6%95%88%E6%80%A7%E6%8F%90%E7%A4%BA -->
+    
+    <!-- Mathjax -->
+    
+        
+    <script>
+        MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+            }
+        };
+    </script>
+
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3.2.0/es5/tex-mml-chtml.js"></script>
+
+
+    
+</main>
+
+                <!-- profile -->
+                
+            </div>
+            <footer class="footer footer-unloaded">
+    <!-- social  -->
+    
+        <div class="social">
+            
+    
+        
+            
+                <a href="mailto:WuMax13@gmail.com" class="iconfont-archer email" title=email ></a>
+            
+        
+    
+        
+            
+                <a href="https://github.com/MaxWutw" class="iconfont-archer github" target="_blank" title=github></a>
+            
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+            
+                <a href="https://www.facebook.com/profile.php?id=100020738000412" class="iconfont-archer facebook" target="_blank" title=facebook></a>
+            
+        
+    
+        
+    
+        
+            
+                <a href="https://www.instagram.com/_wuzhenlong/" class="iconfont-archer instagram" target="_blank" title=instagram></a>
+            
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+
+
+        </div>
+    
+    <!-- powered by Hexo  -->
+    <div class="copyright">
+        <span id="hexo-power">Powered by <a href="https://hexo.io/" target="_blank">Hexo</a></span><span class="iconfont-archer power">&#xe635;</span><span id="theme-info">theme <a href="https://github.com/fi3ework/hexo-theme-archer" target="_blank">Archer</a></span>
+    </div>
+    <!-- website approve for Chinese user -->
+    
+    <!-- 不蒜子  -->
+    
+        <div class="busuanzi-container">
+            
+             
+                <span id="busuanzi_container_site_pv">PV: <span id="busuanzi_value_site_pv"></span> :)</span>
+            
+        </div>
+    	
+</footer>
+
+        </div>
+        <!-- toc -->
+        
+            <div class="toc-wrapper toc-wrapper-loding" style=
+
+
+
+
+
+
+
+    top:50vh;
+
+>
+                <div class="toc-catalog">
+                    <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
+                </div>
+                <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#matplotlib-%E6%95%B8%E6%93%9A%E5%8F%AF%E8%A6%96%E5%8C%96"><span class="toc-number">1.</span> <span class="toc-text">matplotlib 數據可視化</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%90%8C%E6%99%82%E9%A1%AF%E7%A4%BA%E5%85%A9%E5%80%8Bfigure"><span class="toc-number">1.1.</span> <span class="toc-text">同時顯示兩個figure</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%A1%AF%E7%A4%BA%E5%BA%A7%E6%A8%99%E8%BB%B8"><span class="toc-number">1.2.</span> <span class="toc-text">顯示座標軸</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8A%A0%E5%9C%96%E4%BE%8B"><span class="toc-number">1.3.</span> <span class="toc-text">加圖例</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#by-%E4%B8%AD%E5%92%8C%E9%AB%98%E4%B8%AD-%E5%90%B3%E6%8C%AF%E6%A6%AE"><span class="toc-number">1.3.0.1.</span> <span class="toc-text">by 中和高中 吳振榮</span></a></li></ol></li></ol></li></ol></li></ol>
+            </div>
+        
+        <!-- sidebar -->
+        <div class="sidebar sidebar-hide">
+    <ul class="sidebar-tabs sidebar-tabs-active-0">
+        <li class="sidebar-tab-archives"><span class="iconfont-archer">&#xe67d;</span><span class="tab-name">Archive</span></li>
+        <li class="sidebar-tab-tags"><span class="iconfont-archer">&#xe61b;</span><span class="tab-name">Tag</span></li>
+        <li class="sidebar-tab-categories"><span class="iconfont-archer">&#xe666;</span><span class="tab-name">Cate</span></li>
+    </ul>
+    <div class="sidebar-content sidebar-content-show-archive">
+        <div class="sidebar-panel-archives">
+    <!-- 在 ejs 中将 archive 按照时间排序 -->
+    
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+    
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+    
+    
+    
+    
+    <div class="total-and-search">
+        <div class="total-archive">
+        Total : 31
+        </div>
+        <!-- search  -->
+        
+    </div>
+    
+    <div class="post-archive">
+    
+        
+            
+            
+            <div class="archive-year"> 2023 </div>
+            <ul class="year-list">
+            
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/10</span>
+            <a class="archive-post-title" href="/2023/05/10/%E5%9F%BA%E7%A4%8E%E6%95%B8%E8%AB%96/">基礎數論</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/05</span>
+            <a class="archive-post-title" href="/2023/04/05/GIT/">GIT</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/05</span>
+            <a class="archive-post-title" href="/2023/04/05/%E5%BF%AB%E9%80%9F%E5%86%AA%E5%92%8C%E7%9F%A9%E9%99%A3%E5%BF%AB%E9%80%9F%E5%86%AA/">快速冪和矩陣快速冪</a>
+        </li>
+    
+        
+            
+            
+                
+                </ul>
+            
+            <div class="archive-year"> 2021 </div>
+            <ul class="year-list">
+            
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/12</span>
+            <a class="archive-post-title" href="/2021/09/12/%E5%9C%A8Linux%E5%AE%89%E8%A3%9DCUDA/">在Linux安裝CUDA，並在Pytorch進行CUDA訓練</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/29</span>
+            <a class="archive-post-title" href="/2021/08/29/%E5%8F%AF%E8%A7%A3%E9%87%8B%E4%BA%BA%E5%B7%A5%E6%99%BA%E6%85%A7-explainable-ai/">可解釋人工智慧_explainable_ai</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/29</span>
+            <a class="archive-post-title" href="/2021/08/29/%E5%9F%BA%E6%96%BC%E6%B7%B1%E5%BA%A6%E5%AD%B8%E7%BF%92%E9%80%B2%E8%A1%8C%E8%B2%93%E8%88%87%E7%8B%97%E7%9A%84%E8%BE%A8%E8%AA%8D-Pytorch/">基於深度學習進行貓與狗的辨認(Pytorch)</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/28</span>
+            <a class="archive-post-title" href="/2021/08/28/C-%E7%89%A9%E4%BB%B6%E5%B0%8E%E5%90%91/">C++物件導向</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/28</span>
+            <a class="archive-post-title" href="/2021/08/28/%E5%9F%BA%E7%A4%8E%E6%BC%94%E7%AE%97%E6%B3%95-C/">基礎演算法(Algorithm)-C++</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/28</span>
+            <a class="archive-post-title" href="/2021/08/28/%E5%9F%BA%E7%A4%8E%E8%B3%87%E6%96%99%E7%B5%90%E6%A7%8B-C/">基礎資料結構(Data Structure)-C++</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/27</span>
+            <a class="archive-post-title" href="/2021/08/27/CSS/">CSS</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/27</span>
+            <a class="archive-post-title" href="/2021/08/27/HTML/">HTML</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/27</span>
+            <a class="archive-post-title" href="/2021/08/27/Linux%E5%9F%BA%E7%A4%8E%E4%BD%BF%E7%94%A8/">Linux基礎使用</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/27</span>
+            <a class="archive-post-title" href="/2021/08/27/MNIST%E6%89%8B%E5%AF%AB%E8%BE%A8%E8%AD%98-Pytorch-version/">MNIST手寫辨識(Pytorch version)</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/27</span>
+            <a class="archive-post-title" href="/2021/08/27/MNIST%E6%89%8B%E5%AF%AB%E8%BE%A8%E8%AD%98-TensorFlow-version/">MNIST手寫辨識(TensorFlow-version)</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/27</span>
+            <a class="archive-post-title" href="/2021/08/27/Numpy/">Numpy</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/27</span>
+            <a class="archive-post-title" href="/2021/08/27/Pandas/">Pandas</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/27</span>
+            <a class="archive-post-title" href="/2021/08/27/Scikit-Learn/">Scikit Learn</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/27</span>
+            <a class="archive-post-title" href="/2021/08/27/TensorFlow1%E5%9F%BA%E7%A4%8E%E4%BD%BF%E7%94%A8%E6%96%B9%E6%B3%95/">TensorFlow1基礎使用方法</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/27</span>
+            <a class="archive-post-title" href="/2021/08/27/%E9%81%B7%E7%A7%BB%E5%AD%B8%E7%BF%92-%E5%9C%96%E7%89%87%E8%BE%A8%E8%AD%98/">遷移學習-圖片辨識</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/27</span>
+            <a class="archive-post-title" href="/2021/08/27/APCS%E5%AF%A6%E4%BD%9C%E9%A1%8C/">APCS實作題</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/27</span>
+            <a class="archive-post-title" href="/2021/08/27/Matplotlib/">Matplotlib</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/27</span>
+            <a class="archive-post-title" href="/2021/08/27/%E5%9F%BA%E7%A4%8ETensorFlow2%E8%88%87%E6%A9%9F%E5%99%A8%E5%AD%B8%E7%BF%92/">基礎TensorFlow1和2與機器學習</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/27</span>
+            <a class="archive-post-title" href="/2021/08/27/%E5%9F%BA%E7%A4%8Epytorch%E8%88%87%E6%A9%9F%E5%99%A8%E5%AD%B8%E7%BF%92/">基礎pytorch與機器學習</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/24</span>
+            <a class="archive-post-title" href="/2021/08/24/OpenCV/">OpenCV</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/24</span>
+            <a class="archive-post-title" href="/2021/08/24/pipenv/">pipenv</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/24</span>
+            <a class="archive-post-title" href="/2021/06/24/Linked-List/">Linked_List</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/24</span>
+            <a class="archive-post-title" href="/2021/06/24/Stringstream/">Stringstream</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/24</span>
+            <a class="archive-post-title" href="/2021/06/24/Web/">Web</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/24</span>
+            <a class="archive-post-title" href="/2021/06/24/ctime/">ctime</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/24</span>
+            <a class="archive-post-title" href="/2021/06/24/%E6%8C%87%E6%A8%99/">指標</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/24</span>
+            <a class="archive-post-title" href="/2021/06/24/%E9%81%8B%E7%AE%97%E5%AD%90%E9%87%8D%E8%BC%89/">運算子重載</a>
+        </li>
+    
+    </div>
+</div>
+
+        <div class="sidebar-panel-tags">
+    <div class="sidebar-tags-name">
+        
+            <span class="sidebar-tag-name" data-tags="C++">
+                <span class="iconfont-archer">&#xe606;</span>
+                C++
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="OOP">
+                <span class="iconfont-archer">&#xe606;</span>
+                OOP
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="CSS">
+                <span class="iconfont-archer">&#xe606;</span>
+                CSS
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="web dev">
+                <span class="iconfont-archer">&#xe606;</span>
+                web dev
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="HTML">
+                <span class="iconfont-archer">&#xe606;</span>
+                HTML
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="Linux">
+                <span class="iconfont-archer">&#xe606;</span>
+                Linux
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="Pytorch">
+                <span class="iconfont-archer">&#xe606;</span>
+                Pytorch
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="Machine Learning">
+                <span class="iconfont-archer">&#xe606;</span>
+                Machine Learning
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="TensorFlow2">
+                <span class="iconfont-archer">&#xe606;</span>
+                TensorFlow2
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="Python">
+                <span class="iconfont-archer">&#xe606;</span>
+                Python
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="Scikit Learn">
+                <span class="iconfont-archer">&#xe606;</span>
+                Scikit Learn
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="TensorFlow1">
+                <span class="iconfont-archer">&#xe606;</span>
+                TensorFlow1
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="Math theorem">
+                <span class="iconfont-archer">&#xe606;</span>
+                Math theorem
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="algorithm">
+                <span class="iconfont-archer">&#xe606;</span>
+                algorithm
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="Data structure">
+                <span class="iconfont-archer">&#xe606;</span>
+                Data structure
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="Transfer Learning">
+                <span class="iconfont-archer">&#xe606;</span>
+                Transfer Learning
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="APCS">
+                <span class="iconfont-archer">&#xe606;</span>
+                APCS
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="TensorFlow">
+                <span class="iconfont-archer">&#xe606;</span>
+                TensorFlow
+            </span>
+        
+    </div>
+    <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>
+    <div class="tag-load-fail" style="display: none; color: #ccc; font-size: 0.6rem;">
+        缺失模块，请参考主题文档进行安装配置：https://github.com/fi3ework/hexo-theme-archer#%E5%AE%89%E8%A3%85%E4%B8%BB%E9%A2%98
+    </div> 
+    <div class="sidebar-tags-list"></div>
+</div>
+
+        <div class="sidebar-panel-categories">
+    <div class="sidebar-categories-name">
+    
+    </div>
+    <div class="iconfont-archer sidebar-categories-empty">&#xe678;</div>
+    <div class="sidebar-categories-list"></div>
+</div>
+
+    </div>
+</div>
+
+        <!-- site-meta -->
+        <script>
+    var siteMetaRoot = "/"
+    if (siteMetaRoot === "undefined") {
+        siteMetaRoot = '/'
+    }
+    var siteMeta = {
+        url: "https://maxwutw.github.io",
+        root: siteMetaRoot,
+        author: "Max Wu"
+    }
+</script>
+
+        <!-- import experimental options here -->
+        <!-- Custom Font -->
+
+
+        <!-- main func -->
+        <script src="/scripts/main.js?v=20211217"></script>
+        <!-- dark mode -->
+        <script src="/scripts/dark.js?v=20211217"></script>
+        <!-- fancybox -->
+        <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js" defer></script>
+        <!-- algolia -->
+        
+        <!-- busuanzi -->
+        
+            <script src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" async></script>
+        
+        <!-- CNZZ -->
+        
+        <!-- async load share.js -->
+        
+            <script src="/scripts/share.js?v=20211217" async></script>
+        
+        <!-- mermaid -->
+        
+    </body>
+</html>

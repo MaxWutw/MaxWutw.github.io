@@ -1,0 +1,1558 @@
+<!DOCTYPE html>
+<html lang="en">
+    <!-- title -->
+
+
+    
+
+<!-- keywords -->
+
+
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="author" content="Max Wu">
+    <meta name="renderer" content="webkit">
+    <meta name="copyright" content="Max Wu">
+    
+        <meta name="keywords" content="hexo,hexo-theme,hexo-blog">
+    
+    <meta name="description" content="">
+    <meta name="description" content="深度學習與pytorch 中和高中吳振榮 Torch 和 Numpy Torch自稱是神經網路的numpy，但是還是有許多人對numpy比較熱愛，所以Torch在和numpy做調配的時候非常方便。 ### array to torch:from_numpy() 首先利用torch把numpy的array轉成torch的tensor。 123456789import torchimport nump">
+<meta property="og:type" content="article">
+<meta property="og:title" content="基礎pytorch與機器學習">
+<meta property="og:url" content="https://maxwutw.github.io/2021/08/27/%E5%9F%BA%E7%A4%8Epytorch%E8%88%87%E6%A9%9F%E5%99%A8%E5%AD%B8%E7%BF%92/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="深度學習與pytorch 中和高中吳振榮 Torch 和 Numpy Torch自稱是神經網路的numpy，但是還是有許多人對numpy比較熱愛，所以Torch在和numpy做調配的時候非常方便。 ### array to torch:from_numpy() 首先利用torch把numpy的array轉成torch的tensor。 123456789import torchimport nump">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://i.imgur.com/3dlkC3Q.png">
+<meta property="og:image" content="https://i.imgur.com/p8CNa7l.png">
+<meta property="og:image" content="https://i.imgur.com/7irZP6N.png">
+<meta property="og:image" content="https://i.imgur.com/swSXnTG.jpg">
+<meta property="article:published_time" content="2021-08-27T10:46:39.000Z">
+<meta property="article:modified_time" content="2023-04-05T23:19:12.000Z">
+<meta property="article:author" content="Max Wu">
+<meta property="article:tag" content="Pytorch">
+<meta property="article:tag" content="Machine Learning">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.imgur.com/3dlkC3Q.png">
+    <meta http-equiv="Cache-control" content="no-cache">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <link rel="icon" href="/assets/favicon.ico">
+    
+    <title>基礎pytorch與機器學習 · Max Coding blog</title>
+    <!-- /*! loadCSS. [c]2017 Filament Group, Inc. MIT License */
+/* This file is meant as a standalone workflow for
+- testing support for link[rel=preload]
+- enabling async CSS loading in browsers that do not support rel=preload
+- applying rel preload css once loaded, whether supported or not.
+*/ -->
+<script>
+    (function (w) {
+        'use strict'
+        // rel=preload support test
+        if (!w.loadCSS) {
+            w.loadCSS = function () {}
+        }
+        // define on the loadCSS obj
+        var rp = (loadCSS.relpreload = {})
+        // rel=preload feature support test
+        // runs once and returns a function for compat purposes
+        rp.support = (function () {
+            var ret
+            try {
+                ret = w.document.createElement('link').relList.supports('preload')
+            } catch (e) {
+                ret = false
+            }
+            return function () {
+                return ret
+            }
+        })()
+
+        // if preload isn't supported, get an asynchronous load by using a non-matching media attribute
+        // then change that media back to its intended value on load
+        rp.bindMediaToggle = function (link) {
+            // remember existing media attr for ultimate state, or default to 'all'
+            var finalMedia = link.media || 'all'
+
+            function enableStylesheet() {
+                link.media = finalMedia
+            }
+
+            // bind load handlers to enable media
+            if (link.addEventListener) {
+                link.addEventListener('load', enableStylesheet)
+            } else if (link.attachEvent) {
+                link.attachEvent('onload', enableStylesheet)
+            }
+
+            // Set rel and non-applicable media type to start an async request
+            // note: timeout allows this to happen async to let rendering continue in IE
+            setTimeout(function () {
+                link.rel = 'stylesheet'
+                link.media = 'only x'
+            })
+            // also enable media after 3 seconds,
+            // which will catch very old browsers (android 2.x, old firefox) that don't support onload on link
+            setTimeout(enableStylesheet, 3000)
+        }
+
+        // loop through link elements in DOM
+        rp.poly = function () {
+            // double check this to prevent external calls from running
+            if (rp.support()) {
+                return
+            }
+            var links = w.document.getElementsByTagName('link')
+            for (var i = 0; i < links.length; i++) {
+                var link = links[i]
+                // qualify links to those with rel=preload and as=style attrs
+                if (
+                    link.rel === 'preload' &&
+                    link.getAttribute('as') === 'style' &&
+                    !link.getAttribute('data-loadcss')
+                ) {
+                    // prevent rerunning on link
+                    link.setAttribute('data-loadcss', true)
+                    // bind listeners to toggle media back
+                    rp.bindMediaToggle(link)
+                }
+            }
+        }
+
+        // if unsupported, run the polyfill
+        if (!rp.support()) {
+            // run once at least
+            rp.poly()
+
+            // rerun poly on an interval until onload
+            var run = w.setInterval(rp.poly, 500)
+            if (w.addEventListener) {
+                w.addEventListener('load', function () {
+                    rp.poly()
+                    w.clearInterval(run)
+                })
+            } else if (w.attachEvent) {
+                w.attachEvent('onload', function () {
+                    rp.poly()
+                    w.clearInterval(run)
+                })
+            }
+        }
+
+        // commonjs
+        if (typeof exports !== 'undefined') {
+            exports.loadCSS = loadCSS
+        } else {
+            w.loadCSS = loadCSS
+        }
+    })(typeof global !== 'undefined' ? global : this)
+</script>
+
+    <style type="text/css">
+    @font-face {
+        font-family: 'Oswald-Regular';
+        src: url("/font/Oswald-Regular.ttf");
+    }
+
+    body {
+        margin: 0;
+    }
+
+    header,
+    footer,
+    .back-top,
+    .sidebar,
+    .container,
+    .site-intro-meta,
+    .toc-wrapper {
+        display: none;
+    }
+
+    .site-intro {
+        position: relative;
+        z-index: 3;
+        width: 100%;
+        /* height: 50vh; */
+        overflow: hidden;
+    }
+
+    .site-intro-placeholder {
+        position: absolute;
+        z-index: -2;
+        top: 0;
+        left: 0;
+        width: calc(100% + 300px);
+        height: 100%;
+        background: repeating-linear-gradient(-45deg, #444 0, #444 80px, #333 80px, #333 160px);
+        background-position: center center;
+        transform: translate3d(-226px, 0, 0);
+        animation: gradient-move 2.5s ease-out 0s infinite;
+    }
+
+    @keyframes gradient-move {
+        0% {
+            transform: translate3d(-226px, 0, 0);
+        }
+        100% {
+            transform: translate3d(0, 0, 0);
+        }
+    }
+</style>
+
+    <link rel="preload" href="/css/style.css?v=20211217" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="preload" href="/css/dark.css?v=20211217" as="style">
+    <link rel="stylesheet" href="/css/dark.css">
+    <link rel="stylesheet" href="/css/mobile.css?v=20211217" media="(max-width: 960px)">
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js" as="script">
+    <link rel="preload" href="/scripts/main.js?v=20211217" as="script">
+    <link rel="preload" href="/scripts/dark.js?v=20211217" as="script">
+    <link rel="preload" href="/font/Oswald-Regular.ttf" as="font" crossorigin>
+    <link rel="preload" href="https://at.alicdn.com/t/font_327081_1dta1rlogw17zaor.woff" as="font" crossorigin>
+    <!-- algolia -->
+    
+    <!-- 百度统计  -->
+    
+    <!-- 谷歌统计  -->
+    
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --><meta name="generator" content="Hexo 6.3.0"></head>
+
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+    <script type="text/javascript">
+        if (typeof window.$ == undefined) {
+            console.warn('jquery load from jsdelivr failed, will load local script')
+            document.write('<script src="/lib/jquery.min.js" />')
+        }
+    </script>
+    
+        <body class="post-body">
+    
+        <!-- header -->
+        <header class="header header-mobile">
+    <!-- top read progress line -->
+    <div class="header-element">
+        <div class="read-progress"></div>
+    </div>
+    <!-- sidebar menu button -->
+    <div class="header-element">
+        
+            <div class="header-sidebar-menu">
+        
+            
+                <div style="padding-left: 1px;">&#xe775;</div>
+            
+        </div>
+    </div>
+    <!-- header actions -->
+    <div class="header-actions">
+        <!-- theme mode switch button -->
+        <span class="header-theme-btn header-element">
+            <i class="fas fa-adjust"></i>
+        </span>
+        <!-- back to home page text -->
+        <span class="home-link header-element">
+            <a href=/>Max Coding blog</a>
+        </span>
+    </div>
+    <!-- toggle banner for post layout -->
+    
+        
+            <div class="banner">
+        
+            <div class="blog-title header-element">
+                <a href="/">Max Coding blog</a>
+            </div>
+            <div class="post-title header-element">
+                <a href="#" class="post-name">基礎pytorch與機器學習</a>
+            </div>
+        </div>
+    
+</header>
+
+        <!-- fixed footer -->
+        <footer class="footer-fixed">
+    <!-- back to top button -->
+    <div class="footer-fixed-element">
+        
+            <div class="back-top back-top-hidden">
+        
+        
+            <div>&#xe639;</div>
+        
+        </div>
+    </div>
+</footer>
+
+        <!-- wrapper -->
+        <div class="wrapper">
+            <div class="site-intro" style="
+
+
+
+
+
+
+
+    height:50vh;
+
+">
+    
+    <!-- 主页  -->
+    
+        
+    <!-- 404页  -->
+    
+    <div class="site-intro-placeholder"></div>
+    <div class="site-intro-img" style="background-image: url(/intro/post-bg.jpg)"></div>
+    <div class="site-intro-meta">
+        <!-- 标题  -->
+        <h1 class="intro-title">
+            <!-- 主页  -->
+            
+                基礎pytorch與機器學習
+            <!-- 404 -->
+            
+        </h1>
+        <!-- 副标题 -->
+        <p class="intro-subtitle">
+            <!-- 主页副标题  -->
+            
+                
+            <!-- 404 -->
+            
+        </p>
+        <!-- 文章页 meta -->
+        
+            <div class="post-intros">
+                <!-- 文章页标签  -->
+                
+                    <div class= post-intro-tags >
+    
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="Pytorch">Pytorch</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="Machine Learning">Machine Learning</a>
+    
+</div>
+
+                
+                <!-- 文章字数统计 -->
+                
+                <div class="post-intro-meta">
+                    <!-- 撰写日期 -->
+                    <span class="iconfont-archer post-intro-calander">&#xe676;</span>
+                    <span class="post-intro-time">2021/08/27</span>
+                    <!-- busuanzi -->
+                    
+                        <span id="busuanzi_container_page_pv" class="busuanzi-pv">
+                            <span class="iconfont-archer post-intro-busuanzi">&#xe602;</span>
+                            <span id="busuanzi_value_page_pv"></span>
+                        </span>
+                    
+                    <!-- 文章分享 -->
+                    <span class="share-wrapper">
+                        <span class="iconfont-archer share-icon">&#xe71d;</span>
+                        <span class="share-text">Share</span>
+                        <ul class="share-list">
+                            <li class="iconfont-archer share-qr" data-type="qr">&#xe75b;
+                                <div class="share-qrcode"></div>
+                            </li>
+                            <li class="iconfont-archer" data-type="weibo">&#xe619;</li>
+                            <li class="iconfont-archer" data-type="qzone">&#xe62e;</li>
+                            <li class="iconfont-archer" data-type="twitter">&#xe634;</li>
+                            <li class="iconfont-archer" data-type="facebook">&#xe67a;</li>
+                        </ul>
+                    </span>
+                </div>
+            </div>
+        
+    </div>
+</div>
+
+            <script>
+  // get user agent
+  function getBrowserVersions() {
+    var u = window.navigator.userAgent
+    return {
+      userAgent: u,
+      trident: u.indexOf('Trident') > -1, //IE内核
+      presto: u.indexOf('Presto') > -1, //opera内核
+      webKit: u.indexOf('AppleWebKit') > -1, //苹果、谷歌内核
+      gecko: u.indexOf('Gecko') > -1 && u.indexOf('KHTML') == -1, //火狐内核
+      mobile: !!u.match(/AppleWebKit.*Mobile.*/), //是否为移动终端
+      ios: !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/), //ios终端
+      android: u.indexOf('Android') > -1 || u.indexOf('Linux') > -1, //android终端或者uc浏览器
+      iPhone: u.indexOf('iPhone') > -1 || u.indexOf('Mac') > -1, //是否为iPhone或者安卓QQ浏览器
+      iPad: u.indexOf('iPad') > -1, //是否为iPad
+      webApp: u.indexOf('Safari') == -1, //是否为web应用程序，没有头部与底部
+      weixin: u.indexOf('MicroMessenger') == -1, //是否为微信浏览器
+      uc: u.indexOf('UCBrowser') > -1, //是否为android下的UC浏览器
+    }
+  }
+  var browser = {
+    versions: getBrowserVersions(),
+  }
+  console.log('userAgent: ' + browser.versions.userAgent)
+
+  // callback
+  function fontLoaded() {
+    console.log('font loaded')
+    if (document.getElementsByClassName('site-intro-meta')) {
+      document
+        .getElementsByClassName('intro-title')[0]
+        .classList.add('intro-fade-in')
+      document
+        .getElementsByClassName('intro-subtitle')[0]
+        .classList.add('intro-fade-in')
+      var postIntros = document.getElementsByClassName('post-intros')[0]
+      if (postIntros) {
+        postIntros.classList.add('post-fade-in')
+      }
+    }
+  }
+
+  // UC不支持跨域，所以直接显示
+  function asyncCb() {
+    if (browser.versions.uc) {
+      console.log('UCBrowser')
+      fontLoaded()
+    } else {
+      WebFont.load({
+        custom: {
+          families: ['Oswald-Regular'],
+        },
+        loading: function () {
+          // 所有字体开始加载
+          // console.log('font loading');
+        },
+        active: function () {
+          // 所有字体已渲染
+          fontLoaded()
+        },
+        inactive: function () {
+          // 字体预加载失败，无效字体或浏览器不支持加载
+          console.log('inactive: timeout')
+          fontLoaded()
+        },
+        timeout: 5000, // Set the timeout to two seconds
+      })
+    }
+  }
+
+  function asyncErr() {
+    console.warn('script load from CDN failed, will load local script')
+  }
+
+  // load webfont-loader async, and add callback function
+  function async(u, cb, err) {
+    var d = document,
+      t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0]
+    o.src = u
+    if (cb) {
+      o.addEventListener(
+        'load',
+        function (e) {
+          cb(null, e)
+        },
+        false
+      )
+    }
+    if (err) {
+      o.addEventListener(
+        'error',
+        function (e) {
+          err(null, e)
+        },
+        false
+      )
+    }
+    s.parentNode.insertBefore(o, s)
+  }
+
+  var asyncLoadWithFallBack = function (arr, success, reject) {
+    var currReject = function () {
+      reject()
+      arr.shift()
+      if (arr.length) async(arr[0], success, currReject)
+    }
+
+    async(arr[0], success, currReject)
+  }
+
+  asyncLoadWithFallBack(
+    [
+      'https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js',
+      'https://cdn.bootcss.com/webfont/1.6.28/webfontloader.js',
+      "/lib/webfontloader.min.js",
+    ],
+    asyncCb,
+    asyncErr
+  )
+</script>
+
+            <img class="loading" src="/assets/loading.svg" style="display: block; margin: 6rem auto 0 auto; width: 6rem; height: 6rem;" />
+            <div class="container container-unloaded">
+                <main class="main post-page">
+    <article class="article-entry">
+        <h1 id="深度學習與pytorch">深度學習與pytorch</h1>
+<h5 id="中和高中吳振榮">中和高中吳振榮</h5>
+<h2 id="torch-和-numpy">Torch 和 Numpy</h2>
+<p>Torch自稱是神經網路的numpy，但是還是有許多人對numpy比較熱愛，所以Torch在和numpy做調配的時候非常方便。
+### array to torch:from_numpy()
+首先利用torch把numpy的array轉成torch的tensor。 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> torch</span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"></span><br><span class="line">np_data = np.arange(<span class="number">1</span>,<span class="number">7</span>).reshape((<span class="number">2</span>,<span class="number">3</span>))</span><br><span class="line">torch_data = torch.from_numpy(np_data)</span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(np_data)</span><br><span class="line"><span class="built_in">print</span>()</span><br><span class="line"><span class="built_in">print</span>(torch_data)</span><br></pre></td></tr></table></figure>
+把array放進from_numpy()即可得到一個tensor(張量)。 <span id="more"></span> ### torch
+to array <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> torch</span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"></span><br><span class="line">np_data = np.arange(<span class="number">1</span>,<span class="number">7</span>).reshape((<span class="number">2</span>,<span class="number">3</span>))</span><br><span class="line">torch_data = torch.from_numpy(np_data)</span><br><span class="line">torch_to_array = torch_data.numpy()</span><br><span class="line"><span class="built_in">print</span>(np_data)</span><br><span class="line"><span class="built_in">print</span>()</span><br><span class="line"><span class="built_in">print</span>(torch_data)</span><br><span class="line"><span class="built_in">print</span>()</span><br><span class="line"><span class="built_in">print</span>(torch_to_array)</span><br></pre></td></tr></table></figure>
+在地6行可以看到我們使用.numpy()將torch_data的tensor轉成array。 ###
+矩陣相乘 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> torch</span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"></span><br><span class="line">matrix = [[<span class="number">1</span>,<span class="number">2</span>],[<span class="number">3</span>,<span class="number">4</span>]]</span><br><span class="line">tensor_matrix = torch.IntTensor(matrix)</span><br><span class="line"></span><br><span class="line">np_mul = np.matmul(matrix,matrix)</span><br><span class="line">tor_mul = torch.mm(tensor_matrix,tensor_matrix)</span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(np_mul)</span><br><span class="line"><span class="built_in">print</span>(tor_mul)</span><br></pre></td></tr></table></figure>
+在numpy做矩陣相乘可使用np.matmul()，而在torch可以使用torch.mm()。 ###
+torch.mean() 做平均。 ### Variable
+pytorch和tensorflow的差別是pytorch是動態計算圖，而tensorflow的計算圖是固定不變的。
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> torch</span><br><span class="line"><span class="keyword">from</span> torch.autograd <span class="keyword">import</span> Variable</span><br><span class="line"></span><br><span class="line">tensor = torch.FloatTensor([[<span class="number">1</span>,<span class="number">2</span>],[<span class="number">3</span>,<span class="number">4</span>]])</span><br><span class="line">variable = Variable(tensor, requires_grad = <span class="literal">True</span>)</span><br><span class="line"></span><br><span class="line">ten = torch.mean(tensor*tensor)</span><br><span class="line">var = torch.mean(variable*variable)</span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(ten)</span><br><span class="line"><span class="built_in">print</span>(var)</span><br><span class="line"></span><br><span class="line">var.backward()</span><br><span class="line"><span class="built_in">print</span>(variable.grad)</span><br><span class="line"><span class="built_in">print</span>(variable.data)</span><br><span class="line"><span class="built_in">print</span>(variable.data.numpy())</span><br></pre></td></tr></table></figure>
+這邊不做說明，這邊僅是單純紀錄這段程式碼，方便之後複習，為何這邊不做說明呢?因為這邊有用到一種前饋神經網路，稱為back-propagation(BP)，而這部分會運用到的數學太過艱澀，目前自學的我才高一，而這邊需要用到大量微積分，我無法承受，所以這邊就先略過。
+## 重新塑造view() <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> torch</span><br><span class="line"></span><br><span class="line">tensor = torch.FloatTensor([<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>,<span class="number">6</span>,<span class="number">7</span>,<span class="number">8</span>,<span class="number">9</span>])</span><br><span class="line"><span class="built_in">print</span>(tensor.shape)</span><br><span class="line">change = tensor.view(<span class="number">3</span>,<span class="number">3</span>)</span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(change.shape)</span><br></pre></td></tr></table></figure> output : torch.Size([9]) torch.Size([3,
+3]) ## change device <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> torch</span><br><span class="line"></span><br><span class="line">cpu = torch.device(<span class="string">&quot;cpu&quot;</span>)</span><br><span class="line">gpu = torch.device(<span class="string">&quot;gpu&quot;</span>)</span><br><span class="line"></span><br><span class="line">x = torch.rand(<span class="number">10</span>)</span><br><span class="line"><span class="built_in">print</span>(x)</span><br><span class="line">x = x.to(gpu)</span><br><span class="line"><span class="built_in">print</span>(x)</span><br><span class="line">x = x.to(cpu)</span><br><span class="line"><span class="built_in">print</span>(x)</span><br></pre></td></tr></table></figure> ## activation function(激勵函數)
+這邊會介紹激勵函數，激勵函數主要是非線性函數，。那為什麼要使用激勵函數呢?其實在訓練model的時候不使用線性轉換的話，機器就不能學習到複雜的映射關係，如果今天沒有使用激勵函數，就算再多層神經網路也訓練不起來，可見激勵函數是非常重要的。
+而常見的激勵函數有ReLU、Sigmoid、tanh、softplus，然而最常用的是ReLU，因為在做深度學習時時常會遇到梯度消失或者梯度爆炸(然而梯度爆炸較不常見)，而ReLU可以解決這樣的問題，那詳細解決方式這邊就無法再提，因為那樣已經超出我的能力範圍。
+接著說明以上常見的激勵函數的效果:
+ReLU:ReLU會使正數大於等於0，而負數都變成0。
+Sigmoid:會使數值保持在0~1之間，當一個正數已經大到趨近於正無限大時，數字會趨近於1，如果一個負數已經小到趨近於負無限大時，此數會趨近於0。
+tanh:tanh解決了Sigmoid的不是zero-centered輸出問題。
+softplus:則是在做分類(classification)時常用。</p>
+<h3
+id="這邊將四個激勵函數的函數圖形畫出來">這邊將四個激勵函數的函數圖形畫出來。</h3>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> torch</span><br><span class="line"><span class="keyword">import</span> torch.nn.functional <span class="keyword">as</span> nnf</span><br><span class="line"><span class="keyword">from</span> torch.autograd <span class="keyword">import</span> Variable</span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"></span><br><span class="line">x = torch.linspace(-<span class="number">5</span>,<span class="number">5</span>,<span class="number">200</span>)</span><br><span class="line">x = Variable(x)</span><br><span class="line">x_np = x.data.numpy()</span><br><span class="line"></span><br><span class="line">activate_func_relu = torch.relu(x).data.numpy()</span><br><span class="line">activate_func_sigmoid = torch.sigmoid(x).data.numpy()</span><br><span class="line">activate_func_tanh = torch.tanh(x).data.numpy()</span><br><span class="line">activate_func_softplus = nnf.softplus(x).data.numpy()</span><br><span class="line"></span><br><span class="line">plt.figure(<span class="number">1</span>,figsize = (<span class="number">8</span>,<span class="number">6</span>))</span><br><span class="line">plt.subplot(<span class="number">221</span>)</span><br><span class="line">plt.plot(x_np,activate_func_relu,c = <span class="string">&#x27;red&#x27;</span>, label = <span class="string">&#x27;relu&#x27;</span>)</span><br><span class="line">plt.ylim(-<span class="number">1</span>,<span class="number">5</span>)</span><br><span class="line">plt.legend(loc = <span class="string">&#x27;best&#x27;</span>)</span><br><span class="line"></span><br><span class="line">plt.subplot(<span class="number">222</span>)</span><br><span class="line">plt.plot(x_np,activate_func_sigmoid,c = <span class="string">&#x27;green&#x27;</span>, label = <span class="string">&#x27;sigmoid&#x27;</span>)</span><br><span class="line">plt.ylim(-<span class="number">0.2</span>,<span class="number">1.2</span>)</span><br><span class="line">plt.legend(loc = <span class="string">&#x27;best&#x27;</span>)</span><br><span class="line"></span><br><span class="line">plt.subplot(<span class="number">223</span>)</span><br><span class="line">plt.plot(x_np,activate_func_tanh,c = <span class="string">&#x27;blue&#x27;</span>, label = <span class="string">&#x27;tanh&#x27;</span>)</span><br><span class="line">plt.ylim(-<span class="number">1.2</span>,<span class="number">1.2</span>)</span><br><span class="line">plt.legend(loc = <span class="string">&#x27;best&#x27;</span>)</span><br><span class="line"></span><br><span class="line">plt.subplot(<span class="number">224</span>)</span><br><span class="line">plt.plot(x_np,activate_func_softplus,c = <span class="string">&#x27;black&#x27;</span>, label = <span class="string">&#x27;softplus&#x27;</span>)</span><br><span class="line">plt.ylim(-<span class="number">0.2</span>,<span class="number">6</span>)</span><br><span class="line">plt.legend(loc = <span class="string">&#x27;best&#x27;</span>)</span><br><span class="line"></span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
+<p><img src="https://i.imgur.com/3dlkC3Q.png" /> ### 程式介紹:
+首先先引入torch來，接著import
+torch.nn.functional，由於softplus在torch.nn.functional裡，所以這邊引入torch.nn.functional便將它改名成nnf，由於我們的數據會存在變數裡，所以這邊要引用Variable，然後我們最後會將函數圖畫出來，所以這邊要import
+matplotlib.pyplot，方便進行數據可視化。
+接著建造一段連續的數據，利用torch.linspace()，第一個參數是加入數據起始點，第二個參數是加入數據的終點，最後一個參數是表示要產生幾個數據。然後將此數據加入變成變數，但是這份數據是一個張量，而matplotlib不能使用tensor，所以這邊將張量轉成numpy()的array。
+然後將張量x傳入各個激勵函數裡，再將它轉成numpy的array，最後再將它放入matplotlib做數據可視化，這邊講解一下plt.subplot()是將各個圖變成子圖，方便在一個視窗中看到所有圖形，第一個參數和第二個參數分別代表row和column所以大小是row*column，第三個參數是代表編號，這樣就完成了。
+### 接著將四個圖合成成一個來做比較。 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> torch</span><br><span class="line"><span class="keyword">import</span> torch.nn.functional <span class="keyword">as</span> nnf</span><br><span class="line"><span class="keyword">from</span> torch.autograd <span class="keyword">import</span> Variable</span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"></span><br><span class="line">x = torch.linspace(-<span class="number">5</span>,<span class="number">5</span>,<span class="number">200</span>)</span><br><span class="line">x = Variable(x)</span><br><span class="line">x_np = x.data.numpy()</span><br><span class="line"></span><br><span class="line">activate_func_relu = torch.relu(x).data.numpy()</span><br><span class="line">activate_func_sigmoid = torch.sigmoid(x).data.numpy()</span><br><span class="line">activate_func_tanh = torch.tanh(x).data.numpy()</span><br><span class="line">activate_func_softplus = nnf.softplus(x).data.numpy()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">plt.plot(x_np,activate_func_relu,c = <span class="string">&#x27;red&#x27;</span>, label = <span class="string">&#x27;relu&#x27;</span>)</span><br><span class="line">plt.legend(loc = <span class="string">&#x27;best&#x27;</span>)</span><br><span class="line">x_relu = -<span class="number">1.3</span></span><br><span class="line">y_relu = <span class="number">0</span></span><br><span class="line">plt.annotate(<span class="string">&#x27;ReLU&#x27;</span>,xy = (x_relu,y_relu),xycoords = <span class="string">&#x27;data&#x27;</span>,xytext = (-<span class="number">80</span>,-<span class="number">30</span>),textcoords = <span class="string">&#x27;offset points&#x27;</span>,fontsize = <span class="number">20</span>,arrowprops = <span class="built_in">dict</span>(arrowstyle = <span class="string">&#x27;-&gt;&#x27;</span>,connectionstyle = <span class="string">&#x27;arc3,rad = .2&#x27;</span>))</span><br><span class="line"></span><br><span class="line">plt.plot(x_np,activate_func_sigmoid,c = <span class="string">&#x27;green&#x27;</span>, label = <span class="string">&#x27;sigmoid&#x27;</span>)</span><br><span class="line">plt.legend(loc = <span class="string">&#x27;best&#x27;</span>)</span><br><span class="line">x_sigmoid = <span class="number">1.4</span></span><br><span class="line">y_sigmoid = <span class="number">0.8</span></span><br><span class="line">plt.annotate(<span class="string">&#x27;sigmoid&#x27;</span>,xy = (x_sigmoid,y_sigmoid),xycoords = <span class="string">&#x27;data&#x27;</span>,xytext = (-<span class="number">20</span>,-<span class="number">50</span>),textcoords = <span class="string">&#x27;offset points&#x27;</span>,fontsize = <span class="number">20</span>,arrowprops = <span class="built_in">dict</span>(arrowstyle = <span class="string">&#x27;-&gt;&#x27;</span>,connectionstyle = <span class="string">&#x27;arc3,rad = .2&#x27;</span>))</span><br><span class="line"></span><br><span class="line">plt.plot(x_np,activate_func_tanh,c = <span class="string">&#x27;blue&#x27;</span>, label = <span class="string">&#x27;tanh&#x27;</span>)</span><br><span class="line">plt.legend(loc = <span class="string">&#x27;best&#x27;</span>)</span><br><span class="line">x_tanh = -<span class="number">0.5</span></span><br><span class="line">y_tanh = -<span class="number">0.5</span></span><br><span class="line">plt.annotate(<span class="string">&#x27;tanh&#x27;</span>,xy = (x_tanh,y_tanh),xycoords = <span class="string">&#x27;data&#x27;</span>,xytext = (+<span class="number">30</span>,-<span class="number">30</span>),textcoords = <span class="string">&#x27;offset points&#x27;</span>,fontsize = <span class="number">20</span>,arrowprops = <span class="built_in">dict</span>(arrowstyle = <span class="string">&#x27;-&gt;&#x27;</span>,connectionstyle = <span class="string">&#x27;arc3,rad = .2&#x27;</span>))</span><br><span class="line"></span><br><span class="line">plt.plot(x_np,activate_func_softplus,c = <span class="string">&#x27;black&#x27;</span>, label = <span class="string">&#x27;softplus&#x27;</span>)</span><br><span class="line">plt.legend(loc = <span class="string">&#x27;best&#x27;</span>)</span><br><span class="line">x_softplus = <span class="number">0.5</span></span><br><span class="line">y_softplus = <span class="number">1</span></span><br><span class="line">plt.annotate(<span class="string">&#x27;softplus&#x27;</span>,xy = (x_softplus,y_softplus),xycoords = <span class="string">&#x27;data&#x27;</span>,xytext = (-<span class="number">95</span>,+<span class="number">15</span>),textcoords = <span class="string">&#x27;offset points&#x27;</span>,fontsize = <span class="number">20</span>,arrowprops = <span class="built_in">dict</span>(arrowstyle = <span class="string">&#x27;-&gt;&#x27;</span>,connectionstyle = <span class="string">&#x27;arc3,rad = .2&#x27;</span>))</span><br><span class="line"></span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure> <img
+src="https://i.imgur.com/o1a12Yu.png" />
+這邊觀念和上面一個一樣只是有matplotlib做一些調整而已，這邊就不做贅述。
+## Regression(回歸) ### code: <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> torch</span><br><span class="line"><span class="keyword">from</span> torch.autograd <span class="keyword">import</span> Variable</span><br><span class="line"><span class="keyword">import</span> torch.nn.functional <span class="keyword">as</span> nnf</span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"></span><br><span class="line">x = torch.unsqueeze(torch.linspace(-<span class="number">1</span>,<span class="number">1</span>, <span class="number">100</span>),dim = <span class="number">1</span>)</span><br><span class="line">y = x**<span class="number">2</span> + <span class="number">0.2</span> * torch.rand(x.size())</span><br><span class="line"></span><br><span class="line">x, y = Variable(x), Variable(y)</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">NN</span>(torch.nn.Module):</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self,n_features,n_hidden,n_output</span>):</span><br><span class="line">        <span class="built_in">super</span>(NN,self).__init__()</span><br><span class="line">        self.hidden = torch.nn.Linear(n_features, n_hidden)</span><br><span class="line">        self.predict = torch.nn.Linear(n_hidden, n_output)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">forward</span>(<span class="params">self, data</span>):<span class="comment">##forward propagation</span></span><br><span class="line">        data = nnf.relu(self.hidden(data))</span><br><span class="line">        data = self.predict(data)</span><br><span class="line">        <span class="keyword">return</span> data</span><br><span class="line"></span><br><span class="line">network = NN(n_features = <span class="number">1</span>,n_hidden = <span class="number">10</span>,n_output = <span class="number">1</span>)</span><br><span class="line"><span class="built_in">print</span>(network)</span><br><span class="line"></span><br><span class="line">optimization = torch.optim.SGD(network.parameters(),lr = <span class="number">0.5</span>)</span><br><span class="line">loss_func = torch.nn.MSELoss()</span><br><span class="line"></span><br><span class="line">plt.ion()</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1000</span>):</span><br><span class="line">    prediction = network(x)</span><br><span class="line">    loss = loss_func(prediction, y)</span><br><span class="line">    optimization.zero_grad()</span><br><span class="line">    loss.backward()</span><br><span class="line">    optimization.step()</span><br><span class="line">    <span class="keyword">if</span> i % <span class="number">5</span> == <span class="number">0</span>:</span><br><span class="line">        plt.cla()</span><br><span class="line">        plt.scatter(x.data.numpy(),y.data.numpy())</span><br><span class="line">        plt.plot(x.data.numpy(),prediction.data.numpy(),<span class="string">&#x27;r-&#x27;</span>,lw = <span class="number">5</span>)</span><br><span class="line">        plt.text(-<span class="number">0.4</span>, <span class="number">1</span>, <span class="string">&#x27;Loss = %.4f&#x27;</span> % loss.data.numpy(),fontdict = &#123;<span class="string">&#x27;size&#x27;</span>: <span class="number">20</span>,<span class="string">&#x27;color&#x27;</span>: <span class="string">&#x27;green&#x27;</span>&#125;)</span><br><span class="line">        plt.pause(<span class="number">0.1</span>)</span><br><span class="line"></span><br><span class="line">plt.ioff()</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure> ### 函數圖: <img
+src="https://i.imgur.com/vmlz1vD.png" /> ### code introduction:
+首先先引入一些第三方套件，再來生成x,y兩個數據，而在pytorch是有維度的，所以這邊用unsqueeze()來為x增加一個維度，因為單純使用linspace()是一維的，用完unsqueeze()則可生成二維的數據，接著利用x帶入一個函數式來生成y，這邊多加一個常數，會更像真實數據，如果不加，會使此函數圖形太過於整齊，無法顯現現實世界的狀況，再來將x,y變成變數。
+這邊建立一個類別(class)，也就是我們的神經網路，這邊會使用的pytorch寫好的神經網路，這邊會使用類別的繼承，父類別是torch.nn.Module，首先先建立一個__init__函式，接著super(NN,self).__init__()其代表對繼承的那個父類別進行初始化，首先找到NN的父類別torch.nn.Module，然後把NN的物件self轉換為父類別torch.nn.Module的物件，然後被轉換的父類的物件A呼叫自己的__init__函式。接著建造linear
+function，第一個參數和第二參數都是代表維度，而weight和bias會隨機賦予。接著定義一個函式叫forward，代表正向傳播的意思，接著將傳入的data放入我們的神經網路，並使用ReLU這個激勵函數，再來將從隱藏層輸出的數值放入predict裡做預測，這邊不加激勵函數，因為我們的數據有可能是負無限大到正無限大，如果今天再使用激勵函數，例如ReLU，這份數據會因為激勵函數的特性，而使數值被壓縮在0~1之間。
+接著開始建造神經網路，將我們要的神經元個數輸入到我們的NN裡，再來進行optimization，這邊使用SGD(stochastic
+gradient
+decent)也就是最單純的梯度下降方法，要使優化起作用需要知道當前網路的參數空間，而這邊的network.parameter()是要獲得參數的信息，而後面的lr就代表learning
+rate。 再來要建立loss function，這邊使用的方法是MSE(Mean Suare
+Error)。</p>
+<p>接下來要進行訓練，順便把我們要的數據可視化畵出來，首先用plt.ion()代表我們要建立一個連續的圖，最後要記得加入plt.ioff，來關掉，再來用迴圈去跑1000遍，我們希望我們的loss
+function越小越好，所以將network回傳的predict值和我們實際的y值做MSE，由於計算完每次的loss，梯度都會保留，所以要用optimization.zero_grad()把梯度改成0，再將loss進行反向傳播(back-propagation)，然後用optimization.step()來進行優化。
+為了達成數據可視化，這邊將會每五次就更新一下目前的學習狀況，plt.cla()是清除目前座標軸，再用scatter把所有數據點畫出來，然後將訓練的線畫出來，同時並輸出當前的loss，並停頓0.1秒，即完成我們的regression。
+## Classification(分類) ### code <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> torch</span><br><span class="line"><span class="keyword">import</span> torch.nn.functional as nnf</span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot as plt</span><br><span class="line"></span><br><span class="line">data = torch.<span class="built_in">ones</span>(<span class="number">100</span>, <span class="number">2</span>)</span><br><span class="line">x0 = torch.<span class="built_in">normal</span>(<span class="number">2</span>*data, <span class="number">1</span>)</span><br><span class="line">y0 = torch.<span class="built_in">zeros</span>(<span class="number">100</span>)</span><br><span class="line">x1 = torch.<span class="built_in">normal</span>(<span class="number">-2</span>*data, <span class="number">1</span>)</span><br><span class="line">y1 = torch.<span class="built_in">ones</span>(<span class="number">100</span>)</span><br><span class="line">x = torch.<span class="built_in">cat</span>((x0, x1), <span class="number">0</span>).<span class="built_in">type</span>(torch.FloatTensor)</span><br><span class="line">y = torch.<span class="built_in">cat</span>((y0, y1), ).<span class="built_in">type</span>(torch.LongTensor)</span><br><span class="line"></span><br><span class="line">plt.<span class="built_in">figure</span>(<span class="number">1</span>)</span><br><span class="line">plt.<span class="built_in">scatter</span>(x.data.<span class="built_in">numpy</span>()[:,<span class="number">0</span>],x.data.<span class="built_in">numpy</span>()[:, <span class="number">1</span>],c = y.data.<span class="built_in">numpy</span>(),s = <span class="number">100</span>,lw = <span class="number">0</span>,cmap = <span class="string">&#x27;RdYlGn&#x27;</span>)</span><br><span class="line">plt.<span class="built_in">figure</span>(<span class="number">2</span>)</span><br><span class="line"><span class="keyword">class</span> <span class="built_in">NN</span>(torch.nn.Module):</span><br><span class="line">    def __init__(self,n_features,n_hidden,n_output):</span><br><span class="line">        <span class="built_in">super</span>(NN,self).__init__()</span><br><span class="line">        self.hidden = torch.nn.<span class="built_in">Linear</span>(n_features, n_hidden)</span><br><span class="line">        self.predict = torch.nn.<span class="built_in">Linear</span>(n_hidden, n_output)</span><br><span class="line"></span><br><span class="line">    def forward(self, data):#<span class="meta">#forward propagation</span></span><br><span class="line">        data = nnf.<span class="built_in">relu</span>(self.<span class="built_in">hidden</span>(data))</span><br><span class="line">        data = self.<span class="built_in">predict</span>(data)</span><br><span class="line">        <span class="keyword">return</span> data</span><br><span class="line"></span><br><span class="line">network = <span class="built_in">NN</span>(n_features = <span class="number">2</span>,n_hidden = <span class="number">10</span>,n_output = <span class="number">2</span>)</span><br><span class="line"><span class="built_in">print</span>(network)</span><br><span class="line">optimization = torch.optim.<span class="built_in">SGD</span>(network.<span class="built_in">parameters</span>(),lr = <span class="number">0.01</span>)</span><br><span class="line">loss_func = torch.nn.<span class="built_in">CrossEntropyLoss</span>()</span><br><span class="line"></span><br><span class="line">plt.<span class="built_in">ion</span>()</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> i in <span class="built_in">range</span>(<span class="number">100</span>):</span><br><span class="line">    prediction = <span class="built_in">network</span>(x)</span><br><span class="line">    loss = <span class="built_in">loss_func</span>(prediction, y)</span><br><span class="line">    optimization.<span class="built_in">zero_grad</span>()</span><br><span class="line">    loss.<span class="built_in">backward</span>()</span><br><span class="line">    optimization.<span class="built_in">step</span>()</span><br><span class="line">    <span class="keyword">if</span> i % <span class="number">2</span> == <span class="number">0</span>:</span><br><span class="line">        plt.<span class="built_in">cla</span>()</span><br><span class="line">        predict = torch.<span class="built_in">max</span>(prediction, <span class="number">1</span>)[<span class="number">1</span>]</span><br><span class="line">        pred_y = predict.data.<span class="built_in">numpy</span>()</span><br><span class="line">        target_y = y.data.<span class="built_in">numpy</span>()</span><br><span class="line">        plt.<span class="built_in">scatter</span>(x.data.<span class="built_in">numpy</span>()[:, <span class="number">0</span>], x.data.<span class="built_in">numpy</span>()[:,<span class="number">1</span>],c = pred_y, s = <span class="number">100</span>, lw = <span class="number">0</span>, cmap = <span class="string">&#x27;RdYlGn&#x27;</span>)</span><br><span class="line">        accuracy = <span class="built_in">float</span>((pred_y == target_y).<span class="built_in">astype</span>(<span class="type">int</span>).<span class="built_in">sum</span>()) / <span class="built_in">float</span>(target_y.size)</span><br><span class="line">        plt.<span class="built_in">text</span>(<span class="number">0.8</span>,<span class="number">-4</span>,<span class="string">&#x27;Accuracy = %.2f&#x27;</span> % accuracy, fontdict = &#123;<span class="string">&#x27;size&#x27;</span>:<span class="number">20</span>, <span class="string">&#x27;color&#x27;</span>: <span class="string">&#x27;red&#x27;</span>&#125;)</span><br><span class="line">        plt.<span class="built_in">pause</span>(<span class="number">0.1</span>)</span><br><span class="line"></span><br><span class="line">plt.<span class="built_in">ioff</span>()</span><br><span class="line">plt.<span class="built_in">show</span>()</span><br></pre></td></tr></table></figure> ### 輸出圖形
+左側是正確的分類方式，右側是訓練的分類方式。 <img
+src="https://i.imgur.com/EYxHmiw.png" /> ### Neural Network <img
+src="https://i.imgur.com/FLy5Obm.png" /></p>
+<h3 id="code-introduction">code introduction</h3>
+<p>首先創造一些假數據，data裡存的都是1，接著設定x0和x1，這裡利用離散正態度分佈抽取隨機數，第一個參數代表mean代表平均，第二個參數是std代表標準差，再來生成y0和y1，這裡將y0和y1分別生成都是1和都是0，再來將x0和x1合成成x，將y0和y1合成成y，由於要做對比，這裡開一個figure1代表正確的分類，並用散佈圖呈現，記得要將x和y轉成array，因為matplotlib並不支援tensor(張量），這裡使用到numpy的切片，x座標放的是x.data.numpy()[:,
+0]，就是說x是二維的，我們將一維的資料的第一個加入，而一維資料的第二個當y座標，這裡的顏色就用y來表示，稍後也是要訓練的像y的效果，由於這邊是將資料二分，所以1是一類，0是另一類，所以這邊將1設為一種顏色0設為另一種顏色，接著我們的神經網路的設計和上面的regression一樣，這邊就不做贅述了，只是這邊我將我們的輸入和輸出變成兩個神經元，這邊的優化一樣是用SGD(stochastic
+gradient decent)，這裡將learning
+rate調成0.01是為了能更清楚的看到我們的model在學習的跡象，接著這裡我們的loss
+function不是使用MSE或MAE，而是使用CrossEntropy，因為在做classification時判斷的依據是機率，而MSE或MAE皆不是用機率的形式表現，所以這邊才使用CrossEntropy來計算loss
+function，至於CrossEntropy是如何做的呢？有機會的話後面會提到。
+接著進入迴圈，有許多東西和前一個regression相同，這邊就不多贅述，我們將會每兩次輸出一個改變，然後前面提到說做classification主要是看機率，所以我將network回傳的prediction和1做比較，看誰比較大，我們選數字大的當我們的結果，將此結果存在predict裡，而後來判斷輸出的顏色就是以predict為基準的，最後要算我們的精確度，精確度的計算方法是如果預測的predict和實際結果y相同的話，將此值轉成int型態，並將此值除以實際結果y的大小就是我們要的accuracy，最後將所有要的東西輸出就完成這次的classification。
+## 快速建造神經網路 ### code
+這是前幾個例子建造的神經網路，比較長，比較複雜： <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">NN</span>(torch.nn.Module):</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self,n_features,n_hidden,n_output</span>):</span><br><span class="line">        <span class="built_in">super</span>(NN,self).__init__()</span><br><span class="line">        self.hidden = torch.nn.Linear(n_features, n_hidden)</span><br><span class="line">        self.predict = torch.nn.Linear(n_hidden, n_output)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">forward</span>(<span class="params">self, data</span>):<span class="comment">##forward propagation</span></span><br><span class="line">        data = nnf.relu(self.hidden(data))</span><br><span class="line">        data = self.predict(data)</span><br><span class="line">        <span class="keyword">return</span> data</span><br></pre></td></tr></table></figure>
+這個就是快速建造神經網路的方法： <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">NN2 = torch.nn.Sequential(</span><br><span class="line">    torch.nn.Linear(<span class="number">2</span>,<span class="number">10</span>),torch.nn.ReLU(),torch.nn.Linear(<span class="number">10</span>,<span class="number">2</span>),</span><br><span class="line">)</span><br></pre></td></tr></table></figure></p>
+<p>將兩個神經網路輸出，看看會有哪裡不同： <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> torch</span><br><span class="line"><span class="keyword">import</span> torch.nn.functional <span class="keyword">as</span> nnf</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">NN</span>(torch.nn.Module):</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self,n_features,n_hidden,n_output</span>):</span><br><span class="line">        <span class="built_in">super</span>(NN,self).__init__()</span><br><span class="line">        self.hidden = torch.nn.Linear(n_features, n_hidden)</span><br><span class="line">        self.predict = torch.nn.Linear(n_hidden, n_output)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">forward</span>(<span class="params">self, data</span>):<span class="comment">##forward propagation</span></span><br><span class="line">        data = nnf.relu(self.hidden(data))</span><br><span class="line">        data = self.predict(data)</span><br><span class="line">        <span class="keyword">return</span> data</span><br><span class="line"></span><br><span class="line">NN2 = torch.nn.Sequential(</span><br><span class="line">    torch.nn.Linear(<span class="number">2</span>,<span class="number">10</span>),torch.nn.ReLU(),torch.nn.Linear(<span class="number">10</span>,<span class="number">2</span>),</span><br><span class="line">)</span><br><span class="line">network = NN(n_features = <span class="number">2</span>,n_hidden = <span class="number">10</span>,n_output = <span class="number">2</span>)</span><br><span class="line"><span class="built_in">print</span>(network)</span><br><span class="line"><span class="built_in">print</span>(NN2)</span><br></pre></td></tr></table></figure> ### output:
+<img src="https://i.imgur.com/p8CNa7l.png" /> ### code introduction
+原本的神經網路就不介紹了，這裡只介紹第二種神經網路，第二種神經網路看起來簡單許多，只須使用pytorch的內建的class就可以完成，首先使用pytorch裡的class叫Sequential，Sequential是一個容器，可以加入其他的神經網路的class，而Sequential會照著順序執行它，接著加入torch.nn.Linear(2,10)，這句就和原本NN裡的神經網路裡的self.hidden相同，只是可以看到輸出的位置NN2是顯示(0)而不是顯示(hidden)，因為我們沒有幫它命名，接著加入激勵函數，這裡一樣使用ReLU，前面有說到Sequential會照順序執行，所以輸出的地方可以看到有一行ReLU()，看回NN的程式碼，在NN裡是使用nnf.relu(self.hidden(data))來定義激勵函數，但其實nnf.relu()和torch.nn.ReLU()效果是一樣的。最後是我們的預測輸出層，這裡使用torch.nn.Linear(10,2)，和輸入層的觀念相同，這裡就不多做贅述了。</p>
+<h2 id="儲存先前已做好的訓練並讀取">儲存先前已做好的訓練，並讀取</h2>
+<p>https://pytorch.org/tutorials/beginner/saving_loading_models.html ###
+code <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> torch</span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"></span><br><span class="line">x = torch.unsqueeze(torch.linspace(-<span class="number">1</span>,<span class="number">1</span>, <span class="number">100</span>),dim = <span class="number">1</span>)</span><br><span class="line">y = x**<span class="number">2</span> + <span class="number">0.2</span> * torch.rand(x.size())</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">save</span>():</span><br><span class="line">    network = torch.nn.Sequential(</span><br><span class="line">    torch.nn.Linear(<span class="number">1</span>,<span class="number">10</span>),torch.nn.ReLU(),torch.nn.Linear(<span class="number">10</span>,<span class="number">1</span>),</span><br><span class="line">    )</span><br><span class="line">    optimization = torch.optim.SGD(network.parameters(), lr = <span class="number">0.5</span>)</span><br><span class="line">    loss_func = torch.nn.MSELoss()</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1000</span>):</span><br><span class="line">        prediction = network(x)</span><br><span class="line">        loss = loss_func(prediction, y)</span><br><span class="line">        optimization.zero_grad()</span><br><span class="line">        loss.backward()</span><br><span class="line">        optimization.step()</span><br><span class="line">    plt.figure(<span class="number">1</span>)</span><br><span class="line">    plt.subplot(<span class="number">131</span>)</span><br><span class="line">    plt.title(<span class="string">&#x27;origin&#x27;</span>)</span><br><span class="line">    plt.scatter(x.data.numpy(),y.data.numpy())</span><br><span class="line">    plt.plot(x.data.numpy(),prediction.data.numpy(),<span class="string">&#x27;r-&#x27;</span>,lw = <span class="number">5</span>)</span><br><span class="line"></span><br><span class="line">    torch.save(network,<span class="string">&#x27;NN.pkl&#x27;</span>)</span><br><span class="line">    torch.save(network.state_dict(), <span class="string">&#x27;parameter.pkl&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">load_all_NN</span>():</span><br><span class="line">    network2 = torch.load(<span class="string">&#x27;NN.pkl&#x27;</span>)</span><br><span class="line">    prediction = network2(x)</span><br><span class="line">    plt.subplot(<span class="number">132</span>)</span><br><span class="line">    plt.title(<span class="string">&#x27;all NN&#x27;</span>)</span><br><span class="line">    plt.scatter(x.data.numpy(),y.data.numpy())</span><br><span class="line">    plt.plot(x.data.numpy(),prediction.data.numpy(),<span class="string">&#x27;r-&#x27;</span>,lw = <span class="number">5</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">load_parameter_NN</span>():</span><br><span class="line">    network3 = torch.nn.Sequential(</span><br><span class="line">    torch.nn.Linear(<span class="number">1</span>,<span class="number">10</span>),torch.nn.ReLU(),torch.nn.Linear(<span class="number">10</span>,<span class="number">1</span>),</span><br><span class="line">    )</span><br><span class="line">    network3.load_state_dict(torch.load(<span class="string">&#x27;parameter.pkl&#x27;</span>))</span><br><span class="line">    prediction = network3(x)</span><br><span class="line"></span><br><span class="line">    plt.subplot(<span class="number">133</span>)</span><br><span class="line">    plt.title(<span class="string">&#x27;parameters&#x27;</span>)</span><br><span class="line">    plt.scatter(x.data.numpy(),y.data.numpy())</span><br><span class="line">    plt.plot(x.data.numpy(),prediction.data.numpy(),<span class="string">&#x27;r-&#x27;</span>,lw = <span class="number">5</span>)</span><br><span class="line"></span><br><span class="line">save()</span><br><span class="line">load_all_NN()</span><br><span class="line">load_parameter_NN()</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure> ### output</p>
+<h3 id="code-introduction-1">code introduction</h3>
+<p>如果今天想要使用之前訓練的結果，但是如果要重新訓練會很麻煩又很耗時間，所以我們可以將之前的訓練結果存起來，以便下次直接取用，先來看code，我們這邊使用regression的例子，所以不講和之前一樣的東西，可以看到我們的code有三個函式，第一個函式是存取訓練完的資料，第二個函式是讀取全部的資料，第三個是讀取之前訓練的參數，這裡可能會很納悶，第二個和第三個函式不是很像嗎？為何有兩種不同函式呢？這邊是為了清楚顯現效果才將兩種方式顯現出來，否則擇一即可，而這兩種的不同稍後會說。
+首先看到第21行，這邊由於要將三個圖放入一個figure裡，所以要建造子圖，再來看26行，這裡我們直接使用pytorch的函式來儲存，有兩種儲存方法，這也就是為什麼前面有三個自訂函式，第一種儲存方式是將所有資料儲存，包括圖(graph)，因為pytorch是一種graph，另一種儲存方式是只儲存訓練的參數，而存取參數的時候要使用state_dict，在pytorch的官方文檔裡是這樣解釋state_dict:（A
+state_dict is simply a Python dictionary object that maps each layer to
+its parameter tensor.
+）也就是說state_dict是存取之前訓練的各層的張量資料，包括weights和bias，那為什麼要分兩種，其實第二種存參數的速度比較快，這邊記得要將檔案存成pkl檔。
+最後兩個函式中我們將資料取出，使用load()函式，至於存取參數的那個需要多家load_state_dict()，這樣我們就完成了。</p>
+<h2 id="batch-training">Batch Training</h2>
+<h3 id="code">code</h3>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> torch</span><br><span class="line"><span class="keyword">from</span> torch.utils <span class="keyword">import</span> data <span class="keyword">as</span> data_</span><br><span class="line"></span><br><span class="line">batch_sizes = <span class="number">5</span></span><br><span class="line"></span><br><span class="line">x = torch.linspace(<span class="number">1</span>, <span class="number">10</span>, <span class="number">10</span>)</span><br><span class="line">y = torch.linspace(<span class="number">10</span>, <span class="number">1</span>, <span class="number">10</span>)</span><br><span class="line"></span><br><span class="line">torch_dataset = data_.TensorDataset(x, y)</span><br><span class="line">loader = data_.DataLoader(dataset = torch_dataset, batch_size = batch_sizes, shuffle = <span class="literal">True</span>, num_workers = <span class="number">2</span>,)</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> epoch <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">3</span>):</span><br><span class="line">    <span class="keyword">for</span> step, (batch_x, batch_y) <span class="keyword">in</span> <span class="built_in">enumerate</span>(loader):</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&#x27;Epoch: &#x27;</span>, epoch,<span class="string">&#x27; || Step: &#x27;</span>, step, <span class="string">&#x27; || batch x: &#x27;</span>, batch_x.numpy(), <span class="string">&#x27;    ||    batch_y: &#x27;</span>, batch_y.numpy())</span><br></pre></td></tr></table></figure>
+<h3 id="outuput">outuput</h3>
+<p><img src="https://i.imgur.com/7irZP6N.png" /> ### code intorduction
+在做深度學習時不一定是將所有資料全部一起訓練，時常會將資料做切割，進行分批訓練，以提高訓練速度，首先要先引用torch.utils裡的data，以便稍後做分批訓練，然後設定一個變數代表每批訓練的數量，再來創造假數據，一個數據為1到10，另一個則是10到1，接著利用TensorDataset()將x和y加入一個包裝數據和目標張量的集合裡，接著要做batch的分批訓練，我們直接繼承pytorch的類別，便可以直接使用DataLoader()，接著將參數輸入，就可以將資料分批，第一個參數是加入之前的torch_dataset，第個參數是每批幾個，第三個參數代表是否將資料打亂，True代表要，False代表不要，最後一個參數num_workers需要大於等於0，代表我一次要有幾個窗口來導入數據，這樣可以加快數據導入速度，當然加入的參數不只這幾個，這裡引用pytorch的官方文件：
+<span style = "color:red">DataLoader(dataset, batch_size=1,
+shuffle=False, sampler=None, batch_sampler=None, num_workers=0,
+collate_fn=None, pin_memory=False, drop_last=False, timeout=0,
+worker_init_fn=None, *, prefetch_factor=2,
+persistent_workers=False)</span></p>
+<p>以上是可以輸入的參數，接著使用巢狀迴圈去跑，外迴圈代表我們要執行幾次，由於我的數據可以打亂且分為兩批做輸入，所有重複多次這個行為，可以使我們的model訓練的更好，因為每次都會打亂並分為兩批，所以每次訓練的資料不一樣，使每次訓練可以訓練到不同的feature，至於裡面那層迴圈是將我們每批數據都顯現出來，方便我們觀察資料實際的樣子，至於後面的enumerate是為了產生index，方便我們的step顯示，最後將x_batch和y_batch輸出，即完成這次的實作。</p>
+<h2 id="optimization">Optimization</h2>
+<h3 id="code-1">code</h3>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> torch</span><br><span class="line"><span class="keyword">from</span> torch.utils <span class="keyword">import</span> data <span class="keyword">as</span> data_</span><br><span class="line"><span class="keyword">import</span> torch.nn.functional <span class="keyword">as</span> nnf</span><br><span class="line"><span class="keyword">from</span> torch.autograd <span class="keyword">import</span> Variable</span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"></span><br><span class="line">LR = <span class="number">0.01</span></span><br><span class="line">BATCH_SIZE = <span class="number">32</span></span><br><span class="line">EPOCH = <span class="number">12</span></span><br><span class="line"></span><br><span class="line">x = torch.unsqueeze(torch.linspace(-<span class="number">1</span>,<span class="number">1</span>, <span class="number">100</span>),dim = <span class="number">1</span>) <span class="comment">## regression example</span></span><br><span class="line">y = x**<span class="number">2</span> + <span class="number">0.2</span> * torch.rand(x.size())</span><br><span class="line"></span><br><span class="line">plt.figure(<span class="number">1</span>)</span><br><span class="line">plt.scatter(x.numpy(),y.numpy())</span><br><span class="line">plt.figure(<span class="number">2</span>)</span><br><span class="line"></span><br><span class="line">torch_dataset = data_.TensorDataset(x, y)</span><br><span class="line">loader = data_.DataLoader(dataset = torch_dataset, batch_size = BATCH_SIZE, shuffle = <span class="literal">True</span>, num_workers = <span class="number">2</span>,)</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">NN</span>(torch.nn.Module):</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="built_in">super</span>(NN,self).__init__()</span><br><span class="line">        self.hidden = torch.nn.Linear(<span class="number">1</span>,<span class="number">20</span>)</span><br><span class="line">        self.predict = torch.nn.Linear(<span class="number">20</span>,<span class="number">1</span>)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">forward</span>(<span class="params">self, data</span>):<span class="comment">##forward propagation</span></span><br><span class="line">        data = nnf.relu(self.hidden(data))</span><br><span class="line">        data = self.predict(data)</span><br><span class="line">        <span class="keyword">return</span> data</span><br><span class="line"></span><br><span class="line">NN_SGD = NN()</span><br><span class="line">NN_Momentum = NN()</span><br><span class="line">NN_RMSprop = NN()</span><br><span class="line">NN_Adam = NN()</span><br><span class="line"></span><br><span class="line">network = [NN_SGD,NN_Momentum,NN_RMSprop,NN_Adam]</span><br><span class="line"></span><br><span class="line">opt_SGD = torch.optim.SGD(NN_SGD.parameters(), lr= LR)</span><br><span class="line">opt_Momentum = torch.optim.SGD(NN_Momentum.parameters(), lr= LR, momentum = <span class="number">0.8</span>)</span><br><span class="line">opt_RMSprop = torch.optim.RMSprop(NN_RMSprop.parameters(), lr= LR, alpha = <span class="number">0.9</span>)</span><br><span class="line">opt_Adam = torch.optim.Adam(NN_Adam.parameters(), lr= LR, betas = (<span class="number">0.9</span>,<span class="number">0.99</span>))</span><br><span class="line">optimization = [opt_SGD,opt_Momentum,opt_RMSprop,opt_Adam]</span><br><span class="line"></span><br><span class="line">loss_func = torch.nn.MSELoss()</span><br><span class="line">loss_list =[[], [], [], []]</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> epoch <span class="keyword">in</span> <span class="built_in">range</span>(EPOCH):</span><br><span class="line"></span><br><span class="line">  <span class="keyword">for</span> step, (batch_x, batch_y) <span class="keyword">in</span> <span class="built_in">enumerate</span>(loader):</span><br><span class="line">    bx = Variable(batch_x)</span><br><span class="line">    by = Variable(batch_y)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> net, opt, l_list <span class="keyword">in</span> <span class="built_in">zip</span>(network, optimization, loss_list):</span><br><span class="line">      output = net(bx)</span><br><span class="line">      loss = loss_func(output, by)</span><br><span class="line">      opt.zero_grad()</span><br><span class="line">      loss.backward()</span><br><span class="line">      opt.step()</span><br><span class="line">      l_list.append(loss.data.numpy())</span><br><span class="line"></span><br><span class="line">labels = [<span class="string">&#x27;SGD&#x27;</span>, <span class="string">&#x27;Momentum&#x27;</span>, <span class="string">&#x27;RMSprop&#x27;</span>, <span class="string">&#x27;Adam&#x27;</span>]</span><br><span class="line"><span class="keyword">for</span> i, l_list <span class="keyword">in</span> <span class="built_in">enumerate</span>(loss_list):</span><br><span class="line">  plt.plot(l_list, label = labels[i])</span><br><span class="line">plt.legend(loc = <span class="string">&#x27;best&#x27;</span>)</span><br><span class="line">plt.xlabel(<span class="string">&#x27;Steps&#x27;</span>)</span><br><span class="line">plt.ylabel(<span class="string">&#x27;Loss&#x27;</span>)</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
+<h3 id="output">output</h3>
+<p><img src="https://i.imgur.com/swSXnTG.jpg" /> <img
+src="https://i.imgur.com/PAdVPkC.png" /></p>
+<h3 id="code-intorduction">code intorduction</h3>
+<p>首先引入需要用到的套件，接著定義一些hyper parameter，hyper
+parameter就是給設計者進行調配更改的參數，通常以大寫的形式定義（沒有強制），而在做batch
+training時常常會看到epoch這個詞，所謂的一次epoch就代表所有數據的forward（正向傳遞）和backward（反向傳遞）更新參數的過程。
+再來我們要製造假數據，這裡的假數據和前面的regression一樣，這邊就不多做贅述。
+這邊我們一樣做batch training，方式和之前一樣，這邊就不多做贅述。
+再來創建神經網路，方式和之前一樣，這邊就不多做贅述。😂😂
+接著我們將會測試四種optimizer的優化效率，分別為SGD、Momentum、RMSprop、Adam，首先第一個SGD，就是一個常見且基礎的optimizer，利用微分方法找到梯度，並往梯度的方向更新數據，我們這邊參數只需加入learning
+rate即可，接著是Momentum，Momentum有運動量的意思，在同方線的時候學習速度會加快，在方向改變的時候學習速度下減小，所以有機會透過這個機制突破local
+minmum，而momuntum通常會設在0.8、0.9。
+接著是RMSprop，如果沿著同一個方向梯度非常大，可以使用RMSprop，RMSprop更新learning
+rate時會前一次有關係，所以這邊會有一個alpha，可以自由調整新舊gradient的比重。
+最後是Adam，Adam保留了Momentum對過去梯度的方向做梯度速度調整與Adam對過去梯度的平方值做learning
+rate的調整，再加上Adam有做參數的偏離校正，使得每一次的學習率都會有個確定的範圍，會讓參數的更新較為平穩。
+接著創造loss
+function，這裡使用MSE，然後在loss_list裡存放每個optimizer的loss，再來進入迴圈，迴圈裡就是在做分批訓練，在第三層迴圈裡使用zip將可迭代的資料打包成一個，再由變數進行迭代，最後將圖做輸出就完成了。</p>
+<h5 id="by-中和高中-吳振榮">by 中和高中 吳振榮</h5>
+
+    </article>
+    <!-- license -->
+    
+    <!-- paginator -->
+    <ul class="post-paginator">
+        <li class="next">
+            
+                <div class="nextSlogan">Next Post</div>
+                <a href="/2021/08/27/%E5%9F%BA%E7%A4%8ETensorFlow2%E8%88%87%E6%A9%9F%E5%99%A8%E5%AD%B8%E7%BF%92/" title="基礎TensorFlow1和2與機器學習">
+                    <div class="nextTitle">基礎TensorFlow1和2與機器學習</div>
+                </a>
+            
+        </li>
+        <li class="previous">
+            
+                <div class="prevSlogan">Previous Post</div>
+                <a href="/2021/08/24/OpenCV/" title="OpenCV">
+                    <div class="prevTitle">OpenCV</div>
+                </a>
+            
+        </li>
+    </ul>
+    <!-- comment -->
+    
+        <div class="post-comment">
+            <!-- 来必力 City 版安装代码 -->
+
+
+            
+
+            
+
+            
+
+            <!-- utteranc评论 -->
+
+
+            <!-- partial('_partial/comment/changyan') -->
+            <!--PC版-->
+
+
+            
+            
+
+            
+
+        </div>
+    
+    <!-- timeliness note -->
+    <!-- idea from: https://hexo.fluid-dev.com/posts/hexo-injector/#%E6%96%87%E7%AB%A0%E6%97%B6%E6%95%88%E6%80%A7%E6%8F%90%E7%A4%BA -->
+    
+    <!-- Mathjax -->
+    
+        
+    <script>
+        MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+            }
+        };
+    </script>
+
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3.2.0/es5/tex-mml-chtml.js"></script>
+
+
+    
+</main>
+
+                <!-- profile -->
+                
+            </div>
+            <footer class="footer footer-unloaded">
+    <!-- social  -->
+    
+        <div class="social">
+            
+    
+        
+            
+                <a href="mailto:WuMax13@gmail.com" class="iconfont-archer email" title=email ></a>
+            
+        
+    
+        
+            
+                <a href="https://github.com/MaxWutw" class="iconfont-archer github" target="_blank" title=github></a>
+            
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+            
+                <a href="https://www.facebook.com/profile.php?id=100020738000412" class="iconfont-archer facebook" target="_blank" title=facebook></a>
+            
+        
+    
+        
+    
+        
+            
+                <a href="https://www.instagram.com/_wuzhenlong/" class="iconfont-archer instagram" target="_blank" title=instagram></a>
+            
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+
+
+        </div>
+    
+    <!-- powered by Hexo  -->
+    <div class="copyright">
+        <span id="hexo-power">Powered by <a href="https://hexo.io/" target="_blank">Hexo</a></span><span class="iconfont-archer power">&#xe635;</span><span id="theme-info">theme <a href="https://github.com/fi3ework/hexo-theme-archer" target="_blank">Archer</a></span>
+    </div>
+    <!-- website approve for Chinese user -->
+    
+    <!-- 不蒜子  -->
+    
+        <div class="busuanzi-container">
+            
+             
+                <span id="busuanzi_container_site_pv">PV: <span id="busuanzi_value_site_pv"></span> :)</span>
+            
+        </div>
+    	
+</footer>
+
+        </div>
+        <!-- toc -->
+        
+            <div class="toc-wrapper toc-wrapper-loding" style=
+
+
+
+
+
+
+
+    top:50vh;
+
+>
+                <div class="toc-catalog">
+                    <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
+                </div>
+                <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%B7%B1%E5%BA%A6%E5%AD%B8%E7%BF%92%E8%88%87pytorch"><span class="toc-number">1.</span> <span class="toc-text">深度學習與pytorch</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E4%B8%AD%E5%92%8C%E9%AB%98%E4%B8%AD%E5%90%B3%E6%8C%AF%E6%A6%AE"><span class="toc-number">1.0.0.0.1.</span> <span class="toc-text">中和高中吳振榮</span></a></li></ol></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#torch-%E5%92%8C-numpy"><span class="toc-number">1.1.</span> <span class="toc-text">Torch 和 Numpy</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%80%99%E9%82%8A%E5%B0%87%E5%9B%9B%E5%80%8B%E6%BF%80%E5%8B%B5%E5%87%BD%E6%95%B8%E7%9A%84%E5%87%BD%E6%95%B8%E5%9C%96%E5%BD%A2%E7%95%AB%E5%87%BA%E4%BE%86"><span class="toc-number">1.1.1.</span> <span class="toc-text">這邊將四個激勵函數的函數圖形畫出來。</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#code-introduction"><span class="toc-number">1.1.2.</span> <span class="toc-text">code introduction</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%84%B2%E5%AD%98%E5%85%88%E5%89%8D%E5%B7%B2%E5%81%9A%E5%A5%BD%E7%9A%84%E8%A8%93%E7%B7%B4%E4%B8%A6%E8%AE%80%E5%8F%96"><span class="toc-number">1.2.</span> <span class="toc-text">儲存先前已做好的訓練，並讀取</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#code-introduction-1"><span class="toc-number">1.2.1.</span> <span class="toc-text">code introduction</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#batch-training"><span class="toc-number">1.3.</span> <span class="toc-text">Batch Training</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#code"><span class="toc-number">1.3.1.</span> <span class="toc-text">code</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#outuput"><span class="toc-number">1.3.2.</span> <span class="toc-text">outuput</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#optimization"><span class="toc-number">1.4.</span> <span class="toc-text">Optimization</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#code-1"><span class="toc-number">1.4.1.</span> <span class="toc-text">code</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#output"><span class="toc-number">1.4.2.</span> <span class="toc-text">output</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#code-intorduction"><span class="toc-number">1.4.3.</span> <span class="toc-text">code intorduction</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#by-%E4%B8%AD%E5%92%8C%E9%AB%98%E4%B8%AD-%E5%90%B3%E6%8C%AF%E6%A6%AE"><span class="toc-number">1.4.3.0.1.</span> <span class="toc-text">by 中和高中 吳振榮</span></a></li></ol></li></ol></li></ol></li></ol></li></ol>
+            </div>
+        
+        <!-- sidebar -->
+        <div class="sidebar sidebar-hide">
+    <ul class="sidebar-tabs sidebar-tabs-active-0">
+        <li class="sidebar-tab-archives"><span class="iconfont-archer">&#xe67d;</span><span class="tab-name">Archive</span></li>
+        <li class="sidebar-tab-tags"><span class="iconfont-archer">&#xe61b;</span><span class="tab-name">Tag</span></li>
+        <li class="sidebar-tab-categories"><span class="iconfont-archer">&#xe666;</span><span class="tab-name">Cate</span></li>
+    </ul>
+    <div class="sidebar-content sidebar-content-show-archive">
+        <div class="sidebar-panel-archives">
+    <!-- 在 ejs 中将 archive 按照时间排序 -->
+    
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+    
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+    
+    
+    
+    
+    <div class="total-and-search">
+        <div class="total-archive">
+        Total : 31
+        </div>
+        <!-- search  -->
+        
+    </div>
+    
+    <div class="post-archive">
+    
+        
+            
+            
+            <div class="archive-year"> 2023 </div>
+            <ul class="year-list">
+            
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/10</span>
+            <a class="archive-post-title" href="/2023/05/10/%E5%9F%BA%E7%A4%8E%E6%95%B8%E8%AB%96/">基礎數論</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/05</span>
+            <a class="archive-post-title" href="/2023/04/05/GIT/">GIT</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/05</span>
+            <a class="archive-post-title" href="/2023/04/05/%E5%BF%AB%E9%80%9F%E5%86%AA%E5%92%8C%E7%9F%A9%E9%99%A3%E5%BF%AB%E9%80%9F%E5%86%AA/">快速冪和矩陣快速冪</a>
+        </li>
+    
+        
+            
+            
+                
+                </ul>
+            
+            <div class="archive-year"> 2021 </div>
+            <ul class="year-list">
+            
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/12</span>
+            <a class="archive-post-title" href="/2021/09/12/%E5%9C%A8Linux%E5%AE%89%E8%A3%9DCUDA/">在Linux安裝CUDA，並在Pytorch進行CUDA訓練</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/29</span>
+            <a class="archive-post-title" href="/2021/08/29/%E5%8F%AF%E8%A7%A3%E9%87%8B%E4%BA%BA%E5%B7%A5%E6%99%BA%E6%85%A7-explainable-ai/">可解釋人工智慧_explainable_ai</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/29</span>
+            <a class="archive-post-title" href="/2021/08/29/%E5%9F%BA%E6%96%BC%E6%B7%B1%E5%BA%A6%E5%AD%B8%E7%BF%92%E9%80%B2%E8%A1%8C%E8%B2%93%E8%88%87%E7%8B%97%E7%9A%84%E8%BE%A8%E8%AA%8D-Pytorch/">基於深度學習進行貓與狗的辨認(Pytorch)</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/28</span>
+            <a class="archive-post-title" href="/2021/08/28/C-%E7%89%A9%E4%BB%B6%E5%B0%8E%E5%90%91/">C++物件導向</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/28</span>
+            <a class="archive-post-title" href="/2021/08/28/%E5%9F%BA%E7%A4%8E%E6%BC%94%E7%AE%97%E6%B3%95-C/">基礎演算法(Algorithm)-C++</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/28</span>
+            <a class="archive-post-title" href="/2021/08/28/%E5%9F%BA%E7%A4%8E%E8%B3%87%E6%96%99%E7%B5%90%E6%A7%8B-C/">基礎資料結構(Data Structure)-C++</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/27</span>
+            <a class="archive-post-title" href="/2021/08/27/CSS/">CSS</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/27</span>
+            <a class="archive-post-title" href="/2021/08/27/HTML/">HTML</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/27</span>
+            <a class="archive-post-title" href="/2021/08/27/Linux%E5%9F%BA%E7%A4%8E%E4%BD%BF%E7%94%A8/">Linux基礎使用</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/27</span>
+            <a class="archive-post-title" href="/2021/08/27/MNIST%E6%89%8B%E5%AF%AB%E8%BE%A8%E8%AD%98-Pytorch-version/">MNIST手寫辨識(Pytorch version)</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/27</span>
+            <a class="archive-post-title" href="/2021/08/27/MNIST%E6%89%8B%E5%AF%AB%E8%BE%A8%E8%AD%98-TensorFlow-version/">MNIST手寫辨識(TensorFlow-version)</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/27</span>
+            <a class="archive-post-title" href="/2021/08/27/Numpy/">Numpy</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/27</span>
+            <a class="archive-post-title" href="/2021/08/27/Pandas/">Pandas</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/27</span>
+            <a class="archive-post-title" href="/2021/08/27/Scikit-Learn/">Scikit Learn</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/27</span>
+            <a class="archive-post-title" href="/2021/08/27/TensorFlow1%E5%9F%BA%E7%A4%8E%E4%BD%BF%E7%94%A8%E6%96%B9%E6%B3%95/">TensorFlow1基礎使用方法</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/27</span>
+            <a class="archive-post-title" href="/2021/08/27/%E9%81%B7%E7%A7%BB%E5%AD%B8%E7%BF%92-%E5%9C%96%E7%89%87%E8%BE%A8%E8%AD%98/">遷移學習-圖片辨識</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/27</span>
+            <a class="archive-post-title" href="/2021/08/27/APCS%E5%AF%A6%E4%BD%9C%E9%A1%8C/">APCS實作題</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/27</span>
+            <a class="archive-post-title" href="/2021/08/27/Matplotlib/">Matplotlib</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/27</span>
+            <a class="archive-post-title" href="/2021/08/27/%E5%9F%BA%E7%A4%8ETensorFlow2%E8%88%87%E6%A9%9F%E5%99%A8%E5%AD%B8%E7%BF%92/">基礎TensorFlow1和2與機器學習</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/27</span>
+            <a class="archive-post-title" href="/2021/08/27/%E5%9F%BA%E7%A4%8Epytorch%E8%88%87%E6%A9%9F%E5%99%A8%E5%AD%B8%E7%BF%92/">基礎pytorch與機器學習</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/24</span>
+            <a class="archive-post-title" href="/2021/08/24/OpenCV/">OpenCV</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/24</span>
+            <a class="archive-post-title" href="/2021/08/24/pipenv/">pipenv</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/24</span>
+            <a class="archive-post-title" href="/2021/06/24/Linked-List/">Linked_List</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/24</span>
+            <a class="archive-post-title" href="/2021/06/24/Stringstream/">Stringstream</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/24</span>
+            <a class="archive-post-title" href="/2021/06/24/Web/">Web</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/24</span>
+            <a class="archive-post-title" href="/2021/06/24/ctime/">ctime</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/24</span>
+            <a class="archive-post-title" href="/2021/06/24/%E6%8C%87%E6%A8%99/">指標</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/24</span>
+            <a class="archive-post-title" href="/2021/06/24/%E9%81%8B%E7%AE%97%E5%AD%90%E9%87%8D%E8%BC%89/">運算子重載</a>
+        </li>
+    
+    </div>
+</div>
+
+        <div class="sidebar-panel-tags">
+    <div class="sidebar-tags-name">
+        
+            <span class="sidebar-tag-name" data-tags="C++">
+                <span class="iconfont-archer">&#xe606;</span>
+                C++
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="OOP">
+                <span class="iconfont-archer">&#xe606;</span>
+                OOP
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="CSS">
+                <span class="iconfont-archer">&#xe606;</span>
+                CSS
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="web dev">
+                <span class="iconfont-archer">&#xe606;</span>
+                web dev
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="HTML">
+                <span class="iconfont-archer">&#xe606;</span>
+                HTML
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="Linux">
+                <span class="iconfont-archer">&#xe606;</span>
+                Linux
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="Pytorch">
+                <span class="iconfont-archer">&#xe606;</span>
+                Pytorch
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="Machine Learning">
+                <span class="iconfont-archer">&#xe606;</span>
+                Machine Learning
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="TensorFlow2">
+                <span class="iconfont-archer">&#xe606;</span>
+                TensorFlow2
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="Python">
+                <span class="iconfont-archer">&#xe606;</span>
+                Python
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="Scikit Learn">
+                <span class="iconfont-archer">&#xe606;</span>
+                Scikit Learn
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="TensorFlow1">
+                <span class="iconfont-archer">&#xe606;</span>
+                TensorFlow1
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="Math theorem">
+                <span class="iconfont-archer">&#xe606;</span>
+                Math theorem
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="algorithm">
+                <span class="iconfont-archer">&#xe606;</span>
+                algorithm
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="Data structure">
+                <span class="iconfont-archer">&#xe606;</span>
+                Data structure
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="Transfer Learning">
+                <span class="iconfont-archer">&#xe606;</span>
+                Transfer Learning
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="APCS">
+                <span class="iconfont-archer">&#xe606;</span>
+                APCS
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="TensorFlow">
+                <span class="iconfont-archer">&#xe606;</span>
+                TensorFlow
+            </span>
+        
+    </div>
+    <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>
+    <div class="tag-load-fail" style="display: none; color: #ccc; font-size: 0.6rem;">
+        缺失模块，请参考主题文档进行安装配置：https://github.com/fi3ework/hexo-theme-archer#%E5%AE%89%E8%A3%85%E4%B8%BB%E9%A2%98
+    </div> 
+    <div class="sidebar-tags-list"></div>
+</div>
+
+        <div class="sidebar-panel-categories">
+    <div class="sidebar-categories-name">
+    
+    </div>
+    <div class="iconfont-archer sidebar-categories-empty">&#xe678;</div>
+    <div class="sidebar-categories-list"></div>
+</div>
+
+    </div>
+</div>
+
+        <!-- site-meta -->
+        <script>
+    var siteMetaRoot = "/"
+    if (siteMetaRoot === "undefined") {
+        siteMetaRoot = '/'
+    }
+    var siteMeta = {
+        url: "https://maxwutw.github.io",
+        root: siteMetaRoot,
+        author: "Max Wu"
+    }
+</script>
+
+        <!-- import experimental options here -->
+        <!-- Custom Font -->
+
+
+        <!-- main func -->
+        <script src="/scripts/main.js?v=20211217"></script>
+        <!-- dark mode -->
+        <script src="/scripts/dark.js?v=20211217"></script>
+        <!-- fancybox -->
+        <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js" defer></script>
+        <!-- algolia -->
+        
+        <!-- busuanzi -->
+        
+            <script src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" async></script>
+        
+        <!-- CNZZ -->
+        
+        <!-- async load share.js -->
+        
+            <script src="/scripts/share.js?v=20211217" async></script>
+        
+        <!-- mermaid -->
+        
+    </body>
+</html>

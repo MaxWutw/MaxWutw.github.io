@@ -1,0 +1,1951 @@
+<!DOCTYPE html>
+<html lang="en">
+    <!-- title -->
+
+
+    
+
+<!-- keywords -->
+
+
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="author" content="Max Wu">
+    <meta name="renderer" content="webkit">
+    <meta name="copyright" content="Max Wu">
+    
+        <meta name="keywords" content="hexo,hexo-theme,hexo-blog">
+    
+    <meta name="description" content="">
+    <meta property="og:type" content="website">
+<meta property="og:title" content="Hexo">
+<meta property="og:url" content="https://maxwutw.github.io/page/2/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:locale" content="en_US">
+<meta property="article:author" content="Max Wu">
+<meta name="twitter:card" content="summary">
+    <meta http-equiv="Cache-control" content="no-cache">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <link rel="icon" href="/assets/favicon.ico">
+    
+    <title>Max Coding blog</title>
+    <!-- /*! loadCSS. [c]2017 Filament Group, Inc. MIT License */
+/* This file is meant as a standalone workflow for
+- testing support for link[rel=preload]
+- enabling async CSS loading in browsers that do not support rel=preload
+- applying rel preload css once loaded, whether supported or not.
+*/ -->
+<script>
+    (function (w) {
+        'use strict'
+        // rel=preload support test
+        if (!w.loadCSS) {
+            w.loadCSS = function () {}
+        }
+        // define on the loadCSS obj
+        var rp = (loadCSS.relpreload = {})
+        // rel=preload feature support test
+        // runs once and returns a function for compat purposes
+        rp.support = (function () {
+            var ret
+            try {
+                ret = w.document.createElement('link').relList.supports('preload')
+            } catch (e) {
+                ret = false
+            }
+            return function () {
+                return ret
+            }
+        })()
+
+        // if preload isn't supported, get an asynchronous load by using a non-matching media attribute
+        // then change that media back to its intended value on load
+        rp.bindMediaToggle = function (link) {
+            // remember existing media attr for ultimate state, or default to 'all'
+            var finalMedia = link.media || 'all'
+
+            function enableStylesheet() {
+                link.media = finalMedia
+            }
+
+            // bind load handlers to enable media
+            if (link.addEventListener) {
+                link.addEventListener('load', enableStylesheet)
+            } else if (link.attachEvent) {
+                link.attachEvent('onload', enableStylesheet)
+            }
+
+            // Set rel and non-applicable media type to start an async request
+            // note: timeout allows this to happen async to let rendering continue in IE
+            setTimeout(function () {
+                link.rel = 'stylesheet'
+                link.media = 'only x'
+            })
+            // also enable media after 3 seconds,
+            // which will catch very old browsers (android 2.x, old firefox) that don't support onload on link
+            setTimeout(enableStylesheet, 3000)
+        }
+
+        // loop through link elements in DOM
+        rp.poly = function () {
+            // double check this to prevent external calls from running
+            if (rp.support()) {
+                return
+            }
+            var links = w.document.getElementsByTagName('link')
+            for (var i = 0; i < links.length; i++) {
+                var link = links[i]
+                // qualify links to those with rel=preload and as=style attrs
+                if (
+                    link.rel === 'preload' &&
+                    link.getAttribute('as') === 'style' &&
+                    !link.getAttribute('data-loadcss')
+                ) {
+                    // prevent rerunning on link
+                    link.setAttribute('data-loadcss', true)
+                    // bind listeners to toggle media back
+                    rp.bindMediaToggle(link)
+                }
+            }
+        }
+
+        // if unsupported, run the polyfill
+        if (!rp.support()) {
+            // run once at least
+            rp.poly()
+
+            // rerun poly on an interval until onload
+            var run = w.setInterval(rp.poly, 500)
+            if (w.addEventListener) {
+                w.addEventListener('load', function () {
+                    rp.poly()
+                    w.clearInterval(run)
+                })
+            } else if (w.attachEvent) {
+                w.attachEvent('onload', function () {
+                    rp.poly()
+                    w.clearInterval(run)
+                })
+            }
+        }
+
+        // commonjs
+        if (typeof exports !== 'undefined') {
+            exports.loadCSS = loadCSS
+        } else {
+            w.loadCSS = loadCSS
+        }
+    })(typeof global !== 'undefined' ? global : this)
+</script>
+
+    <style type="text/css">
+    @font-face {
+        font-family: 'Oswald-Regular';
+        src: url("/font/Oswald-Regular.ttf");
+    }
+
+    body {
+        margin: 0;
+    }
+
+    header,
+    footer,
+    .back-top,
+    .sidebar,
+    .container,
+    .site-intro-meta,
+    .toc-wrapper {
+        display: none;
+    }
+
+    .site-intro {
+        position: relative;
+        z-index: 3;
+        width: 100%;
+        /* height: 50vh; */
+        overflow: hidden;
+    }
+
+    .site-intro-placeholder {
+        position: absolute;
+        z-index: -2;
+        top: 0;
+        left: 0;
+        width: calc(100% + 300px);
+        height: 100%;
+        background: repeating-linear-gradient(-45deg, #444 0, #444 80px, #333 80px, #333 160px);
+        background-position: center center;
+        transform: translate3d(-226px, 0, 0);
+        animation: gradient-move 2.5s ease-out 0s infinite;
+    }
+
+    @keyframes gradient-move {
+        0% {
+            transform: translate3d(-226px, 0, 0);
+        }
+        100% {
+            transform: translate3d(0, 0, 0);
+        }
+    }
+</style>
+
+    <link rel="preload" href="/css/style.css?v=20211217" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="preload" href="/css/dark.css?v=20211217" as="style">
+    <link rel="stylesheet" href="/css/dark.css">
+    <link rel="stylesheet" href="/css/mobile.css?v=20211217" media="(max-width: 960px)">
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js" as="script">
+    <link rel="preload" href="/scripts/main.js?v=20211217" as="script">
+    <link rel="preload" href="/scripts/dark.js?v=20211217" as="script">
+    <link rel="preload" href="/font/Oswald-Regular.ttf" as="font" crossorigin>
+    <link rel="preload" href="https://at.alicdn.com/t/font_327081_1dta1rlogw17zaor.woff" as="font" crossorigin>
+    <!-- algolia -->
+    
+    <!-- 百度统计  -->
+    
+    <!-- 谷歌统计  -->
+    
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --><meta name="generator" content="Hexo 6.3.0"></head>
+
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+    <script type="text/javascript">
+        if (typeof window.$ == undefined) {
+            console.warn('jquery load from jsdelivr failed, will load local script')
+            document.write('<script src="/lib/jquery.min.js" />')
+        }
+    </script>
+    
+        <body class="home-body">
+    
+        <!-- header -->
+        <header class="header header-mobile index-header">
+    <!-- top read progress line -->
+    <div class="header-element">
+        <div class="read-progress"></div>
+    </div>
+    <!-- sidebar menu button -->
+    <div class="header-element">
+        
+            <div class="header-sidebar-menu">
+        
+            
+                <div style="padding-left: 1px;">&#xe775;</div>
+            
+        </div>
+    </div>
+    <!-- header actions -->
+    <div class="header-actions">
+        <!-- theme mode switch button -->
+        <span class="header-theme-btn header-element">
+            <i class="fas fa-adjust"></i>
+        </span>
+        <!-- back to home page text -->
+        <span class="home-link header-element">
+            <a href=/>Max Coding blog</a>
+        </span>
+    </div>
+    <!-- toggle banner for post layout -->
+    
+</header>
+
+        <!-- fixed footer -->
+        <footer class="footer-fixed index-footer-fixed">
+    <!-- back to top button -->
+    <div class="footer-fixed-element">
+        
+            <div class="back-top back-top-hidden">
+        
+        
+            <div>&#xe639;</div>
+        
+        </div>
+    </div>
+</footer>
+
+        <!-- wrapper -->
+        <div class="wrapper">
+            <div class="site-intro" style="
+
+
+
+
+
+
+
+    height:50vh;
+
+">
+    
+    <!-- 主页  -->
+    
+        
+    <!-- 文章页  -->
+    
+    <div class="site-intro-placeholder"></div>
+    <div class="site-intro-img" style="background-image: url(/intro/index-bg.jpg)"></div>
+    <div class="site-intro-meta">
+        <!-- 标题  -->
+        <h1 class="intro-title">
+            <!-- 主页  -->
+            
+                Max Coding blog
+            <!-- 文章页  -->
+            
+        </h1>
+        <!-- 副标题 -->
+        <p class="intro-subtitle">
+            <!-- 主页副标题  -->
+            
+                
+                    Zero in your target,and go for it.
+                
+            <!-- 文章页  -->
+            
+        </p>
+        <!-- 文章页 meta -->
+        
+    </div>
+</div>
+
+            <script>
+  // get user agent
+  function getBrowserVersions() {
+    var u = window.navigator.userAgent
+    return {
+      userAgent: u,
+      trident: u.indexOf('Trident') > -1, //IE内核
+      presto: u.indexOf('Presto') > -1, //opera内核
+      webKit: u.indexOf('AppleWebKit') > -1, //苹果、谷歌内核
+      gecko: u.indexOf('Gecko') > -1 && u.indexOf('KHTML') == -1, //火狐内核
+      mobile: !!u.match(/AppleWebKit.*Mobile.*/), //是否为移动终端
+      ios: !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/), //ios终端
+      android: u.indexOf('Android') > -1 || u.indexOf('Linux') > -1, //android终端或者uc浏览器
+      iPhone: u.indexOf('iPhone') > -1 || u.indexOf('Mac') > -1, //是否为iPhone或者安卓QQ浏览器
+      iPad: u.indexOf('iPad') > -1, //是否为iPad
+      webApp: u.indexOf('Safari') == -1, //是否为web应用程序，没有头部与底部
+      weixin: u.indexOf('MicroMessenger') == -1, //是否为微信浏览器
+      uc: u.indexOf('UCBrowser') > -1, //是否为android下的UC浏览器
+    }
+  }
+  var browser = {
+    versions: getBrowserVersions(),
+  }
+  console.log('userAgent: ' + browser.versions.userAgent)
+
+  // callback
+  function fontLoaded() {
+    console.log('font loaded')
+    if (document.getElementsByClassName('site-intro-meta')) {
+      document
+        .getElementsByClassName('intro-title')[0]
+        .classList.add('intro-fade-in')
+      document
+        .getElementsByClassName('intro-subtitle')[0]
+        .classList.add('intro-fade-in')
+      var postIntros = document.getElementsByClassName('post-intros')[0]
+      if (postIntros) {
+        postIntros.classList.add('post-fade-in')
+      }
+    }
+  }
+
+  // UC不支持跨域，所以直接显示
+  function asyncCb() {
+    if (browser.versions.uc) {
+      console.log('UCBrowser')
+      fontLoaded()
+    } else {
+      WebFont.load({
+        custom: {
+          families: ['Oswald-Regular'],
+        },
+        loading: function () {
+          // 所有字体开始加载
+          // console.log('font loading');
+        },
+        active: function () {
+          // 所有字体已渲染
+          fontLoaded()
+        },
+        inactive: function () {
+          // 字体预加载失败，无效字体或浏览器不支持加载
+          console.log('inactive: timeout')
+          fontLoaded()
+        },
+        timeout: 5000, // Set the timeout to two seconds
+      })
+    }
+  }
+
+  function asyncErr() {
+    console.warn('script load from CDN failed, will load local script')
+  }
+
+  // load webfont-loader async, and add callback function
+  function async(u, cb, err) {
+    var d = document,
+      t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0]
+    o.src = u
+    if (cb) {
+      o.addEventListener(
+        'load',
+        function (e) {
+          cb(null, e)
+        },
+        false
+      )
+    }
+    if (err) {
+      o.addEventListener(
+        'error',
+        function (e) {
+          err(null, e)
+        },
+        false
+      )
+    }
+    s.parentNode.insertBefore(o, s)
+  }
+
+  var asyncLoadWithFallBack = function (arr, success, reject) {
+    var currReject = function () {
+      reject()
+      arr.shift()
+      if (arr.length) async(arr[0], success, currReject)
+    }
+
+    async(arr[0], success, currReject)
+  }
+
+  asyncLoadWithFallBack(
+    [
+      'https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js',
+      'https://cdn.bootcss.com/webfont/1.6.28/webfontloader.js',
+      "/lib/webfontloader.min.js",
+    ],
+    asyncCb,
+    asyncErr
+  )
+</script>
+
+            <img class="loading" src="/assets/loading.svg" style="display: block; margin: 6rem auto 0 auto; width: 6rem; height: 6rem;" />
+            <div class="container container-unloaded">
+                <main class="main index-page">
+    
+        
+        
+        
+        
+            
+            
+        
+        <article class="index-post">
+            <a class="abstract-title" href="/2021/08/27/HTML/">
+                
+                <span class="abstract-title-text">HTML</span>
+            </a>
+            <div class="abstract-content">
+                <figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;!DOCTYPE <span class="keyword">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">html</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">title</span>&gt;</span>max<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">body</span>&gt;</span>Hello this note is about HTML<span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<h2 id="add-a-content-title">Add a content title</h2>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;!DOCTYPE <span class="keyword">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">html</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">title</span>&gt;</span>max<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">h1</span>&gt;</span>one<span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">h2</span>&gt;</span>two<span class="tag">&lt;/<span class="name">h2</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">h3</span>&gt;</span>three<span class="tag">&lt;/<span class="name">h3</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">h5</span>&gt;</span>five<span class="tag">&lt;/<span class="name">h5</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2023/04/06">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/08/27</span>
+                </div>
+                <!-- tags -->
+                
+                    <div class= abstract-tags >
+    
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="web dev">web dev</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="HTML">HTML</a>
+    
+</div>
+
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+        
+        
+        
+        
+            
+            
+        
+        <article class="index-post">
+            <a class="abstract-title" href="/2021/08/27/MNIST%E6%89%8B%E5%AF%AB%E8%BE%A8%E8%AD%98-Pytorch-version/">
+                
+                <span class="abstract-title-text">MNIST手寫辨識(Pytorch version)</span>
+            </a>
+            <div class="abstract-content">
+                <p>此文章是介紹MNIST手寫辨識的作法及知識，分為兩個版本，一個為Pytorch版本，另一個為Tensorflow版本，觀念的部分大致相同，比較不一樣的地會是在實作的部分，那廢話不多說，開始吧！</p>
+<h2 id="contents">Contents</h2>
+<p>我會一步一步的講解每一個步驟，有些步驟是幫助我們做理解的，但對最後實作結果沒有明顯幫助，在文章最後面會有完整程式碼，而某些步驟只是讓我們更了解實作過程的那些程式碼不會被包含在內。
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2023/05/10">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/08/27</span>
+                </div>
+                <!-- tags -->
+                
+                    <div class= abstract-tags >
+    
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="Pytorch">Pytorch</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="Machine Learning">Machine Learning</a>
+    
+</div>
+
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+        
+        
+        
+        
+            
+            
+        
+        <article class="index-post">
+            <a class="abstract-title" href="/2021/08/27/MNIST%E6%89%8B%E5%AF%AB%E8%BE%A8%E8%AD%98-TensorFlow-version/">
+                
+                <span class="abstract-title-text">MNIST手寫辨識(TensorFlow-version)</span>
+            </a>
+            <div class="abstract-content">
+                <p>此文章是介紹MNIST手寫辨識的作法及知識，分為兩個版本，，一個為Tensorflow版本，另一個為Pytorch版本，觀念的部分大致相同，比較不一樣的地會是在實作的部分，那廢話不多說，開始吧！</p>
+<h2 id="contents">Contents</h2>
+<p>我會一步一步的講解每一個步驟，有些步驟是幫助我們做理解的，但對最後實作結果沒有明顯幫助，在文章最後面會有完整程式碼，而某些步驟只是讓我們更了解實作過程的那些程式碼不會被包含在內。
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2023/04/06">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/08/27</span>
+                </div>
+                <!-- tags -->
+                
+                    <div class= abstract-tags >
+    
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="Machine Learning">Machine Learning</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="TensorFlow2">TensorFlow2</a>
+    
+</div>
+
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+        
+        
+        
+        
+            
+            
+        
+        <article class="index-post">
+            <a class="abstract-title" href="/2021/08/27/%E9%81%B7%E7%A7%BB%E5%AD%B8%E7%BF%92-%E5%9C%96%E7%89%87%E8%BE%A8%E8%AD%98/">
+                
+                <span class="abstract-title-text">遷移學習-圖片辨識</span>
+            </a>
+            <div class="abstract-content">
+                <h1 id="影像辨識">影像辨識</h1>
+<p>(Modify from https://github.com/yenlung/Deep-Learning-Basics) ##
+利用ResNet製作影像辨識 </p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> pandas <span class="keyword">as</span> pd</span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"><span class="keyword">from</span> tensorflow.keras.applications <span class="keyword">import</span> ResNet50</span><br><span class="line"><span class="keyword">from</span> tensorflow.keras.applications.resnet50 <span class="keyword">import</span> preprocess_input</span><br><span class="line"><span class="keyword">from</span> tensorflow.keras.preprocessing.image <span class="keyword">import</span> load_img, img_to_array</span><br><span class="line"><span class="keyword">from</span> urllib.request <span class="keyword">import</span> urlretrieve</span><br><span class="line"></span><br><span class="line">urlretrieve(<span class="string">&quot;https://rawcdn.githack.com/MaxWutw/Deep-Learning/a9bbc7ed859d16ebc782f3bbde5bd2e1c65073dc/Image%20recognition/type.txt&quot;</span>, <span class="string">&quot;classes.txt&quot;</span>)</span><br><span class="line"></span><br><span class="line">photo = []</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1</span>,<span class="number">10</span>):</span><br><span class="line">  urlretrieve(<span class="string">f&quot;https://github.com/MaxWutw/Deep-Learning/raw/main/ResNet/photo<span class="subst">&#123;i&#125;</span>.jpg&quot;</span>, <span class="string">f&quot;photo<span class="subst">&#123;i&#125;</span>.jpg&quot;</span>)</span><br><span class="line">  photo.append(<span class="string">f&quot;photo<span class="subst">&#123;i&#125;</span>.jpg&quot;</span>)</span><br><span class="line">store = []</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">0</span>,<span class="number">9</span>):</span><br><span class="line">  img = load_img(photo[i], target_size = (<span class="number">224</span>,<span class="number">224</span>))</span><br><span class="line">  x = img_to_array(img)</span><br><span class="line">  store.append(x)</span><br><span class="line">resnet = ResNet50()</span><br><span class="line"><span class="keyword">with</span> <span class="built_in">open</span>(<span class="string">&#x27;classes.txt&#x27;</span>) <span class="keyword">as</span> f:</span><br><span class="line">  labels = [line.strip() <span class="keyword">for</span> line <span class="keyword">in</span> f.readlines()]</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">0</span>, <span class="number">9</span>):</span><br><span class="line">  plt.figure(i)</span><br><span class="line">  plt.axis(<span class="string">&#x27;off&#x27;</span>)</span><br><span class="line">  plt.imshow(store[i]/<span class="number">255</span>)</span><br><span class="line">  store[i] = store[i].reshape(<span class="number">1</span>, <span class="number">224</span>, <span class="number">224</span>, <span class="number">3</span>)</span><br><span class="line">  inp = preprocess_input(store[i])</span><br><span class="line">  [k] = np.argmax(resnet.predict(inp), axis=-<span class="number">1</span>)</span><br><span class="line">  tex = labels[k].split(<span class="string">&#x27; &#x27;</span>)</span><br><span class="line">  plt.text(<span class="number">15</span>, <span class="number">220</span>,<span class="string">f&quot;ResNet judge: <span class="subst">&#123;tex[<span class="number">0</span>]&#125;</span>&quot;</span>, fontsize = <span class="number">15</span>)</span><br><span class="line">  plt.show()</span><br><span class="line">  <span class="built_in">print</span>(<span class="string">f&quot;ResNet 覺得是 <span class="subst">&#123;labels[k]&#125;</span>&quot;</span>)</span><br></pre></td></tr></table></figure> ### 輸出 <img src="https://i.imgur.com/TWYARYp.png"> <img src="https://i.imgur.com/YIUVo5P.png"> ### 程式介紹
+首先引入基本的套件，由於會使用到ResNet，所以這邊要引入keras.applications底下的ResNet50，其實還有V2版本，但這邊就使用原來版本的，而ResNet50在做判斷前會將圖片做前置處理，所以這邊引入preprocess_input，再來就是讀入圖片並將圖片轉成array，所以這邊要引入load_img,和img_to_array，最後urlretrieve是為了將網上的資料下載下來。
+先從我的github下載ResNet判斷1000種類別的清單，並將此清單命名為classes.txt，接著從我的github上下載範例圖片，並將它添加進入一個list，再來將圖片轉成arrayㄝ並將此資料加入另一個list，這裡加入RestNet50當我們的神經網路，再來將剛才classes.txt的資料提取並加入laels裡，最後我們用迴圈將每個圖片都送進去ResNet50裡，並做預測，這樣即完成此次圖像辨識。
+## 利用遷移學習打造影像辨識 ###
+程式碼（此部分程式碼是利用電腦裡自有的照片） <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> pandas <span class="keyword">as</span> pd</span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"><span class="keyword">from</span> tensorflow.keras.utils <span class="keyword">import</span> to_categorical</span><br><span class="line"><span class="keyword">from</span> tensorflow.keras.applications.resnet50 <span class="keyword">import</span> preprocess_input</span><br><span class="line"><span class="keyword">from</span> tensorflow.keras.applications <span class="keyword">import</span> ResNet50</span><br><span class="line"><span class="keyword">from</span> tensorflow.keras.models <span class="keyword">import</span> Sequential</span><br><span class="line"><span class="keyword">from</span> tensorflow.keras.layers <span class="keyword">import</span> Dense</span><br><span class="line"><span class="keyword">from</span> tensorflow.keras.preprocessing.image <span class="keyword">import</span> load_img, img_to_array</span><br><span class="line"></span><br><span class="line">tmp = []</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1</span>,<span class="number">10</span>):</span><br><span class="line">    tmp.append(<span class="string">f&quot;photo<span class="subst">&#123;i&#125;</span>.jpg&quot;</span>)</span><br><span class="line"></span><br><span class="line">data = []</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">0</span>,<span class="number">9</span>):</span><br><span class="line">    img = load_img(tmp[i], target_size = (<span class="number">256</span>,<span class="number">256</span>))</span><br><span class="line">    x = img_to_array(img)</span><br><span class="line">    data.append(x)</span><br><span class="line">data = np.asarray(data, dtype = np.uint8)</span><br><span class="line"></span><br><span class="line">target = np.array([<span class="number">1</span>,<span class="number">1</span>,<span class="number">1</span>,<span class="number">2</span>,<span class="number">2</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">3</span>,<span class="number">3</span>])</span><br><span class="line"></span><br><span class="line">x_train = preprocess_input(data)</span><br><span class="line">plt.axis(<span class="string">&#x27;off&#x27;</span>)</span><br><span class="line">n = <span class="number">1</span></span><br><span class="line">plt.imshow(x_train[n])</span><br><span class="line"></span><br><span class="line">y_train = to_categorical(target-<span class="number">1</span>, <span class="number">3</span>)</span><br><span class="line"></span><br><span class="line">resnet = ResNet50(include_top=<span class="literal">False</span>, pooling=<span class="string">&quot;avg&quot;</span>)</span><br><span class="line">resnet.trainable = <span class="literal">False</span></span><br><span class="line"></span><br><span class="line">model = Sequential()</span><br><span class="line">model.add(resnet)</span><br><span class="line">model.add(Dense(<span class="number">3</span>, activation=<span class="string">&#x27;softmax&#x27;</span>))</span><br><span class="line">model.<span class="built_in">compile</span>(loss=<span class="string">&#x27;categorical_crossentropy&#x27;</span>, optimizer=<span class="string">&#x27;adam&#x27;</span>, metrics=[<span class="string">&#x27;accuracy&#x27;</span>])</span><br><span class="line">model.summary()</span><br><span class="line">model.fit(x_train, y_train, batch_size=<span class="number">9</span>, epochs=<span class="number">25</span>)</span><br><span class="line"></span><br><span class="line">y_predict = np.argmax(model.predict(x_train), -<span class="number">1</span>)</span><br><span class="line">labels=[<span class="string">&quot;麻雀&quot;</span>, <span class="string">&quot;喜鵲&quot;</span>, <span class="string">&quot;白頭翁&quot;</span>]</span><br><span class="line"><span class="built_in">print</span>(y_predict)</span><br><span class="line"><span class="built_in">print</span>(target-<span class="number">1</span>)</span><br><span class="line"></span><br><span class="line">testing = []</span><br><span class="line">pho = []</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1</span>,<span class="number">4</span>):</span><br><span class="line">    pho.append(<span class="string">f&quot;test<span class="subst">&#123;i&#125;</span>.jpg&quot;</span>)</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">0</span>,<span class="number">3</span>):</span><br><span class="line">    img = load_img(pho[i], target_size = (<span class="number">256</span>,<span class="number">256</span>))</span><br><span class="line">    x = img_to_array(img)</span><br><span class="line">    testing.append(x)</span><br><span class="line">testing = np.asarray(testing, dtype = np.uint8)</span><br><span class="line"></span><br><span class="line">testing_data = preprocess_input(testing)</span><br><span class="line">final = np.argmax(model.predict(testing_data), -<span class="number">1</span>)</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">3</span>):</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">f&quot;<span class="subst">&#123;i+<span class="number">1</span>&#125;</span>. CNN judge: &quot;</span>, labels[final[i]])</span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;Answer : 麻雀、白頭翁、喜鵲&quot;</span>)</span><br></pre></td></tr></table></figure> ### 輸出 <img src="https://i.imgur.com/G5D8vhu.png"> <br> <img src="https://i.imgur.com/NZosjpE.png"> <br>
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2023/04/06">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/08/27</span>
+                </div>
+                <!-- tags -->
+                
+                    <div class= abstract-tags >
+    
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="TensorFlow2">TensorFlow2</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="Transfer Learning">Transfer Learning</a>
+    
+</div>
+
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+        
+        
+        
+        
+            
+            
+        
+        <article class="index-post">
+            <a class="abstract-title" href="/2021/08/27/APCS%E5%AF%A6%E4%BD%9C%E9%A1%8C/">
+                
+                <span class="abstract-title-text">APCS實作題</span>
+            </a>
+            <div class="abstract-content">
+                <h1 id="apcs實作">APCS實作</h1>
+<h2 id="default-code-v1">Default code v1</h2>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> IOS ios_base::sync_with_stdio(false);cin.tie(0);cout.tie(0);</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> out cout &lt;&lt; <span class="string">&#x27;\n&#x27;</span>;</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> int long long</span></span><br><span class="line"><span class="meta">#<span class="keyword">pragma</span> GCC optimize(<span class="string">&quot;Ofast,unroll-loops,no-stack-protector,fast-math&quot;</span>)</span></span><br><span class="line"><span class="meta">#<span class="keyword">pragma</span> GCC target(<span class="string">&quot;sse,sse2,sse3,ssse3,sse4,popcnt,abm,mmx,avx,tune=native&quot;</span>)</span></span><br><span class="line"><span class="meta">#<span class="keyword">pragma</span> comment(linker, <span class="string">&quot;/stack:200000000&quot;</span>)</span></span><br><span class="line"><span class="function"><span class="type">signed</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">    IOS</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="my-default-code">My default code</h2>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;bits/stdc++.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> IOS ios_base::sync_with_stdio(false);cin.tie(0);cout.tie(0);</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> INF 0x3f3f3f3f</span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"><span class="keyword">typedef</span> <span class="type">long</span> <span class="type">long</span> ll;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">    IOS</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="about-pragma">About pragma</h3>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">pragma</span> GCC optimize(<span class="string">&quot;O0&quot;</span>)<span class="comment">//不優化(預設)</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">pragma</span> GCC optimize(<span class="string">&quot;O1&quot;</span>)<span class="comment">//優化一些</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">pragma</span> GCC optimize(<span class="string">&quot;O2&quot;</span>)<span class="comment">//優化更多</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">pragma</span> GCC optimize(<span class="string">&quot;O3&quot;</span>)<span class="comment">//O2優化再加上inline函式優化</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">pragma</span> GCC optimize(<span class="string">&quot;Os&quot;</span>)<span class="comment">//針對程式大小進行優化(程式最小)</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">pragma</span> GCC optimize(<span class="string">&quot;Ofast&quot;</span>)<span class="comment">//O3加上一些快速但不安全的數學運算</span></span></span><br></pre></td></tr></table></figure>
+<h3 id="more-about-pragma">More about pragma</h3>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">pragma</span> GCC optimize(<span class="string">&quot;Ofast,unroll-loops,no-stack-protector,fast-math&quot;</span>)</span></span><br><span class="line"><span class="meta">#<span class="keyword">pragma</span> GCC target(<span class="string">&quot;sse,sse2,sse3,ssse3,sse4,popcnt,abm,mmx,avx,tune=native&quot;</span>)</span></span><br><span class="line"><span class="meta">#<span class="keyword">pragma</span> comment(linker, <span class="string">&quot;/stack:200000000&quot;</span>)</span></span><br></pre></td></tr></table></figure>
+<ol type="1">
+<li>Ofast優化，加上迴圈展開、忽略堆疊溢出攻擊。</li>
+<li>針對CPU的指令集擴充，只有一些intel支援，有些AMD也有。</li>
+<li>加開堆疊，可以讓遞迴函式跑多一點。 $$$$</li>
+</ol>
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2023/05/10">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/08/27</span>
+                </div>
+                <!-- tags -->
+                
+                    <div class= abstract-tags >
+    
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="C++">C++</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="APCS">APCS</a>
+    
+</div>
+
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+        
+        
+        
+        
+            
+            
+        
+        <article class="index-post">
+            <a class="abstract-title" href="/2021/08/27/Linux%E5%9F%BA%E7%A4%8E%E4%BD%BF%E7%94%A8/">
+                
+                <span class="abstract-title-text">Linux基礎使用</span>
+            </a>
+            <div class="abstract-content">
+                <h1 id="linux">Linux</h1>
+<h2 id="linux基礎用法">linux基礎用法</h2>
+<p>第一個輸入大多為命令(command)，後面家的通常為跟著這個命令的參數，參數都是用空格分開，不管加多少空格，terminal都會認為只加了一個空格。在最一開此使，<span class="citation" data-cites="前面是用戶名">@前面是用戶名</span>，在@後面是計算機名 ### @
+at在 ### computer:後第一個字元(Home Directory):為所在文件夾的名字 ###
+computer:後第二個字元(Prompt):提示符 ### uname 1. <span style="color:green">uname</span> :會印出內核名字。 2. <span style="color:red">uname -a == uname
+--all</span>:會印出系統的所有的資訊，會忽略未知的處理器與未知的硬件平台。
+3. <span style="color:red">uname -s == uname
+--kernel-name</span>:會印出顯示於網路上的主機名稱。 4. <span style="color:red">uname -r == uname
+--kernel-release</span>:會印出內核的版本。 5. <span style="color:red">uname -v == uname
+--kernel-version</span>:會印出內核運行於哪個linux上，和實際發行的日期。
+6. <span style="color:red">uname -m == uname
+--machine</span>:會印出電腦類型：x86_64(為64位元架構，如為32位元會如：x86_32)
+7. <span style="color:red">uname -p == uname
+--processor</span>:會印出處理器類型：x86_64(為64位元架構，如為32位元會如：x86_32)
+8. <span style="color:red">uname -i == uname
+--hardware-platform</span>:會印出硬件平台類型：x86_64(硬件平台包括如CPU、儲存裝置、主機板等等硬體)
+9. <span style="color:red">uname -o == uname
+--operating-system</span>:會印出操作系統名稱：GNU/Linux(作業系統，如windows)
+10. <span style="color:red">uname -h == uname
+--help</span>:會印出這個指令的幫助，與各個參數的功能 11. <span style="color:red">uname --version</span>
+:會印出這個指令(uname)的版本與其他訊息(包括聲明、授權等等) ### ctrl+c
+:強制中斷某一支程式。 ### exit :離開系統。 ### cal :看月曆 。 ### cal
+:年份 :看某年的年曆。 ### cal :年份 月份 :看某年某月的月曆。 ### bc
+:計算機(此情況不能用小數)。 #### scale = 小數位數。 #### quit :退出bc。
+### file :查看文件訊息。 ### pwd(Print Working Directory) 取得目前的路徑
+### ls(list) 取得當前資料夾與檔案名稱 #### ls -l:
+顯示出的資料的第一個區塊為顯示使用者權限，排除第一個字元<span style="color:red">(第一個字元如果是dash(-)，此檔案即為文件，如果是d，則為目錄)</span>，剩下字元為三個三個一組，共三組，第一組是user，第二組是group，第三組是other。順序必為rwx，r(read),w(write),x(execute)，若有權限則會顯示出該字元，若沒有權限則會顯示'-'(dash)，而這三組的權限分別為第一個是文件所有者的權限、第二個為用戶組的權限，第三組為其他人的權限。
+### chmod(change mode)
+如果你想要更換權限，可以使用這個命令，command:chmod u+r
+t.py，用法是第一個加入chmod指令，第二個是輸入你想更改權限的對象，user是u，group是g，other是o，接著+後面是加上你要給予的權力，注意如果是要刪除某項權力，就加上-減號，接著加上以下就是給予的權力，r(read),w(write),x(execute)，最後加上檔案名稱。
+### 直接執行檔案 ./file.py
+如果要直接執行某個檔案時可以直接使用這個指令，假設有一個檔案叫做test.py，然後我們想要執行他，所以輸入:./test.py，此時會發現出錯了，原因是你要在test.py的第一行加入一段指令，代表說這份文件要通過什麼來運行，而這邊我輸入#!/usr/bin/python3，之後再輸入:./test.py，即完成。
+### linux有一個特性，就是所有東西都是一個文件。 ###
+linux大小寫必須區分，在linux中大小寫是不一樣的東西。 ###
+在terminal中可使用TAB鍵來補齊一些物件或檔名(善用TAB鍵)。 ### lscpu :查詢
+CPU 規格。 ### / :根目錄。 #### bin :放置執行文件。 #### boot
+:放置開機會運用到的文件。 #### dev :接口設備都會存取在dev中。 #### etc
+:系統主要配置文件，例如用戶的帳號密碼、服務的起始文件。 #### home
+:主文件夾的位置。 #### lib :開機時會用到的主函式庫。 #### media
+:放置可以刪除的設備。 #### opt :第三方程式的放置目錄。 #### root
+:系統管理員的主文件夾。 #### sbin
+:放置一些只有系統管理員才可以執行的執行命令。 #### srv
+:服務取用數據的目錄。 #### tmp :放置一些臨時的文件，需定時清理。 ####
+usr :unix操作系統的支援(不是user!!!!!)，可放置一些系統默認程式。 ####
+var :放置快取 ### cd(Change Directory) :切換目錄。 #### 絕對路徑
+:是由根目錄也就是最前面的那一個目錄開始向下輸入的(要加/)，不管在哪裡，只要有絕對路徑都可以去。
+#### 相對路徑 :相對於當前工作目錄(pwd)，不是從根目錄開始。 #### cd .
+:當前目錄。 #### cd .. :該目錄的上一層目錄。 ### man(manual page)
+:指令查詢 ### mkdir :創造路徑 #### 創造多層目錄: ##### -p
+:可以幫你把上一層目錄也創建好(如果上一層目錄不存在的話)。 ##### -pv
+:v的功能可以幫你顯示他正在執行甚麼。 ### rmdir :刪除目錄。 #### -p
+:可一次刪除多個目錄 ### touch
+:創建空文件，主要功能為修改文件，如果該文件不存在，則會創造一個空文件。
+#### -a :修改訪問時間。 #### -c :修改文件時間，若不存在則不創建新文件。
+#### -d :使用指定日期，而不是當前日期。 #### -m :僅修改mtime。 #### -t
+:使用指定的時間而不是當前的時間。 ### cp :複製，用法 cp a b
+，將a複製給b。 ### echo發送文字: 用法 echo "word"。而且會換行。 ####
+將文字輸入進一個檔案裡: 用法 echo "word" &gt; data.txt。 如果是用 &gt;
+寫入的話會將原本的覆蓋，所以要使用 &gt;&gt; 才能延續檔案原本的資料 echo
+"word" &gt;&gt; data.txt。 ### cat(concatenate)顯示出檔案裡的文字 用法
+cat data.txt #### cat 合併資料輸出 用法 cat first.txt second.txt ####
+將兩個檔案合併出一個新的檔案 方法 cat first.txt second.txt &gt;&gt;
+third.txt，要加 &gt;&gt; 。 若要合併更多檔案，就以此類推 ###
+用printf輸出 用echo和printf的最大差別是echo會換行而printf不會換行。
+也可以使用printf輸入一個檔案，和echo一樣 ### vim文字編輯器
+vi和vim.tiny和vim這三個功能極為相似，不同的地方是有些功能比較多，通常在linux中vim要另外裝。
+此處使用vim.tiny，要進行文字編輯的方法:vim.tiny
+data.txt，按enter鍵後再按 i
+即可進行編輯，當編輯完之後想要結束編輯，先按Esc，再按 :
+，接著如果想要將剛剛編輯的資料寫進去，則按w，如果想直接退出，按q，如果進行編輯後不想儲存，就輸入q!即可強制退出。若想退出又要寫入，就按wq。
+### 下載vim
+首先到ubuntu商店下載vim，接著去terminal輸出apt-get，apt-get會去網站上找有關你要下載的套件，但是如果apt-get沒有更新，他上去找的網站還是舊的，此時要把你的apt-get更新，因此輸入apt-get
+update，但此時又會出現錯誤，因為update此動作為較高階的動作，所以以目前的狀態是沒有權限執行的，所以要在apt-get前加sudo，此時作業系統會嘗試以超級使用者的方式幫你去做執行，所以輸入完sudo
+apt-get update即可完成網站的更新，更新完之後輸入sudo apt-get install
+vim，即可進行安裝，如果要移除，就輸入sudo apt-get remove vim ### whereis
+查看東西在哪裡，會顯示所有相關的路徑。 whereis name ### which
+會明確跟你說東西的實際路徑。 ### 查看物品的實際位置 以vim為例 方法 : ls
+-al /usr/bin/vim 接著會顯示一個箭頭
+-&gt;會指向一個地方，這就是軟連結，會指向更精確的地方，可以再繼續使用那個位置尋找更精確的位置。
+### vim 基本用法和vim.tiny一致，接著為vim的一些基礎指令。 :set nu
+在每一行前面加數字編號。 輸入 dd 即可快速刪去該行。
+輸入d2d可以快速刪除兩行 在前面加 / 後面加你想搜尋的文字。 按u可以undo
+按ctrl+r是redo ## linux ssh
+首先要再其中一台linux上獲取ip位置(稍後要給其他電腦做連接)，首先先下載net-tools(稍後要使用的ifconfig是其中一部分)，接著輸入ifconfig，然後往下滑可以找到你的ip位置，或者輸入ip
+addr show，也可以看到你的ip位置。接著在另一台電腦輸入:ssh
+username@ip，username是你linux的名稱，ip是你的ip位置。 <span style="color:red">mac 用戶:</span>
+如果是mac用戶且同時想要利用ssh在自己的mac上看到matplotlib的結果，要先安裝XQuartz，安裝完後在terminal裡輸入的不再是ssh
+user@ip 了，是要改輸入<span style="color:red">ssh -X
+user@ip</span>，這樣才能看到matplotlib的效果。 ### linux查詢gpu型號 輸入
+lspci | grep -i nvidia ，會顯示出幾行文字，例如： 01:00.0 VGA compatible
+controller: NVIDIA Corporation Device 1e84 (rev a1) 01:00.1 Audio
+device: NVIDIA Corporation Device 10f8 (rev a1) 01:00.2 USB controller:
+NVIDIA Corporation Device 1ad8 (rev a1) 01:00.3 Serial bus controller
+[0c80]: NVIDIA Corporation Device 1ad9 (rev a1) 然後看第一行的最後面
+1e84
+，這個就是型號，但我們還是看不出來實際的型號，所以去這個網站上輸入你的型號：http://pci-ids.ucw.cz/mods/PC/10de?action=help?help=pci
+可以查到這張gpu是GeForce RTX 2070 Super。 ### 查看ubuntu版本 cat
+/etc/issue ### 更改檔案名稱 mv 原檔案名稱 更改的名稱 ###
+查看目錄裡資料的數量 1. ls -l|grep "^-"| wc -l ， find ./ -type f | wc
+-l: 查看當前目錄的所有資料數量（<span style="color:red">不包括</span>子目錄資料數量）。 2. ls -lR|grep "^-"|
+wc -l : 查看當前目錄的所有資料數量（<span style="color:red">包括</span>子目錄資料數量）。 3. ls -l|grep "^d"| wc
+-l : 查看當前目錄的所有資料夾目錄個數（<span style="color:red">包括</span>子資料夾目錄個數）。 ## tmux 1.
+tmux:進入tmux。 2. tmux attach:進入預設第一個Session。 3. tmux new -s
+"tmp":新增、進入一個名為tmp的Session。 4. tmux ls:列出所有的Session。 5.
+tmux detach:暫時離開目前的Session。 6.
+<code>Ctrl</code>+<code>D</code>:關閉/結束目前的Session。 7. tmux
+kill-session -t "tmp":關閉、結束名稱維tmp的Session。 ### Panes分割視窗
+1. <code>Ctrl</code>+<code>b</code>+<code>%</code>:垂直分割視窗。 2.
+<code>Ctrl</code>+<code>b</code>+<code>"</code>:水平分割視窗。 3.
+<code>Ctrl</code>+<code>b</code>+<code>o</code>:輪流切換pane。 4.
+<code>Ctrl</code>+<code>b</code>+<code>方向鍵</code>:切換指定方向的pane。
+5. <code>Ctrl</code>+<code>b</code>+<code>空白鍵</code>:切換佈局。 6.
+<code>Ctrl</code>+<code>b</code>+<code>!</code>:將目前的pane抽出來，並獨立建立一個window視窗。
+7. <code>Ctrl</code>+<code>b</code>+<code>x</code>:關閉目前的pane。 ###
+Windows視窗 1.
+<code>Ctrl</code>+<code>b</code>+<code>c</code>:建立新的window視窗。 2.
+<code>Ctrl</code>+<code>b</code>+<code>w</code>:以視覺化選單切換window視窗。
+3.
+<code>Ctrl</code>+<code>b</code>+<code>n</code>:切換至下一個window視窗。
+4.
+<code>Ctrl</code>+<code>b</code>+<code>p</code>:切換至上喔個window視窗。
+5.
+<code>Ctrl</code>+<code>b</code>+<code>數字鍵</code>:切換至指定的window視窗。
+6.
+<code>Ctrl</code>+<code>b</code>+<code>&amp;</code>:關閉目前的window視窗。
+### Session 1.
+<code>Ctrl</code>+<code>b</code>+<code>$</code>:重新命名目前的Session。
+2. <code>Ctrl</code>+<code>b</code>+<code>d</code>:離開tmux環境。 3.
+<code>Ctrl</code>+<code>b</code>+<code>s</code>:視覺化選單切換Session。
+4.
+<code>Ctrl</code>+<code>b</code>+<code>L</code>:切換上一個使用過的Session。
+5. <code>Ctrl</code>+<code>b</code>+<code>(</code>:切換上一個Session。
+6. <code>Ctrl</code>+<code>b</code>+<code>)</code>:切換下一個Session。
+7. 想回去特定的Session: <code>tmux attach -t "session name"</code><span style="color:red">(請忽略雙引號)</span> 8.
+修改Session名稱:<code>tmux rename-session -t "origin seesion name" "new name"</code>
+<span style="color:red">(請忽略雙引號)</span> 9. 刪除某一個Session:
+<code>tmux kill-session -t 0</code> 或是
+<code>tmux kill-session -t &lt;session_name&gt;</code> 10.
+刪除所有Session: <code>tmux kill-session -a</code> 11. 快捷鍵：
+</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">快捷鍵/視窗管理</span><br><span class="line">C-b ? Help</span><br><span class="line">C-b c 新增視窗</span><br><span class="line">C-b， 視窗命名</span><br><span class="line">C-b w 視窗列表</span><br><span class="line">C-b f 尋找視窗</span><br><span class="line">C-b &amp; 刪除視窗</span><br><span class="line">C-b % 垂直分割區塊</span><br><span class="line">C-b “ 水平分割區塊</span><br><span class="line">C-b &lt;方向鍵&gt;</span><br><span class="line">C-b p 上一個視窗</span><br><span class="line">C-b n 下一個視窗</span><br><span class="line">C-b &lt;number&gt; 依照編號直接切換（編號顯示於狀態列）</span><br><span class="line">C-b d 離開 session</span><br><span class="line">C-b x 關閉 Pane</span><br><span class="line">C-d   關閉 Pane</span><br><span class="line">C-b z 讓一個 Pane 變成全螢幕，在輸入一次則回到剛剛的尺寸</span><br></pre></td></tr></table></figure><p></p>
+<h5 id="by-中和高中-吳振榮">by 中和高中 吳振榮</h5>
+
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2023/04/06">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/08/27</span>
+                </div>
+                <!-- tags -->
+                
+                    <div class= abstract-tags >
+    
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="Linux">Linux</a>
+    
+</div>
+
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+        
+        
+        
+        
+            
+            
+        
+        <article class="index-post">
+            <a class="abstract-title" href="/2021/08/27/Matplotlib/">
+                
+                <span class="abstract-title-text">Matplotlib</span>
+            </a>
+            <div class="abstract-content">
+                <h2 id="matplotlib-數據可視化">matplotlib 數據可視化</h2>
+<p>參考資料：https://matplotlib.org/stable/index.html ###
+matplotlib.pyplot.cla() &amp; matplotlib.pyplot.clf() &amp;
+matplotlib.pyplot.close() matplotlib.pyplot.cla():清除當前座標軸。
+matplotlib.pyplot.clf():清除當前圖形。
+matplotlib.pyplot.close():關閉整個視窗。 ### 做出一個簡易的一次函數圖形
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line">x = np.linspace(-<span class="number">1</span>, <span class="number">1</span>,<span class="number">50</span>)</span><br><span class="line">y = <span class="number">2</span>*x+<span class="number">1</span></span><br><span class="line">plt.plot(x,y)</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure> <img src="https://i.imgur.com/9TR3rBw.png" />
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2023/04/06">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/08/27</span>
+                </div>
+                <!-- tags -->
+                
+                    <div class= abstract-tags >
+    
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="Python">Python</a>
+    
+</div>
+
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+        
+        
+        
+        
+            
+            
+        
+        <article class="index-post">
+            <a class="abstract-title" href="/2021/08/27/Pandas/">
+                
+                <span class="abstract-title-text">Pandas</span>
+            </a>
+            <div class="abstract-content">
+                <h1 id="pandas">Pandas</h1>
+<h2 id="pandas-1">pandas</h2>
+<p>參考資料：https://pandas.pydata.org/pandas-docs/stable/reference/index.html
+### Series #### 製作出一個一維陣列 </p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> pandas <span class="keyword">as</span> pd</span><br><span class="line">data = pd.Series([<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>])</span><br><span class="line"><span class="built_in">print</span>(data)</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;Max:&quot;</span>,data.<span class="built_in">max</span>())<span class="comment">#output is 5</span></span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;Median&quot;</span>,data.median())<span class="comment">#output is 3.0</span></span><br><span class="line"><span class="built_in">print</span>(data==<span class="number">20</span>)<span class="comment">#output is a boolean</span></span><br></pre></td></tr></table></figure> #### 觀察Series資料
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> pandas <span class="keyword">as</span> pd</span><br><span class="line">data = pd.Series([<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>],index = [<span class="string">&#x27;a&#x27;</span>,<span class="string">&#x27;b&#x27;</span>,<span class="string">&#x27;c&#x27;</span>,<span class="string">&#x27;d&#x27;</span>,<span class="string">&#x27;e&#x27;</span>])</span><br><span class="line"><span class="built_in">print</span>(data.dtype)<span class="comment">#查看資料型態</span></span><br><span class="line"><span class="built_in">print</span>(data.size)<span class="comment">#查看資料數量</span></span><br><span class="line"><span class="built_in">print</span>(data.index)<span class="comment">#查看資料索引</span></span><br></pre></td></tr></table></figure> #### 資料的索引（索引數量要和元素數量一致） <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> pandas <span class="keyword">as</span> pd</span><br><span class="line">data = pd.Series([<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>],index = [<span class="string">&#x27;a&#x27;</span>,<span class="string">&#x27;b&#x27;</span>,<span class="string">&#x27;c&#x27;</span>,<span class="string">&#x27;d&#x27;</span>,<span class="string">&#x27;e&#x27;</span>])</span><br><span class="line"><span class="built_in">print</span>(data)</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> pandas <span class="keyword">as</span> pd</span><br><span class="line">data = pd.Series([<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>],index = [<span class="string">&#x27;a&#x27;</span>,<span class="string">&#x27;b&#x27;</span>,<span class="string">&#x27;c&#x27;</span>,<span class="string">&#x27;d&#x27;</span>,<span class="string">&#x27;e&#x27;</span>])</span><br><span class="line"><span class="built_in">print</span>(data[<span class="number">2</span>],data[<span class="number">0</span>])<span class="comment">##按照順序取得資料</span></span><br><span class="line"><span class="built_in">print</span>(data[<span class="string">&quot;e&quot;</span>],[<span class="string">&quot;d&quot;</span>])<span class="comment">##按照索引取得資料</span></span><br></pre></td></tr></table></figure> #### Series數學、統計相關函式：<span style="color:red"><code>sum()</code>、<code>max()</code>、prod()全部相乘、mean()、median()、std()標準差、nlargest(n)前n大的數字、nsmallest(n)取最小的n個數字</span>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> pandas <span class="keyword">as</span> pd</span><br><span class="line">data = pd.Series([<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>],index = [<span class="string">&#x27;a&#x27;</span>,<span class="string">&#x27;b&#x27;</span>,<span class="string">&#x27;c&#x27;</span>,<span class="string">&#x27;d&#x27;</span>,<span class="string">&#x27;e&#x27;</span>])</span><br><span class="line"><span class="built_in">print</span>(data.<span class="built_in">max</span>())<span class="comment">#最大值</span></span><br><span class="line"><span class="built_in">print</span>(data.<span class="built_in">sum</span>())<span class="comment">#總和</span></span><br><span class="line"><span class="built_in">print</span>(data.std())<span class="comment">#標準差</span></span><br><span class="line"><span class="built_in">print</span>(data.median())<span class="comment">#中位數</span></span><br><span class="line"><span class="built_in">print</span>(data.nlargest(<span class="number">3</span>))<span class="comment">#最大的三個數</span></span><br></pre></td></tr></table></figure> #### Series字串操作：<span style="color:green">str.lower()、str.upper()、str.len()、str.cat(sep =
+"n")用n串在一起、str.contains("n")判斷每一個字串是否包含n、str.replace("n","k")對字串做取代的動作，把n變成k</span>
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2023/04/06">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/08/27</span>
+                </div>
+                <!-- tags -->
+                
+                    <div class= abstract-tags >
+    
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="Python">Python</a>
+    
+</div>
+
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+        
+        
+        
+        
+            
+            
+        
+        <article class="index-post">
+            <a class="abstract-title" href="/2021/08/27/Numpy/">
+                
+                <span class="abstract-title-text">Numpy</span>
+            </a>
+            <div class="abstract-content">
+                <p>參考資料：https://numpy.org/doc/stable/reference/ ## np.array([])
+若要製造一個矩陣，可使用此函式。 ## array.ndim 可查看array是幾維矩陣。
+## array.size 可查看有多少元素在array裡。 ## array.transpose() or
+array.T 可將矩陣轉置，row變成column，column變成row。
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2023/04/06">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/08/27</span>
+                </div>
+                <!-- tags -->
+                
+                    <div class= abstract-tags >
+    
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="Python">Python</a>
+    
+</div>
+
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+        
+        
+        
+        
+            
+            
+        
+        <article class="index-post">
+            <a class="abstract-title" href="/2021/08/27/Scikit-Learn/">
+                
+                <span class="abstract-title-text">Scikit Learn</span>
+            </a>
+            <div class="abstract-content">
+                <h1 id="scikit-learn">Scikit Learn</h1>
+<h2 id="線性回歸">線性回歸</h2>
+<h3 id="程式碼">程式碼</h3>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"><span class="keyword">from</span> sklearn.model_selection <span class="keyword">import</span> train_test_split</span><br><span class="line"><span class="keyword">from</span> sklearn.linear_model <span class="keyword">import</span> LinearRegression</span><br><span class="line"></span><br><span class="line">x = np.linspace(<span class="number">0</span>, <span class="number">5</span>, <span class="number">200</span>)</span><br><span class="line">y = <span class="number">1.2</span> * x + <span class="number">0.8</span> + <span class="number">0.5</span> * np.random.randn(<span class="number">200</span>)</span><br><span class="line"></span><br><span class="line">x_train, x_test, y_train, y_test = train_test_split(x, y,test_size = <span class="number">0.2</span>,random_state = <span class="number">0</span>)</span><br><span class="line">x_train = x_train.reshape(<span class="built_in">len</span>(x_train), <span class="number">1</span>)</span><br><span class="line">x_test = x_test.reshape(<span class="built_in">len</span>(x_test), <span class="number">1</span>)</span><br><span class="line"></span><br><span class="line">model = LinearRegression()</span><br><span class="line">model.fit(x_train, y_train)</span><br><span class="line"></span><br><span class="line">y_predict = model.predict(x_test)</span><br><span class="line">model.predict([[<span class="number">4.3</span>],[<span class="number">2.5</span>]])</span><br><span class="line"></span><br><span class="line">plt.scatter(x_test, y_test)</span><br><span class="line">plt.plot(x_test, y_predict,c = <span class="string">&#x27;r&#x27;</span>)</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
+<h3 id="函數圖形">函數圖形</h3>
+<p><img src="https://i.imgur.com/4wMzbZe.png"> ### 程式介紹
+首先先引入一些第三方套件，numpy和matplotlib幾乎是必備，今後不多做贅述，接著從sklearn.model_selection引入train_test_split，train_test_split主要功能是劃分資料，最後從linear_model引入LinearRegression方便稍後做線性回歸訓練。
+接著建造假數據，x為0~5得數字，共500個，y為將x乘以1.2+0.8，且還須加上一個雜值，使數據更像真數據。然後我們將x和y資料做切割，分別代表x訓練資料x測試資料，y訓練資料，y測試資料，在train_test_split()參數裡先加入要切割的資料，在第三個參數加入每個資料的大小，範圍在0~1之間，而random_state是我們的亂數種子，可以固定我們切割資料的結果。然後我將x的訓練資料和測試資料變成n*1的矩陣，代表說我們每次輸入皆是一個資料。
+接著我們的model是線性回歸，而我們使用model.fit()將此model
+fit，意思是使此model在函數中找到代表的線，此線是最合適所有資料點的，也就是線性回歸在做的事，找尋最佳直線。接著進行預。，我們將一開始切割好的預測資料放入，此時為了測試效果，我在後面又多加兩個資料，記得自己增加資料時，要保持n*1的矩陣，最後將點點出來，並畫出回歸直線即完成。
+## 波士頓房價預測（真實數據） ### 程式碼 </p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> pandas <span class="keyword">as</span> pd</span><br><span class="line"><span class="keyword">import</span> seaborn <span class="keyword">as</span> sns</span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"><span class="keyword">from</span> sklearn.model_selection <span class="keyword">import</span> train_test_split</span><br><span class="line"><span class="keyword">from</span> sklearn.linear_model <span class="keyword">import</span> LinearRegression</span><br><span class="line"><span class="keyword">from</span> sklearn.datasets <span class="keyword">import</span> load_boston</span><br><span class="line"></span><br><span class="line">sns.<span class="built_in">set</span>()</span><br><span class="line">boston_dataset = load_boston()</span><br><span class="line"><span class="comment"># print(boston_dataset.DESCR) # description</span></span><br><span class="line"><span class="comment"># print(boston_dataset.data[:5])</span></span><br><span class="line"></span><br><span class="line">boston = pd.DataFrame(boston_dataset.data,columns = boston_dataset.feature_names)</span><br><span class="line"></span><br><span class="line"><span class="comment"># boston.head()</span></span><br><span class="line"></span><br><span class="line">boston[<span class="string">&#x27;MEDV&#x27;</span>] = boston_dataset.target</span><br><span class="line">boston.head()</span><br><span class="line"></span><br><span class="line">sns.distplot(boston.MEDV, bins = <span class="number">30</span>)</span><br><span class="line">corr_matrix = boston.corr().<span class="built_in">round</span>(<span class="number">2</span>)</span><br><span class="line">plt.figure(figsize = (<span class="number">11.7</span>, <span class="number">8.27</span>)) <span class="comment"># 寬先寫</span></span><br><span class="line">sns.heatmap(corr_matrix, annot = <span class="literal">True</span>) <span class="comment"># draw</span></span><br><span class="line">plt.figure(<span class="number">3</span>)</span><br><span class="line">boston.iloc[<span class="number">0</span>]</span><br><span class="line">x = boston.loc[:, <span class="string">&quot;CRIM&quot;</span> : <span class="string">&quot;LSTAT&quot;</span>].values</span><br><span class="line">y = boston.MEDV.values</span><br><span class="line"></span><br><span class="line">x_train, x_test, y_train, y_test = train_test_split(x, y, test_size = <span class="number">0.2</span>, random_state = <span class="number">0</span>)</span><br><span class="line">model = LinearRegression()</span><br><span class="line">model.fit(x_train, y_train)</span><br><span class="line"></span><br><span class="line">y_predict = model.predict(x_test)</span><br><span class="line">plt.scatter(y_test, y_predict)</span><br><span class="line">plt.xlim(<span class="number">0</span>, <span class="number">55</span>)</span><br><span class="line">plt.ylim(<span class="number">0</span>, <span class="number">55</span>)</span><br><span class="line">plt.plot([<span class="number">0</span>, <span class="number">55</span>], [<span class="number">0</span>, <span class="number">55</span>], c = <span class="string">&#x27;r&#x27;</span>)</span><br></pre></td></tr></table></figure> ### 輸出圖形 <img src="https://i.imgur.com/tD3Znzi.png"> <img src="https://i.imgur.com/IaL2nZo.png"> <img src="https://i.imgur.com/PpCLUHW.png">
+            </div>
+            <!-- read more -->
+            
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2023/04/06">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/08/27</span>
+                </div>
+                <!-- tags -->
+                
+                    <div class= abstract-tags >
+    
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="Machine Learning">Machine Learning</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="Scikit Learn">Scikit Learn</a>
+    
+</div>
+
+                
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+    
+    <!-- paginator  -->
+    
+        <nav class="page-nav">
+            <a class="extend prev" rel="prev" href="/">&lt; PREV</a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><a class="extend next" rel="next" href="/page/3/">NEXT &gt;</a>
+        </nav>
+    
+</main>
+
+                <!-- profile -->
+                
+                    <div class="profile">
+    <img class="profile-avatar" alt="avatar" src= /avatar/long.jpg />
+    <div class="profile-name">Max Wu</div>
+    
+        <div class="profile-signature">
+            Hello
+        </div>
+    
+    
+        <div class="profile-social">
+            
+    
+        
+            
+                <a href="mailto:WuMax13@gmail.com" class="iconfont-archer email" title=email ></a>
+            
+        
+    
+        
+            
+                <a href="https://github.com/MaxWutw" class="iconfont-archer github" target="_blank" title=github></a>
+            
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+            
+                <a href="https://www.facebook.com/profile.php?id=100020738000412" class="iconfont-archer facebook" target="_blank" title=facebook></a>
+            
+        
+    
+        
+    
+        
+            
+                <a href="https://www.instagram.com/_wuzhenlong/" class="iconfont-archer instagram" target="_blank" title=instagram></a>
+            
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+
+
+        </div>
+    
+    
+    
+        <div class="profile-link-item">
+            <a href="/about" class="about-me">
+                
+                ABOUT ME
+            </a>
+        </div>
+    
+    
+    
+</div>
+
+                
+            </div>
+            <footer class="footer footer-unloaded">
+    <!-- social  -->
+    
+        <div class="social">
+            
+    
+        
+            
+                <a href="mailto:WuMax13@gmail.com" class="iconfont-archer email" title=email ></a>
+            
+        
+    
+        
+            
+                <a href="https://github.com/MaxWutw" class="iconfont-archer github" target="_blank" title=github></a>
+            
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+            
+                <a href="https://www.facebook.com/profile.php?id=100020738000412" class="iconfont-archer facebook" target="_blank" title=facebook></a>
+            
+        
+    
+        
+    
+        
+            
+                <a href="https://www.instagram.com/_wuzhenlong/" class="iconfont-archer instagram" target="_blank" title=instagram></a>
+            
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+
+
+        </div>
+    
+    <!-- powered by Hexo  -->
+    <div class="copyright">
+        <span id="hexo-power">Powered by <a href="https://hexo.io/" target="_blank">Hexo</a></span><span class="iconfont-archer power">&#xe635;</span><span id="theme-info">theme <a href="https://github.com/fi3ework/hexo-theme-archer" target="_blank">Archer</a></span>
+    </div>
+    <!-- website approve for Chinese user -->
+    
+    <!-- 不蒜子  -->
+    
+        <div class="busuanzi-container">
+            
+             
+                <span id="busuanzi_container_site_pv">PV: <span id="busuanzi_value_site_pv"></span> :)</span>
+            
+        </div>
+    	
+</footer>
+
+        </div>
+        <!-- toc -->
+        
+        <!-- sidebar -->
+        <div class="sidebar sidebar-hide">
+    <ul class="sidebar-tabs sidebar-tabs-active-0">
+        <li class="sidebar-tab-archives"><span class="iconfont-archer">&#xe67d;</span><span class="tab-name">Archive</span></li>
+        <li class="sidebar-tab-tags"><span class="iconfont-archer">&#xe61b;</span><span class="tab-name">Tag</span></li>
+        <li class="sidebar-tab-categories"><span class="iconfont-archer">&#xe666;</span><span class="tab-name">Cate</span></li>
+    </ul>
+    <div class="sidebar-content sidebar-content-show-archive">
+        <div class="sidebar-panel-archives">
+    <!-- 在 ejs 中将 archive 按照时间排序 -->
+    
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+    
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+    
+    
+    
+    
+    <div class="total-and-search">
+        <div class="total-archive">
+        Total : 31
+        </div>
+        <!-- search  -->
+        
+    </div>
+    
+    <div class="post-archive">
+    
+        
+            
+            
+            <div class="archive-year"> 2023 </div>
+            <ul class="year-list">
+            
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/10</span>
+            <a class="archive-post-title" href="/2023/05/10/%E5%9F%BA%E7%A4%8E%E6%95%B8%E8%AB%96/">基礎數論</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/05</span>
+            <a class="archive-post-title" href="/2023/04/05/GIT/">GIT</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/05</span>
+            <a class="archive-post-title" href="/2023/04/05/%E5%BF%AB%E9%80%9F%E5%86%AA%E5%92%8C%E7%9F%A9%E9%99%A3%E5%BF%AB%E9%80%9F%E5%86%AA/">快速冪和矩陣快速冪</a>
+        </li>
+    
+        
+            
+            
+                
+                </ul>
+            
+            <div class="archive-year"> 2021 </div>
+            <ul class="year-list">
+            
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/12</span>
+            <a class="archive-post-title" href="/2021/09/12/%E5%9C%A8Linux%E5%AE%89%E8%A3%9DCUDA/">在Linux安裝CUDA，並在Pytorch進行CUDA訓練</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/29</span>
+            <a class="archive-post-title" href="/2021/08/29/%E5%8F%AF%E8%A7%A3%E9%87%8B%E4%BA%BA%E5%B7%A5%E6%99%BA%E6%85%A7-explainable-ai/">可解釋人工智慧_explainable_ai</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/29</span>
+            <a class="archive-post-title" href="/2021/08/29/%E5%9F%BA%E6%96%BC%E6%B7%B1%E5%BA%A6%E5%AD%B8%E7%BF%92%E9%80%B2%E8%A1%8C%E8%B2%93%E8%88%87%E7%8B%97%E7%9A%84%E8%BE%A8%E8%AA%8D-Pytorch/">基於深度學習進行貓與狗的辨認(Pytorch)</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/28</span>
+            <a class="archive-post-title" href="/2021/08/28/C-%E7%89%A9%E4%BB%B6%E5%B0%8E%E5%90%91/">C++物件導向</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/28</span>
+            <a class="archive-post-title" href="/2021/08/28/%E5%9F%BA%E7%A4%8E%E6%BC%94%E7%AE%97%E6%B3%95-C/">基礎演算法(Algorithm)-C++</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/28</span>
+            <a class="archive-post-title" href="/2021/08/28/%E5%9F%BA%E7%A4%8E%E8%B3%87%E6%96%99%E7%B5%90%E6%A7%8B-C/">基礎資料結構(Data Structure)-C++</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/27</span>
+            <a class="archive-post-title" href="/2021/08/27/CSS/">CSS</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/27</span>
+            <a class="archive-post-title" href="/2021/08/27/HTML/">HTML</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/27</span>
+            <a class="archive-post-title" href="/2021/08/27/Linux%E5%9F%BA%E7%A4%8E%E4%BD%BF%E7%94%A8/">Linux基礎使用</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/27</span>
+            <a class="archive-post-title" href="/2021/08/27/MNIST%E6%89%8B%E5%AF%AB%E8%BE%A8%E8%AD%98-Pytorch-version/">MNIST手寫辨識(Pytorch version)</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/27</span>
+            <a class="archive-post-title" href="/2021/08/27/MNIST%E6%89%8B%E5%AF%AB%E8%BE%A8%E8%AD%98-TensorFlow-version/">MNIST手寫辨識(TensorFlow-version)</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/27</span>
+            <a class="archive-post-title" href="/2021/08/27/Numpy/">Numpy</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/27</span>
+            <a class="archive-post-title" href="/2021/08/27/Pandas/">Pandas</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/27</span>
+            <a class="archive-post-title" href="/2021/08/27/Scikit-Learn/">Scikit Learn</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/27</span>
+            <a class="archive-post-title" href="/2021/08/27/TensorFlow1%E5%9F%BA%E7%A4%8E%E4%BD%BF%E7%94%A8%E6%96%B9%E6%B3%95/">TensorFlow1基礎使用方法</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/27</span>
+            <a class="archive-post-title" href="/2021/08/27/%E9%81%B7%E7%A7%BB%E5%AD%B8%E7%BF%92-%E5%9C%96%E7%89%87%E8%BE%A8%E8%AD%98/">遷移學習-圖片辨識</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/27</span>
+            <a class="archive-post-title" href="/2021/08/27/APCS%E5%AF%A6%E4%BD%9C%E9%A1%8C/">APCS實作題</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/27</span>
+            <a class="archive-post-title" href="/2021/08/27/Matplotlib/">Matplotlib</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/27</span>
+            <a class="archive-post-title" href="/2021/08/27/%E5%9F%BA%E7%A4%8ETensorFlow2%E8%88%87%E6%A9%9F%E5%99%A8%E5%AD%B8%E7%BF%92/">基礎TensorFlow1和2與機器學習</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/27</span>
+            <a class="archive-post-title" href="/2021/08/27/%E5%9F%BA%E7%A4%8Epytorch%E8%88%87%E6%A9%9F%E5%99%A8%E5%AD%B8%E7%BF%92/">基礎pytorch與機器學習</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/24</span>
+            <a class="archive-post-title" href="/2021/08/24/OpenCV/">OpenCV</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/24</span>
+            <a class="archive-post-title" href="/2021/08/24/pipenv/">pipenv</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/24</span>
+            <a class="archive-post-title" href="/2021/06/24/Linked-List/">Linked_List</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/24</span>
+            <a class="archive-post-title" href="/2021/06/24/Stringstream/">Stringstream</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/24</span>
+            <a class="archive-post-title" href="/2021/06/24/Web/">Web</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/24</span>
+            <a class="archive-post-title" href="/2021/06/24/ctime/">ctime</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/24</span>
+            <a class="archive-post-title" href="/2021/06/24/%E6%8C%87%E6%A8%99/">指標</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/24</span>
+            <a class="archive-post-title" href="/2021/06/24/%E9%81%8B%E7%AE%97%E5%AD%90%E9%87%8D%E8%BC%89/">運算子重載</a>
+        </li>
+    
+    </div>
+</div>
+
+        <div class="sidebar-panel-tags">
+    <div class="sidebar-tags-name">
+        
+            <span class="sidebar-tag-name" data-tags="C++">
+                <span class="iconfont-archer">&#xe606;</span>
+                C++
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="OOP">
+                <span class="iconfont-archer">&#xe606;</span>
+                OOP
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="CSS">
+                <span class="iconfont-archer">&#xe606;</span>
+                CSS
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="web dev">
+                <span class="iconfont-archer">&#xe606;</span>
+                web dev
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="HTML">
+                <span class="iconfont-archer">&#xe606;</span>
+                HTML
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="Linux">
+                <span class="iconfont-archer">&#xe606;</span>
+                Linux
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="Pytorch">
+                <span class="iconfont-archer">&#xe606;</span>
+                Pytorch
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="Machine Learning">
+                <span class="iconfont-archer">&#xe606;</span>
+                Machine Learning
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="TensorFlow2">
+                <span class="iconfont-archer">&#xe606;</span>
+                TensorFlow2
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="Python">
+                <span class="iconfont-archer">&#xe606;</span>
+                Python
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="Scikit Learn">
+                <span class="iconfont-archer">&#xe606;</span>
+                Scikit Learn
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="TensorFlow1">
+                <span class="iconfont-archer">&#xe606;</span>
+                TensorFlow1
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="Math theorem">
+                <span class="iconfont-archer">&#xe606;</span>
+                Math theorem
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="algorithm">
+                <span class="iconfont-archer">&#xe606;</span>
+                algorithm
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="Data structure">
+                <span class="iconfont-archer">&#xe606;</span>
+                Data structure
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="Transfer Learning">
+                <span class="iconfont-archer">&#xe606;</span>
+                Transfer Learning
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="APCS">
+                <span class="iconfont-archer">&#xe606;</span>
+                APCS
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="TensorFlow">
+                <span class="iconfont-archer">&#xe606;</span>
+                TensorFlow
+            </span>
+        
+    </div>
+    <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>
+    <div class="tag-load-fail" style="display: none; color: #ccc; font-size: 0.6rem;">
+        缺失模块，请参考主题文档进行安装配置：https://github.com/fi3ework/hexo-theme-archer#%E5%AE%89%E8%A3%85%E4%B8%BB%E9%A2%98
+    </div> 
+    <div class="sidebar-tags-list"></div>
+</div>
+
+        <div class="sidebar-panel-categories">
+    <div class="sidebar-categories-name">
+    
+    </div>
+    <div class="iconfont-archer sidebar-categories-empty">&#xe678;</div>
+    <div class="sidebar-categories-list"></div>
+</div>
+
+    </div>
+</div>
+
+        <!-- site-meta -->
+        <script>
+    var siteMetaRoot = "/"
+    if (siteMetaRoot === "undefined") {
+        siteMetaRoot = '/'
+    }
+    var siteMeta = {
+        url: "https://maxwutw.github.io",
+        root: siteMetaRoot,
+        author: "Max Wu"
+    }
+</script>
+
+        <!-- import experimental options here -->
+        <!-- Custom Font -->
+
+
+        <!-- main func -->
+        <script src="/scripts/main.js?v=20211217"></script>
+        <!-- dark mode -->
+        <script src="/scripts/dark.js?v=20211217"></script>
+        <!-- fancybox -->
+        <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js" defer></script>
+        <!-- algolia -->
+        
+        <!-- busuanzi -->
+        
+            <script src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" async></script>
+        
+        <!-- CNZZ -->
+        
+        <!-- async load share.js -->
+        
+        <!-- mermaid -->
+        
+    </body>
+</html>

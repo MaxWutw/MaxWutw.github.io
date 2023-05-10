@@ -1,0 +1,1484 @@
+<!DOCTYPE html>
+<html lang="en">
+    <!-- title -->
+
+
+    
+
+<!-- keywords -->
+
+
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="author" content="Max Wu">
+    <meta name="renderer" content="webkit">
+    <meta name="copyright" content="Max Wu">
+    
+        <meta name="keywords" content="hexo,hexo-theme,hexo-blog">
+    
+    <meta name="description" content="">
+    <meta name="description" content="這次會介紹我在Kaggle上進行的貓狗辨認程式，我最終的測試結果得準確率可以高達90%，此部份會使用Pytorch這個深度學習框架。 1. 準備資料 在進行訓練前需要先準備好資料，我們先從Kaggle上下載圖片下來，再做資料的分配，這邊使用貓1000張及狗1000張當作訓練資料，使用貓500張及狗500張當作驗證資料，最後使用100張貓狗照片當作測試資料，我不使用Kaggle給的所有照片，因為我的">
+<meta property="og:type" content="article">
+<meta property="og:title" content="基於深度學習進行貓與狗的辨認(Pytorch)">
+<meta property="og:url" content="https://maxwutw.github.io/2021/08/29/%E5%9F%BA%E6%96%BC%E6%B7%B1%E5%BA%A6%E5%AD%B8%E7%BF%92%E9%80%B2%E8%A1%8C%E8%B2%93%E8%88%87%E7%8B%97%E7%9A%84%E8%BE%A8%E8%AA%8D-Pytorch/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="這次會介紹我在Kaggle上進行的貓狗辨認程式，我最終的測試結果得準確率可以高達90%，此部份會使用Pytorch這個深度學習框架。 1. 準備資料 在進行訓練前需要先準備好資料，我們先從Kaggle上下載圖片下來，再做資料的分配，這邊使用貓1000張及狗1000張當作訓練資料，使用貓500張及狗500張當作驗證資料，最後使用100張貓狗照片當作測試資料，我不使用Kaggle給的所有照片，因為我的">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://i.imgur.com/Uj6bBtg.png">
+<meta property="article:published_time" content="2021-08-29T14:22:08.000Z">
+<meta property="article:modified_time" content="2023-05-10T15:24:28.822Z">
+<meta property="article:author" content="Max Wu">
+<meta property="article:tag" content="Pytorch">
+<meta property="article:tag" content="Machine Learning">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.imgur.com/Uj6bBtg.png">
+    <meta http-equiv="Cache-control" content="no-cache">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <link rel="icon" href="/assets/favicon.ico">
+    
+    <title>基於深度學習進行貓與狗的辨認(Pytorch) · Max Coding blog</title>
+    <!-- /*! loadCSS. [c]2017 Filament Group, Inc. MIT License */
+/* This file is meant as a standalone workflow for
+- testing support for link[rel=preload]
+- enabling async CSS loading in browsers that do not support rel=preload
+- applying rel preload css once loaded, whether supported or not.
+*/ -->
+<script>
+    (function (w) {
+        'use strict'
+        // rel=preload support test
+        if (!w.loadCSS) {
+            w.loadCSS = function () {}
+        }
+        // define on the loadCSS obj
+        var rp = (loadCSS.relpreload = {})
+        // rel=preload feature support test
+        // runs once and returns a function for compat purposes
+        rp.support = (function () {
+            var ret
+            try {
+                ret = w.document.createElement('link').relList.supports('preload')
+            } catch (e) {
+                ret = false
+            }
+            return function () {
+                return ret
+            }
+        })()
+
+        // if preload isn't supported, get an asynchronous load by using a non-matching media attribute
+        // then change that media back to its intended value on load
+        rp.bindMediaToggle = function (link) {
+            // remember existing media attr for ultimate state, or default to 'all'
+            var finalMedia = link.media || 'all'
+
+            function enableStylesheet() {
+                link.media = finalMedia
+            }
+
+            // bind load handlers to enable media
+            if (link.addEventListener) {
+                link.addEventListener('load', enableStylesheet)
+            } else if (link.attachEvent) {
+                link.attachEvent('onload', enableStylesheet)
+            }
+
+            // Set rel and non-applicable media type to start an async request
+            // note: timeout allows this to happen async to let rendering continue in IE
+            setTimeout(function () {
+                link.rel = 'stylesheet'
+                link.media = 'only x'
+            })
+            // also enable media after 3 seconds,
+            // which will catch very old browsers (android 2.x, old firefox) that don't support onload on link
+            setTimeout(enableStylesheet, 3000)
+        }
+
+        // loop through link elements in DOM
+        rp.poly = function () {
+            // double check this to prevent external calls from running
+            if (rp.support()) {
+                return
+            }
+            var links = w.document.getElementsByTagName('link')
+            for (var i = 0; i < links.length; i++) {
+                var link = links[i]
+                // qualify links to those with rel=preload and as=style attrs
+                if (
+                    link.rel === 'preload' &&
+                    link.getAttribute('as') === 'style' &&
+                    !link.getAttribute('data-loadcss')
+                ) {
+                    // prevent rerunning on link
+                    link.setAttribute('data-loadcss', true)
+                    // bind listeners to toggle media back
+                    rp.bindMediaToggle(link)
+                }
+            }
+        }
+
+        // if unsupported, run the polyfill
+        if (!rp.support()) {
+            // run once at least
+            rp.poly()
+
+            // rerun poly on an interval until onload
+            var run = w.setInterval(rp.poly, 500)
+            if (w.addEventListener) {
+                w.addEventListener('load', function () {
+                    rp.poly()
+                    w.clearInterval(run)
+                })
+            } else if (w.attachEvent) {
+                w.attachEvent('onload', function () {
+                    rp.poly()
+                    w.clearInterval(run)
+                })
+            }
+        }
+
+        // commonjs
+        if (typeof exports !== 'undefined') {
+            exports.loadCSS = loadCSS
+        } else {
+            w.loadCSS = loadCSS
+        }
+    })(typeof global !== 'undefined' ? global : this)
+</script>
+
+    <style type="text/css">
+    @font-face {
+        font-family: 'Oswald-Regular';
+        src: url("/font/Oswald-Regular.ttf");
+    }
+
+    body {
+        margin: 0;
+    }
+
+    header,
+    footer,
+    .back-top,
+    .sidebar,
+    .container,
+    .site-intro-meta,
+    .toc-wrapper {
+        display: none;
+    }
+
+    .site-intro {
+        position: relative;
+        z-index: 3;
+        width: 100%;
+        /* height: 50vh; */
+        overflow: hidden;
+    }
+
+    .site-intro-placeholder {
+        position: absolute;
+        z-index: -2;
+        top: 0;
+        left: 0;
+        width: calc(100% + 300px);
+        height: 100%;
+        background: repeating-linear-gradient(-45deg, #444 0, #444 80px, #333 80px, #333 160px);
+        background-position: center center;
+        transform: translate3d(-226px, 0, 0);
+        animation: gradient-move 2.5s ease-out 0s infinite;
+    }
+
+    @keyframes gradient-move {
+        0% {
+            transform: translate3d(-226px, 0, 0);
+        }
+        100% {
+            transform: translate3d(0, 0, 0);
+        }
+    }
+</style>
+
+    <link rel="preload" href="/css/style.css?v=20211217" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="preload" href="/css/dark.css?v=20211217" as="style">
+    <link rel="stylesheet" href="/css/dark.css">
+    <link rel="stylesheet" href="/css/mobile.css?v=20211217" media="(max-width: 960px)">
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js" as="script">
+    <link rel="preload" href="/scripts/main.js?v=20211217" as="script">
+    <link rel="preload" href="/scripts/dark.js?v=20211217" as="script">
+    <link rel="preload" href="/font/Oswald-Regular.ttf" as="font" crossorigin>
+    <link rel="preload" href="https://at.alicdn.com/t/font_327081_1dta1rlogw17zaor.woff" as="font" crossorigin>
+    <!-- algolia -->
+    
+    <!-- 百度统计  -->
+    
+    <!-- 谷歌统计  -->
+    
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --><meta name="generator" content="Hexo 6.3.0"></head>
+
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+    <script type="text/javascript">
+        if (typeof window.$ == undefined) {
+            console.warn('jquery load from jsdelivr failed, will load local script')
+            document.write('<script src="/lib/jquery.min.js" />')
+        }
+    </script>
+    
+        <body class="post-body">
+    
+        <!-- header -->
+        <header class="header header-mobile">
+    <!-- top read progress line -->
+    <div class="header-element">
+        <div class="read-progress"></div>
+    </div>
+    <!-- sidebar menu button -->
+    <div class="header-element">
+        
+            <div class="header-sidebar-menu">
+        
+            
+                <div style="padding-left: 1px;">&#xe775;</div>
+            
+        </div>
+    </div>
+    <!-- header actions -->
+    <div class="header-actions">
+        <!-- theme mode switch button -->
+        <span class="header-theme-btn header-element">
+            <i class="fas fa-adjust"></i>
+        </span>
+        <!-- back to home page text -->
+        <span class="home-link header-element">
+            <a href=/>Max Coding blog</a>
+        </span>
+    </div>
+    <!-- toggle banner for post layout -->
+    
+        
+            <div class="banner">
+        
+            <div class="blog-title header-element">
+                <a href="/">Max Coding blog</a>
+            </div>
+            <div class="post-title header-element">
+                <a href="#" class="post-name">基於深度學習進行貓與狗的辨認(Pytorch)</a>
+            </div>
+        </div>
+    
+</header>
+
+        <!-- fixed footer -->
+        <footer class="footer-fixed">
+    <!-- back to top button -->
+    <div class="footer-fixed-element">
+        
+            <div class="back-top back-top-hidden">
+        
+        
+            <div>&#xe639;</div>
+        
+        </div>
+    </div>
+</footer>
+
+        <!-- wrapper -->
+        <div class="wrapper">
+            <div class="site-intro" style="
+
+
+
+
+
+
+
+    height:50vh;
+
+">
+    
+    <!-- 主页  -->
+    
+        
+    <!-- 404页  -->
+    
+    <div class="site-intro-placeholder"></div>
+    <div class="site-intro-img" style="background-image: url(/intro/post-bg.jpg)"></div>
+    <div class="site-intro-meta">
+        <!-- 标题  -->
+        <h1 class="intro-title">
+            <!-- 主页  -->
+            
+                基於深度學習進行貓與狗的辨認(Pytorch)
+            <!-- 404 -->
+            
+        </h1>
+        <!-- 副标题 -->
+        <p class="intro-subtitle">
+            <!-- 主页副标题  -->
+            
+                
+            <!-- 404 -->
+            
+        </p>
+        <!-- 文章页 meta -->
+        
+            <div class="post-intros">
+                <!-- 文章页标签  -->
+                
+                    <div class= post-intro-tags >
+    
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="Pytorch">Pytorch</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="Machine Learning">Machine Learning</a>
+    
+</div>
+
+                
+                <!-- 文章字数统计 -->
+                
+                <div class="post-intro-meta">
+                    <!-- 撰写日期 -->
+                    <span class="iconfont-archer post-intro-calander">&#xe676;</span>
+                    <span class="post-intro-time">2021/08/29</span>
+                    <!-- busuanzi -->
+                    
+                        <span id="busuanzi_container_page_pv" class="busuanzi-pv">
+                            <span class="iconfont-archer post-intro-busuanzi">&#xe602;</span>
+                            <span id="busuanzi_value_page_pv"></span>
+                        </span>
+                    
+                    <!-- 文章分享 -->
+                    <span class="share-wrapper">
+                        <span class="iconfont-archer share-icon">&#xe71d;</span>
+                        <span class="share-text">Share</span>
+                        <ul class="share-list">
+                            <li class="iconfont-archer share-qr" data-type="qr">&#xe75b;
+                                <div class="share-qrcode"></div>
+                            </li>
+                            <li class="iconfont-archer" data-type="weibo">&#xe619;</li>
+                            <li class="iconfont-archer" data-type="qzone">&#xe62e;</li>
+                            <li class="iconfont-archer" data-type="twitter">&#xe634;</li>
+                            <li class="iconfont-archer" data-type="facebook">&#xe67a;</li>
+                        </ul>
+                    </span>
+                </div>
+            </div>
+        
+    </div>
+</div>
+
+            <script>
+  // get user agent
+  function getBrowserVersions() {
+    var u = window.navigator.userAgent
+    return {
+      userAgent: u,
+      trident: u.indexOf('Trident') > -1, //IE内核
+      presto: u.indexOf('Presto') > -1, //opera内核
+      webKit: u.indexOf('AppleWebKit') > -1, //苹果、谷歌内核
+      gecko: u.indexOf('Gecko') > -1 && u.indexOf('KHTML') == -1, //火狐内核
+      mobile: !!u.match(/AppleWebKit.*Mobile.*/), //是否为移动终端
+      ios: !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/), //ios终端
+      android: u.indexOf('Android') > -1 || u.indexOf('Linux') > -1, //android终端或者uc浏览器
+      iPhone: u.indexOf('iPhone') > -1 || u.indexOf('Mac') > -1, //是否为iPhone或者安卓QQ浏览器
+      iPad: u.indexOf('iPad') > -1, //是否为iPad
+      webApp: u.indexOf('Safari') == -1, //是否为web应用程序，没有头部与底部
+      weixin: u.indexOf('MicroMessenger') == -1, //是否为微信浏览器
+      uc: u.indexOf('UCBrowser') > -1, //是否为android下的UC浏览器
+    }
+  }
+  var browser = {
+    versions: getBrowserVersions(),
+  }
+  console.log('userAgent: ' + browser.versions.userAgent)
+
+  // callback
+  function fontLoaded() {
+    console.log('font loaded')
+    if (document.getElementsByClassName('site-intro-meta')) {
+      document
+        .getElementsByClassName('intro-title')[0]
+        .classList.add('intro-fade-in')
+      document
+        .getElementsByClassName('intro-subtitle')[0]
+        .classList.add('intro-fade-in')
+      var postIntros = document.getElementsByClassName('post-intros')[0]
+      if (postIntros) {
+        postIntros.classList.add('post-fade-in')
+      }
+    }
+  }
+
+  // UC不支持跨域，所以直接显示
+  function asyncCb() {
+    if (browser.versions.uc) {
+      console.log('UCBrowser')
+      fontLoaded()
+    } else {
+      WebFont.load({
+        custom: {
+          families: ['Oswald-Regular'],
+        },
+        loading: function () {
+          // 所有字体开始加载
+          // console.log('font loading');
+        },
+        active: function () {
+          // 所有字体已渲染
+          fontLoaded()
+        },
+        inactive: function () {
+          // 字体预加载失败，无效字体或浏览器不支持加载
+          console.log('inactive: timeout')
+          fontLoaded()
+        },
+        timeout: 5000, // Set the timeout to two seconds
+      })
+    }
+  }
+
+  function asyncErr() {
+    console.warn('script load from CDN failed, will load local script')
+  }
+
+  // load webfont-loader async, and add callback function
+  function async(u, cb, err) {
+    var d = document,
+      t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0]
+    o.src = u
+    if (cb) {
+      o.addEventListener(
+        'load',
+        function (e) {
+          cb(null, e)
+        },
+        false
+      )
+    }
+    if (err) {
+      o.addEventListener(
+        'error',
+        function (e) {
+          err(null, e)
+        },
+        false
+      )
+    }
+    s.parentNode.insertBefore(o, s)
+  }
+
+  var asyncLoadWithFallBack = function (arr, success, reject) {
+    var currReject = function () {
+      reject()
+      arr.shift()
+      if (arr.length) async(arr[0], success, currReject)
+    }
+
+    async(arr[0], success, currReject)
+  }
+
+  asyncLoadWithFallBack(
+    [
+      'https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js',
+      'https://cdn.bootcss.com/webfont/1.6.28/webfontloader.js',
+      "/lib/webfontloader.min.js",
+    ],
+    asyncCb,
+    asyncErr
+  )
+</script>
+
+            <img class="loading" src="/assets/loading.svg" style="display: block; margin: 6rem auto 0 auto; width: 6rem; height: 6rem;" />
+            <div class="container container-unloaded">
+                <main class="main post-page">
+    <article class="article-entry">
+        <p>這次會介紹我在Kaggle上進行的貓狗辨認程式，我最終的測試結果得準確率可以高達90%，此部份會使用Pytorch這個深度學習框架。</p>
+<h2 id="準備資料">1. 準備資料</h2>
+<p>在進行訓練前需要先準備好資料，我們先從Kaggle上下載圖片下來，再做資料的分配，這邊使用貓1000張及狗1000張當作訓練資料，使用貓500張及狗500張當作驗證資料，最後使用100張貓狗照片當作測試資料，我不使用Kaggle給的所有照片，因為我的電腦要跑很久，所以這邊取比較少張照片做訓練。
+<span id="more"></span> <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> os</span><br><span class="line"><span class="keyword">import</span> shutil</span><br><span class="line"></span><br><span class="line">train_all_path = <span class="string">&quot;/home/chisc/workspace/wuzhenrong&quot;</span></span><br><span class="line"></span><br><span class="line">train_dir = <span class="string">&quot;/home/chisc/workspace/wuzhenrong/train&quot;</span></span><br><span class="line">validation_dir = <span class="string">&quot;/home/chisc/workspace/wuzhenrong/validation&quot;</span></span><br><span class="line">test_dir = <span class="string">&quot;/home/chisc/workspace/wuzhenrong/test&quot;</span></span><br><span class="line"></span><br><span class="line">train_cat = <span class="string">&quot;/home/chisc/workspace/wuzhenrong/train/cat&quot;</span></span><br><span class="line">train_dog = <span class="string">&quot;/home/chisc/workspace/wuzhenrong/train/dog&quot;</span></span><br><span class="line"></span><br><span class="line">val_cat = <span class="string">&quot;/home/chisc/workspace/wuzhenrong/validation/cat&quot;</span></span><br><span class="line">val_dog = <span class="string">&quot;/home/chisc/workspace/wuzhenrong/validation/dog&quot;</span></span><br><span class="line"></span><br><span class="line">test_cat = <span class="string">&quot;/home/chisc/workspace/wuzhenrong/test/cat&quot;</span></span><br><span class="line">test_dog = <span class="string">&quot;/home/chisc/workspace/wuzhenrong/test/dog&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> <span class="keyword">not</span> os.path.exists(train_dir):</span><br><span class="line">    os.mkdir(train_dir)</span><br><span class="line"><span class="keyword">if</span> <span class="keyword">not</span> os.path.exists(validation_dir):</span><br><span class="line">    os.mkdir(validation_dir)</span><br><span class="line"><span class="keyword">if</span> <span class="keyword">not</span> os.path.exists(test_dir):</span><br><span class="line">    os.mkdir(test_dir)</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> <span class="keyword">not</span> os.path.exists(train_cat):</span><br><span class="line">    os.mkdir(train_cat)</span><br><span class="line"><span class="keyword">if</span> <span class="keyword">not</span> os.path.exists(train_dog):</span><br><span class="line">    os.mkdir(train_dog)</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> <span class="keyword">not</span> os.path.exists(val_cat):</span><br><span class="line">    os.mkdir(val_cat)</span><br><span class="line"><span class="keyword">if</span> <span class="keyword">not</span> os.path.exists(val_dog):</span><br><span class="line">    os.mkdir(val_dog)</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> <span class="keyword">not</span> os.path.exists(test_cat):</span><br><span class="line">    os.mkdir(test_cat)</span><br><span class="line"><span class="keyword">if</span> <span class="keyword">not</span> os.path.exists(test_dog):</span><br><span class="line">    os.mkdir(test_dog)</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">0</span>, <span class="number">2000</span>):</span><br><span class="line">    addr = <span class="string">f&quot;/home/chisc/workspace/wuzhenrong/train_all/cat.<span class="subst">&#123;i&#125;</span>.jpg&quot;</span></span><br><span class="line">    to_add = <span class="string">f&quot;/home/chisc/workspace/wuzhenrong/train/cat/cat.<span class="subst">&#123;i&#125;</span>.jpg&quot;</span></span><br><span class="line">    shutil.copyfile(addr, to_add)</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">0</span>, <span class="number">2000</span>):</span><br><span class="line">    addr = <span class="string">f&quot;/home/chisc/workspace/wuzhenrong/train_all/dog.<span class="subst">&#123;i&#125;</span>.jpg&quot;</span></span><br><span class="line">    to_add = <span class="string">f&quot;/home/chisc/workspace/wuzhenrong/train/dog/dog.<span class="subst">&#123;i&#125;</span>.jpg&quot;</span></span><br><span class="line">    shutil.copyfile(addr, to_add)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">2000</span>, <span class="number">2500</span>):</span><br><span class="line">    addr = <span class="string">f&quot;/home/chisc/workspace/wuzhenrong/train_all/cat.<span class="subst">&#123;i&#125;</span>.jpg&quot;</span></span><br><span class="line">    to_add = <span class="string">f&quot;/home/chisc/workspace/wuzhenrong/validation/cat/cat.<span class="subst">&#123;i&#125;</span>.jpg&quot;</span></span><br><span class="line">    shutil.copyfile(addr, to_add)</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">2000</span>, <span class="number">2500</span>):</span><br><span class="line">    addr = <span class="string">f&quot;/home/chisc/workspace/wuzhenrong/train_all/dog.<span class="subst">&#123;i&#125;</span>.jpg&quot;</span></span><br><span class="line">    to_add = <span class="string">f&quot;/home/chisc/workspace/wuzhenrong/validation/dog/dog.<span class="subst">&#123;i&#125;</span>.jpg&quot;</span></span><br><span class="line">    shutil.copyfile(addr, to_add)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">2500</span>, <span class="number">3000</span>):</span><br><span class="line">    addr = <span class="string">f&quot;/home/chisc/workspace/wuzhenrong/train_all/cat.<span class="subst">&#123;i&#125;</span>.jpg&quot;</span></span><br><span class="line">    to_add = <span class="string">f&quot;/home/chisc/workspace/wuzhenrong/test/cat/cat.<span class="subst">&#123;i&#125;</span>.jpg&quot;</span></span><br><span class="line">    shutil.copyfile(addr, to_add)</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">2500</span>, <span class="number">3000</span>):</span><br><span class="line">    addr = <span class="string">f&quot;/home/chisc/workspace/wuzhenrong/train_all/dog.<span class="subst">&#123;i&#125;</span>.jpg&quot;</span></span><br><span class="line">    to_add = <span class="string">f&quot;/home/chisc/workspace/wuzhenrong/test/cat/dog.<span class="subst">&#123;i&#125;</span>.jpg&quot;</span></span><br><span class="line">    shutil.copyfile(addr, to_add)</span><br></pre></td></tr></table></figure>
+首先會先判斷目錄使否存在，如果不存在會自動建立一個，再來就是分配資料，這邊使用shutil.copyfile()來複製資料，第一個參數是資料來源地，第二個參數是目的地。</p>
+<h2 id="引入函式庫">2. 引入函式庫</h2>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> pandas <span class="keyword">as</span> pd</span><br><span class="line"><span class="keyword">import</span> torch</span><br><span class="line"><span class="keyword">import</span> torch.nn <span class="keyword">as</span> nn</span><br><span class="line"><span class="keyword">from</span> torch.utils.data <span class="keyword">import</span> Dataset, DataLoader</span><br><span class="line"><span class="keyword">import</span> torchvision.transforms <span class="keyword">as</span> transforms</span><br><span class="line"><span class="keyword">from</span> torchvision.datasets <span class="keyword">import</span> ImageFolder</span><br><span class="line"><span class="keyword">from</span> PIL <span class="keyword">import</span> Image</span><br><span class="line"><span class="keyword">from</span> torchvision.datasets <span class="keyword">import</span> DatasetFolder</span><br><span class="line"><span class="keyword">import</span> torchvision</span><br><span class="line"><span class="keyword">from</span> tqdm.notebook <span class="keyword">import</span> tqdm <span class="keyword">as</span> tqdm</span><br></pre></td></tr></table></figure>
+<p>為了畫函數圖形，所以引入matplotlib，接著numpy和pandas是常用的工具，所以提前引入以防不備之需，torch.nn裡包含很多神經網路的類別。再來是torchvision，引入後可以做資料的提取及準備。由於pytorch沒有訓練進度條，所以引入tqdm可以顯示進度條。</p>
+<h2 id="引入資料">3. 引入資料</h2>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">train_trans = transforms.Compose(</span><br><span class="line">    [transforms.RandomHorizontalFlip(),</span><br><span class="line">     transforms.RandomRotation((-<span class="number">30</span>, <span class="number">30</span>)),</span><br><span class="line">     transforms.Resize((<span class="number">224</span>, <span class="number">224</span>)),</span><br><span class="line">     transforms.ToTensor(),</span><br><span class="line">     transforms.Normalize([<span class="number">0.485</span>, <span class="number">0.456</span>, <span class="number">0.406</span>], [<span class="number">0.229</span>, <span class="number">0.224</span>, <span class="number">0.225</span>])])</span><br><span class="line"><span class="comment"># val_trans = transforms.Compose([transforms.Resize((224, 224)), transforms.ToTensor(), transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])])</span></span><br><span class="line">val_trans = transforms.Compose([transforms.Resize((<span class="number">224</span>, <span class="number">224</span>)), transforms.ToTensor()])</span><br><span class="line">test_trans = transforms.Compose([transforms.Resize((<span class="number">224</span>, <span class="number">224</span>)), transforms.ToTensor(), transforms.Normalize([<span class="number">0.485</span>, <span class="number">0.456</span>, <span class="number">0.406</span>], [<span class="number">0.229</span>, <span class="number">0.224</span>, <span class="number">0.225</span>])])</span><br><span class="line"></span><br><span class="line">batch_size = <span class="number">32</span></span><br><span class="line"></span><br><span class="line">train_data = ImageFolder(train_path, transform = train_trans)</span><br><span class="line">val_data = ImageFolder(val_path,transform = test_trans)</span><br><span class="line">test_data = ImageFolder(test_path, transform = test_trans)</span><br><span class="line"></span><br><span class="line">train_loader = DataLoader(train_data, batch_size = batch_size, shuffle = <span class="literal">True</span>, num_workers = <span class="number">2</span>, pin_memory = <span class="literal">True</span>)</span><br><span class="line">val_loader = DataLoader(val_data, batch_size = batch_size, shuffle = <span class="literal">True</span>, num_workers = <span class="number">2</span>, pin_memory = <span class="literal">True</span>)</span><br><span class="line">test_loader = DataLoader(test_data, shuffle = <span class="literal">True</span>)</span><br></pre></td></tr></table></figure>
+<p>接著就是讀入資料，transforms.Compose可以放入data
+augmentation的資訊，ImageFolder是從目錄裡讀取資料，會依據不同資料夾來當作不同label，而DataLoader會彙整剛剛兩個的資訊。</p>
+<h2 id="看圖片">4. 看圖片</h2>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">images, labels = <span class="built_in">next</span>(<span class="built_in">iter</span>(train_loader))</span><br><span class="line"><span class="comment"># After Normalize</span></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> np.arange(<span class="number">3</span>):</span><br><span class="line">  plt.figure(i)</span><br><span class="line">  plt.imshow(images[i].permute(<span class="number">1</span>, <span class="number">2</span>, <span class="number">0</span>))</span><br><span class="line"><span class="comment"># plt.show()</span></span><br><span class="line"><span class="comment"># Before Normalize</span></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> np.arange(<span class="number">3</span>):</span><br><span class="line">  plt.figure(i)</span><br><span class="line">  <span class="comment"># Our data are normalized, in order to watch our origin image, so we need to denormalize our data</span></span><br><span class="line">  mean = torch.tensor([<span class="number">0.485</span>, <span class="number">0.456</span>, <span class="number">0.406</span>])</span><br><span class="line">  std = torch.tensor([<span class="number">0.229</span>, <span class="number">0.224</span>, <span class="number">0.225</span>])</span><br><span class="line">  tmp = transforms.Normalize(-mean/std, <span class="number">1</span>/std)(images[i]) <span class="comment"># denormalize</span></span><br><span class="line">  plt.imshow(tmp.permute(<span class="number">1</span>, <span class="number">2</span>, <span class="number">0</span>))</span><br><span class="line">  plt.show()</span><br></pre></td></tr></table></figure>
+<p>這邊的程式可以看到貓與狗的圖片，由於我們的train
+data有做normalize，所以要做denormalize，才能看到原圖。 <img
+src="https://i.imgur.com/XRtcid5.jpg" /> <img
+src="https://i.imgur.com/Qdnk6P2.jpg" /></p>
+<h2 id="cnn架構">5. CNN架構</h2>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">CatDpg</span>(nn.Module):</span><br><span class="line">  <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self</span>):</span><br><span class="line">    <span class="built_in">super</span>(CatDpg, self).__init__()</span><br><span class="line">    self.cnn = nn.Sequential(</span><br><span class="line">        <span class="comment">## CNN1</span></span><br><span class="line">        nn.Conv2d(in_channels = <span class="number">3</span>, out_channels = <span class="number">64</span>, kernel_size = <span class="number">3</span>, stride = <span class="number">1</span>, padding = <span class="number">1</span>), <span class="comment"># padding = kernel_size / 2</span></span><br><span class="line">        nn.ReLU(),</span><br><span class="line">        nn.MaxPool2d(kernel_size = <span class="number">2</span>),<span class="comment">## (64, 112, 112)</span></span><br><span class="line">        <span class="comment">## CNN2</span></span><br><span class="line">        nn.Conv2d(in_channels = <span class="number">64</span>, out_channels = <span class="number">128</span>, kernel_size = <span class="number">3</span>, stride = <span class="number">1</span>, padding = <span class="number">1</span>),</span><br><span class="line">        nn.ReLU(),</span><br><span class="line">        nn.MaxPool2d(kernel_size = <span class="number">2</span>),<span class="comment">## (128, 56, 56)</span></span><br><span class="line">        <span class="comment">## CNN3</span></span><br><span class="line">        nn.Conv2d(in_channels = <span class="number">128</span>, out_channels = <span class="number">256</span>, kernel_size = <span class="number">3</span>, stride = <span class="number">1</span>, padding = <span class="number">1</span>),</span><br><span class="line">        nn.ReLU(),</span><br><span class="line">        nn.MaxPool2d(kernel_size = <span class="number">2</span>),<span class="comment">## (256, 28, 28)</span></span><br><span class="line">        <span class="comment">## CNN4</span></span><br><span class="line">        nn.Conv2d(in_channels = <span class="number">256</span>, out_channels = <span class="number">512</span>, kernel_size = <span class="number">3</span>, stride = <span class="number">1</span>, padding = <span class="number">1</span>),</span><br><span class="line">        nn.ReLU(),</span><br><span class="line">        nn.MaxPool2d(kernel_size = <span class="number">2</span>),<span class="comment">## (512, 14, 14)</span></span><br><span class="line">        <span class="comment">## CNN5</span></span><br><span class="line">        nn.Conv2d(in_channels = <span class="number">512</span>, out_channels = <span class="number">512</span>, kernel_size = <span class="number">3</span>, stride = <span class="number">1</span>, padding = <span class="number">1</span>),</span><br><span class="line">        nn.ReLU(),</span><br><span class="line">        nn.MaxPool2d(kernel_size = <span class="number">2</span>)<span class="comment">## (512, 7, 7)</span></span><br><span class="line">    )</span><br><span class="line">    self.fc = nn.Sequential(</span><br><span class="line">        nn.Linear(<span class="number">512</span> * <span class="number">7</span> * <span class="number">7</span>, <span class="number">1024</span>), <span class="comment"># Fully-connected layer</span></span><br><span class="line">        nn.Dropout(<span class="number">0.4</span>), <span class="comment"># Avoid overfitting</span></span><br><span class="line">        nn.ReLU(),</span><br><span class="line">        nn.Linear(<span class="number">1024</span>, <span class="number">1024</span>),</span><br><span class="line">        nn.Dropout(<span class="number">0.5</span>),</span><br><span class="line">        nn.ReLU(),</span><br><span class="line">        nn.Linear(<span class="number">1024</span>, <span class="number">2</span>)</span><br><span class="line">    )</span><br><span class="line">  <span class="comment"># forward propagation</span></span><br><span class="line">  <span class="keyword">def</span> <span class="title function_">forward</span>(<span class="params">self, x</span>):</span><br><span class="line">    x = self.cnn(x)</span><br><span class="line">    x = x.flatten(<span class="number">1</span>)</span><br><span class="line">    x = self.fc(x)</span><br><span class="line">    <span class="keyword">return</span> x</span><br></pre></td></tr></table></figure>
+<p>CNN的架構如下: 1. Input layer 2. Convolutional layer 3. ReLU layer 4.
+Pooling layer 5. Fully-connected layer <img
+src="https://i.imgur.com/bFv7sa5.png" />
+我們首先先建立卷積層，再一層激勵函數，然後再來一個池化層，記住padding等於kernel_size
+/
+2，這樣做5層即可，然後在forward李需要加入flatten()，這樣才能做fully-connected。</p>
+<h2 id="開始訓練">6. 開始訓練</h2>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line">device = <span class="string">&quot;cuda&quot;</span> <span class="keyword">if</span> train_on_gpu <span class="keyword">else</span> <span class="string">&quot;cpu&quot;</span></span><br><span class="line">model = CatDpg()</span><br><span class="line"></span><br><span class="line">model = model.to(device)</span><br><span class="line"><span class="built_in">print</span>(model)</span><br><span class="line"></span><br><span class="line">optimizer = torch.optim.Adam(model.parameters(), lr=<span class="number">0.0005</span>)</span><br><span class="line">loss_func = nn.CrossEntropyLoss()</span><br><span class="line"></span><br><span class="line">n_epochs = <span class="number">30</span></span><br><span class="line">train_loss_record = []</span><br><span class="line">train_acc_record = []</span><br><span class="line">val_loss_record = []</span><br><span class="line">val_acc_record = []</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> epoch <span class="keyword">in</span> <span class="built_in">range</span>(n_epochs):</span><br><span class="line">  train_loss = <span class="number">0.0</span></span><br><span class="line">  val_loss = <span class="number">0.0</span></span><br><span class="line">  train_acc = <span class="number">0.0</span></span><br><span class="line">  val_acc = <span class="number">0.0</span></span><br><span class="line">  model.train()</span><br><span class="line"></span><br><span class="line">  <span class="keyword">for</span> x, y <span class="keyword">in</span> tqdm(train_loader):</span><br><span class="line">    x, y = x.to(device), y.to(device)</span><br><span class="line">    prediction = model(x)</span><br><span class="line">    loss = loss_func(prediction, y)</span><br><span class="line">    optimizer.zero_grad()</span><br><span class="line">    loss.backward()</span><br><span class="line">    optimizer.step()</span><br><span class="line">    acc = ((prediction.argmax(dim = <span class="number">1</span>) == y).<span class="built_in">float</span>().mean())</span><br><span class="line">    train_acc += acc/<span class="built_in">len</span>(train_loader)</span><br><span class="line">    train_loss += loss/<span class="built_in">len</span>(train_loader)</span><br><span class="line"></span><br><span class="line">  <span class="built_in">print</span>(<span class="string">f&quot;[ Train | <span class="subst">&#123;epoch+<span class="number">1</span>&#125;</span>/<span class="subst">&#123;n_epochs&#125;</span> ] loss = <span class="subst">&#123;train_loss:<span class="number">.5</span>f&#125;</span>, acc = <span class="subst">&#123;train_acc:<span class="number">.5</span>f&#125;</span>&quot;</span>)</span><br><span class="line">  train_loss_record.append(train_loss)</span><br><span class="line">  train_acc_record.append(train_acc)</span><br><span class="line"><span class="comment">#   with torch.no_grad():</span></span><br><span class="line">  <span class="keyword">for</span> x, y <span class="keyword">in</span> tqdm(val_loader):</span><br><span class="line">      x, y = x.to(device), y.to(device)</span><br><span class="line">      prediction = model(x)</span><br><span class="line">      loss = loss_func(prediction, y)</span><br><span class="line">      loss.backward()</span><br><span class="line">      acc = ((prediction.argmax(dim = <span class="number">1</span>) == y).<span class="built_in">float</span>().mean())</span><br><span class="line">      val_acc += acc/<span class="built_in">len</span>(val_loader)</span><br><span class="line">      val_loss += loss/<span class="built_in">len</span>(val_loader)</span><br><span class="line">  <span class="built_in">print</span>(<span class="string">f&quot;[ Validation | <span class="subst">&#123;epoch+<span class="number">1</span>&#125;</span>/<span class="subst">&#123;n_epochs&#125;</span> ] loss = <span class="subst">&#123;val_loss:<span class="number">.5</span>f&#125;</span>, acc = <span class="subst">&#123;val_acc:<span class="number">.5</span>f&#125;</span>&quot;</span>)</span><br><span class="line">  val_loss_record.append(val_loss)</span><br><span class="line">  val_acc_record.append(val_acc)</span><br><span class="line">torch.save(model, <span class="string">&#x27;catvsdog.pkl&#x27;</span>)</span><br></pre></td></tr></table></figure>
+<p>首先要判斷是否有CUDA，如果有就使用CUDA訓練，如果沒有，就用CPU訓練，我們這邊使用Adam當作optimizer，Adam相對SGD還要來的穩定，且沒有梯度消失及梯度爆炸的問題，loss
+function是使用cross
+entropy，接著進入訓練，記得訓練的的地方需要加入model.train()。</p>
+<h2 id="查看模型效能">7. 查看模型效能</h2>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line">plt.figure(<span class="number">1</span>)</span><br><span class="line">plt.title(<span class="string">&#x27;Training and Validation Loss&#x27;</span>)</span><br><span class="line">train_l, = plt.plot(train_loss_record, color = <span class="string">&#x27;red&#x27;</span>)</span><br><span class="line">val_l, = plt.plot(val_loss_record, color = <span class="string">&#x27;blue&#x27;</span>)</span><br><span class="line">plt.xlabel(<span class="string">&#x27;Epochs&#x27;</span>)</span><br><span class="line">plt.ylabel(<span class="string">&#x27;Loss&#x27;</span>)</span><br><span class="line">plt.legend(handles = [train_l, val_l], labels = [<span class="string">&#x27;Training&#x27;</span>, <span class="string">&#x27;Validation&#x27;</span>], loc = <span class="string">&#x27;best&#x27;</span>)</span><br><span class="line">plt.show()</span><br><span class="line"></span><br><span class="line">plt.figure(<span class="number">2</span>)</span><br><span class="line">plt.title(<span class="string">&#x27;Training and Validation Accuracy&#x27;</span>)</span><br><span class="line">train_a, = plt.plot(train_acc_record, color = <span class="string">&#x27;red&#x27;</span>)</span><br><span class="line">val_a, = plt.plot(val_acc_record, color = <span class="string">&#x27;blue&#x27;</span>)</span><br><span class="line">plt.xlabel(<span class="string">&#x27;Epochs&#x27;</span>)</span><br><span class="line">plt.ylabel(<span class="string">&#x27;Accuracy&#x27;</span>)</span><br><span class="line">plt.legend(handles = [train_a, val_a], labels = [<span class="string">&#x27;Training&#x27;</span>, <span class="string">&#x27;Validation&#x27;</span>], loc = <span class="string">&#x27;best&#x27;</span>)</span><br><span class="line">plt.show()</span><br><span class="line"></span><br><span class="line">i = <span class="number">0</span></span><br><span class="line"><span class="keyword">for</span> x, y <span class="keyword">in</span> test_loader:</span><br><span class="line">  i += <span class="number">1</span></span><br><span class="line">  <span class="keyword">if</span> train_on_gpu:</span><br><span class="line">    x, y = x.cuda(), y.cuda()</span><br><span class="line">  output = model(x)</span><br><span class="line">  out = output.argmax(dim = <span class="number">1</span>)</span><br><span class="line">  out = out.to(<span class="string">&#x27;cpu&#x27;</span>).numpy()</span><br><span class="line">  <span class="comment"># print(out)</span></span><br><span class="line">  <span class="keyword">if</span> i % <span class="number">10</span> == <span class="number">0</span>:</span><br><span class="line">    plt.figure(i)</span><br><span class="line">    <span class="keyword">if</span> out[<span class="number">0</span>] == <span class="number">0</span>:</span><br><span class="line">      plt.title(<span class="string">&#x27;Predict: cat&#x27;</span>)</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">      plt.title(<span class="string">&#x27;Predict: dog&#x27;</span>)</span><br><span class="line">    mean = torch.tensor([<span class="number">0.485</span>, <span class="number">0.456</span>, <span class="number">0.406</span>])</span><br><span class="line">    std = torch.tensor([<span class="number">0.229</span>, <span class="number">0.224</span>, <span class="number">0.225</span>])</span><br><span class="line">    x = x.squeeze()</span><br><span class="line">    tmp = transforms.Normalize(-mean/std, <span class="number">1</span>/std)(x) <span class="comment"># denormalize</span></span><br><span class="line">    tmp = tmp.to(<span class="string">&#x27;cpu&#x27;</span>)</span><br><span class="line">    plt.imshow(tmp.permute(<span class="number">1</span>, <span class="number">2</span>, <span class="number">0</span>))</span><br><span class="line">    plt.show()</span><br></pre></td></tr></table></figure>
+<p><img src="https://i.imgur.com/Uj6bBtg.png" /> <img
+src="https://i.imgur.com/DiKI8Jk.png" /> <img
+src="https://i.imgur.com/yKqs3HF.png" /> <img
+src="https://i.imgur.com/Xe81UzD.png" />
+最後把圖形輸出就完成了，而測試的最高準確率可以達到91%，而平均測試準確率是88%，</p>
+<h2 id="總程式碼">總程式碼</h2>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> pandas <span class="keyword">as</span> pd</span><br><span class="line"><span class="keyword">import</span> torch</span><br><span class="line"><span class="keyword">import</span> torch.nn <span class="keyword">as</span> nn</span><br><span class="line"><span class="keyword">from</span> torch.utils.data <span class="keyword">import</span> Dataset, DataLoader</span><br><span class="line"><span class="keyword">import</span> torchvision.transforms <span class="keyword">as</span> transforms</span><br><span class="line"><span class="keyword">from</span> torchvision.datasets <span class="keyword">import</span> ImageFolder</span><br><span class="line"><span class="keyword">from</span> PIL <span class="keyword">import</span> Image</span><br><span class="line"><span class="keyword">from</span> torchvision.datasets <span class="keyword">import</span> DatasetFolder</span><br><span class="line"><span class="keyword">import</span> torchvision</span><br><span class="line"><span class="keyword">from</span> tqdm.notebook <span class="keyword">import</span> tqdm <span class="keyword">as</span> tqdm</span><br><span class="line"></span><br><span class="line">train_on_gpu = torch.cuda.is_available()</span><br><span class="line"><span class="keyword">if</span> <span class="keyword">not</span> train_on_gpu:</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&#x27;CUDA is not available.&#x27;</span>)</span><br><span class="line"><span class="keyword">else</span>:</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&#x27;CUDA is available!&#x27;</span>)</span><br><span class="line"></span><br><span class="line">train_path = <span class="string">&#x27;/home/chisc/workspace/wuzhenrong/train&#x27;</span></span><br><span class="line">val_path = <span class="string">&#x27;/home/chisc/workspace/wuzhenrong/validation/&#x27;</span></span><br><span class="line">test_path = <span class="string">&#x27;/home/chisc/workspace/wuzhenrong/test/&#x27;</span></span><br><span class="line"></span><br><span class="line">train_trans = transforms.Compose(</span><br><span class="line">    [transforms.RandomHorizontalFlip(),</span><br><span class="line">     transforms.RandomRotation((-<span class="number">30</span>, <span class="number">30</span>)),</span><br><span class="line">     transforms.Resize((<span class="number">224</span>, <span class="number">224</span>)),</span><br><span class="line">     transforms.ToTensor(),</span><br><span class="line">     transforms.Normalize([<span class="number">0.485</span>, <span class="number">0.456</span>, <span class="number">0.406</span>], [<span class="number">0.229</span>, <span class="number">0.224</span>, <span class="number">0.225</span>])])</span><br><span class="line"><span class="comment"># val_trans = transforms.Compose([transforms.Resize((224, 224)), transforms.ToTensor(), transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])])</span></span><br><span class="line">val_trans = transforms.Compose([transforms.Resize((<span class="number">224</span>, <span class="number">224</span>)), transforms.ToTensor()])</span><br><span class="line">test_trans = transforms.Compose([transforms.Resize((<span class="number">224</span>, <span class="number">224</span>)), transforms.ToTensor(), transforms.Normalize([<span class="number">0.485</span>, <span class="number">0.456</span>, <span class="number">0.406</span>], [<span class="number">0.229</span>, <span class="number">0.224</span>, <span class="number">0.225</span>])])</span><br><span class="line"></span><br><span class="line">batch_size = <span class="number">32</span></span><br><span class="line"></span><br><span class="line">train_data = ImageFolder(train_path, transform = train_trans)</span><br><span class="line">val_data = ImageFolder(val_path,transform = test_trans)</span><br><span class="line">test_data = ImageFolder(test_path, transform = test_trans)</span><br><span class="line"></span><br><span class="line">train_loader = DataLoader(train_data, batch_size = batch_size, shuffle = <span class="literal">True</span>, num_workers = <span class="number">2</span>, pin_memory = <span class="literal">True</span>)</span><br><span class="line">val_loader = DataLoader(val_data, batch_size = batch_size, shuffle = <span class="literal">True</span>, num_workers = <span class="number">2</span>, pin_memory = <span class="literal">True</span>)</span><br><span class="line">test_loader = DataLoader(test_data, shuffle = <span class="literal">True</span>)</span><br><span class="line"><span class="built_in">print</span>(train_loader)</span><br><span class="line"></span><br><span class="line">images, labels = <span class="built_in">next</span>(<span class="built_in">iter</span>(train_loader))</span><br><span class="line"><span class="comment"># After Normalize</span></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> np.arange(<span class="number">3</span>):</span><br><span class="line">  plt.figure(i)</span><br><span class="line">  plt.imshow(images[i].permute(<span class="number">1</span>, <span class="number">2</span>, <span class="number">0</span>))</span><br><span class="line"><span class="comment"># plt.show()</span></span><br><span class="line"><span class="comment"># Before Normalize</span></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> np.arange(<span class="number">3</span>):</span><br><span class="line">  plt.figure(i)</span><br><span class="line">  <span class="comment"># Our data are normalized, in order to watch our origin image, so we need to denormalize our data</span></span><br><span class="line">  mean = torch.tensor([<span class="number">0.485</span>, <span class="number">0.456</span>, <span class="number">0.406</span>])</span><br><span class="line">  std = torch.tensor([<span class="number">0.229</span>, <span class="number">0.224</span>, <span class="number">0.225</span>])</span><br><span class="line">  tmp = transforms.Normalize(-mean/std, <span class="number">1</span>/std)(images[i]) <span class="comment"># denormalize</span></span><br><span class="line">  plt.imshow(tmp.permute(<span class="number">1</span>, <span class="number">2</span>, <span class="number">0</span>))</span><br><span class="line">  plt.show()</span><br><span class="line"></span><br><span class="line"><span class="comment"># 1. Input layer</span></span><br><span class="line"><span class="comment"># 2. Convolutional layer</span></span><br><span class="line"><span class="comment"># 3. ReLU layer</span></span><br><span class="line"><span class="comment"># 4. Pooling layer</span></span><br><span class="line"><span class="comment"># 5. Fully-connected layer</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">CatDpg</span>(nn.Module):</span><br><span class="line">  <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self</span>):</span><br><span class="line">    <span class="built_in">super</span>(CatDpg, self).__init__()</span><br><span class="line">    self.cnn = nn.Sequential(</span><br><span class="line">        <span class="comment">## CNN1</span></span><br><span class="line">        nn.Conv2d(in_channels = <span class="number">3</span>, out_channels = <span class="number">64</span>, kernel_size = <span class="number">3</span>, stride = <span class="number">1</span>, padding = <span class="number">1</span>), <span class="comment"># padding = kernel_size / 2</span></span><br><span class="line">        nn.ReLU(),</span><br><span class="line">        nn.MaxPool2d(kernel_size = <span class="number">2</span>),<span class="comment">## (64, 112, 112)</span></span><br><span class="line">        <span class="comment">## CNN2</span></span><br><span class="line">        nn.Conv2d(in_channels = <span class="number">64</span>, out_channels = <span class="number">128</span>, kernel_size = <span class="number">3</span>, stride = <span class="number">1</span>, padding = <span class="number">1</span>),</span><br><span class="line">        nn.ReLU(),</span><br><span class="line">        nn.MaxPool2d(kernel_size = <span class="number">2</span>),<span class="comment">## (128, 56, 56)</span></span><br><span class="line">        <span class="comment">## CNN3</span></span><br><span class="line">        nn.Conv2d(in_channels = <span class="number">128</span>, out_channels = <span class="number">256</span>, kernel_size = <span class="number">3</span>, stride = <span class="number">1</span>, padding = <span class="number">1</span>),</span><br><span class="line">        nn.ReLU(),</span><br><span class="line">        nn.MaxPool2d(kernel_size = <span class="number">2</span>),<span class="comment">## (256, 28, 28)</span></span><br><span class="line">        <span class="comment">## CNN4</span></span><br><span class="line">        nn.Conv2d(in_channels = <span class="number">256</span>, out_channels = <span class="number">512</span>, kernel_size = <span class="number">3</span>, stride = <span class="number">1</span>, padding = <span class="number">1</span>),</span><br><span class="line">        nn.ReLU(),</span><br><span class="line">        nn.MaxPool2d(kernel_size = <span class="number">2</span>),<span class="comment">## (512, 14, 14)</span></span><br><span class="line">        <span class="comment">## CNN5</span></span><br><span class="line">        nn.Conv2d(in_channels = <span class="number">512</span>, out_channels = <span class="number">512</span>, kernel_size = <span class="number">3</span>, stride = <span class="number">1</span>, padding = <span class="number">1</span>),</span><br><span class="line">        nn.ReLU(),</span><br><span class="line">        nn.MaxPool2d(kernel_size = <span class="number">2</span>)<span class="comment">## (512, 7, 7)</span></span><br><span class="line">    )</span><br><span class="line">    self.fc = nn.Sequential(</span><br><span class="line">        nn.Linear(<span class="number">512</span> * <span class="number">7</span> * <span class="number">7</span>, <span class="number">1024</span>), <span class="comment"># Fully-connected layer</span></span><br><span class="line">        nn.Dropout(<span class="number">0.4</span>), <span class="comment"># Avoid overfitting</span></span><br><span class="line">        nn.ReLU(),</span><br><span class="line">        nn.Linear(<span class="number">1024</span>, <span class="number">1024</span>),</span><br><span class="line">        nn.Dropout(<span class="number">0.5</span>),</span><br><span class="line">        nn.ReLU(),</span><br><span class="line">        nn.Linear(<span class="number">1024</span>, <span class="number">2</span>)</span><br><span class="line">    )</span><br><span class="line">  <span class="comment"># forward propagation</span></span><br><span class="line">  <span class="keyword">def</span> <span class="title function_">forward</span>(<span class="params">self, x</span>):</span><br><span class="line">    x = self.cnn(x)</span><br><span class="line">    x = x.flatten(<span class="number">1</span>)</span><br><span class="line">    x = self.fc(x)</span><br><span class="line">    <span class="keyword">return</span> x</span><br><span class="line"></span><br><span class="line">device = <span class="string">&quot;cuda&quot;</span> <span class="keyword">if</span> train_on_gpu <span class="keyword">else</span> <span class="string">&quot;cpu&quot;</span></span><br><span class="line">model = CatDpg()</span><br><span class="line"></span><br><span class="line">model = model.to(device)</span><br><span class="line"><span class="built_in">print</span>(model)</span><br><span class="line"></span><br><span class="line">optimizer = torch.optim.Adam(model.parameters(), lr=<span class="number">0.0005</span>)</span><br><span class="line">loss_func = nn.CrossEntropyLoss()</span><br><span class="line"></span><br><span class="line">n_epochs = <span class="number">30</span></span><br><span class="line">train_loss_record = []</span><br><span class="line">train_acc_record = []</span><br><span class="line">val_loss_record = []</span><br><span class="line">val_acc_record = []</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> epoch <span class="keyword">in</span> <span class="built_in">range</span>(n_epochs):</span><br><span class="line">  train_loss = <span class="number">0.0</span></span><br><span class="line">  val_loss = <span class="number">0.0</span></span><br><span class="line">  train_acc = <span class="number">0.0</span></span><br><span class="line">  val_acc = <span class="number">0.0</span></span><br><span class="line">  model.train()</span><br><span class="line"></span><br><span class="line">  <span class="keyword">for</span> x, y <span class="keyword">in</span> tqdm(train_loader):</span><br><span class="line">    x, y = x.to(device), y.to(device)</span><br><span class="line">    prediction = model(x)</span><br><span class="line">    loss = loss_func(prediction, y)</span><br><span class="line">    optimizer.zero_grad()</span><br><span class="line">    loss.backward()</span><br><span class="line">    optimizer.step()</span><br><span class="line">    acc = ((prediction.argmax(dim = <span class="number">1</span>) == y).<span class="built_in">float</span>().mean())</span><br><span class="line">    train_acc += acc/<span class="built_in">len</span>(train_loader)</span><br><span class="line">    train_loss += loss/<span class="built_in">len</span>(train_loader)</span><br><span class="line"></span><br><span class="line">  <span class="built_in">print</span>(<span class="string">f&quot;[ Train | <span class="subst">&#123;epoch+<span class="number">1</span>&#125;</span>/<span class="subst">&#123;n_epochs&#125;</span> ] loss = <span class="subst">&#123;train_loss:<span class="number">.5</span>f&#125;</span>, acc = <span class="subst">&#123;train_acc:<span class="number">.5</span>f&#125;</span>&quot;</span>)</span><br><span class="line">  train_loss_record.append(train_loss)</span><br><span class="line">  train_acc_record.append(train_acc)</span><br><span class="line"><span class="comment">#   with torch.no_grad():</span></span><br><span class="line">  <span class="keyword">for</span> x, y <span class="keyword">in</span> tqdm(val_loader):</span><br><span class="line">      x, y = x.to(device), y.to(device)</span><br><span class="line">      prediction = model(x)</span><br><span class="line">      loss = loss_func(prediction, y)</span><br><span class="line">      loss.backward()</span><br><span class="line">      acc = ((prediction.argmax(dim = <span class="number">1</span>) == y).<span class="built_in">float</span>().mean())</span><br><span class="line">      val_acc += acc/<span class="built_in">len</span>(val_loader)</span><br><span class="line">      val_loss += loss/<span class="built_in">len</span>(val_loader)</span><br><span class="line">  <span class="built_in">print</span>(<span class="string">f&quot;[ Validation | <span class="subst">&#123;epoch+<span class="number">1</span>&#125;</span>/<span class="subst">&#123;n_epochs&#125;</span> ] loss = <span class="subst">&#123;val_loss:<span class="number">.5</span>f&#125;</span>, acc = <span class="subst">&#123;val_acc:<span class="number">.5</span>f&#125;</span>&quot;</span>)</span><br><span class="line">  val_loss_record.append(val_loss)</span><br><span class="line">  val_acc_record.append(val_acc)</span><br><span class="line">torch.save(model, <span class="string">&#x27;catvsdog.pkl&#x27;</span>)</span><br><span class="line"></span><br><span class="line">plt.figure(<span class="number">1</span>)</span><br><span class="line">plt.title(<span class="string">&#x27;Training and Validation Loss&#x27;</span>)</span><br><span class="line">train_l, = plt.plot(train_loss_record, color = <span class="string">&#x27;red&#x27;</span>)</span><br><span class="line">val_l, = plt.plot(val_loss_record, color = <span class="string">&#x27;blue&#x27;</span>)</span><br><span class="line">plt.xlabel(<span class="string">&#x27;Epochs&#x27;</span>)</span><br><span class="line">plt.ylabel(<span class="string">&#x27;Loss&#x27;</span>)</span><br><span class="line">plt.legend(handles = [train_l, val_l], labels = [<span class="string">&#x27;Training&#x27;</span>, <span class="string">&#x27;Validation&#x27;</span>], loc = <span class="string">&#x27;best&#x27;</span>)</span><br><span class="line">plt.show()</span><br><span class="line"></span><br><span class="line">plt.figure(<span class="number">2</span>)</span><br><span class="line">plt.title(<span class="string">&#x27;Training and Validation Accuracy&#x27;</span>)</span><br><span class="line">train_a, = plt.plot(train_acc_record, color = <span class="string">&#x27;red&#x27;</span>)</span><br><span class="line">val_a, = plt.plot(val_acc_record, color = <span class="string">&#x27;blue&#x27;</span>)</span><br><span class="line">plt.xlabel(<span class="string">&#x27;Epochs&#x27;</span>)</span><br><span class="line">plt.ylabel(<span class="string">&#x27;Accuracy&#x27;</span>)</span><br><span class="line">plt.legend(handles = [train_a, val_a], labels = [<span class="string">&#x27;Training&#x27;</span>, <span class="string">&#x27;Validation&#x27;</span>], loc = <span class="string">&#x27;best&#x27;</span>)</span><br><span class="line">plt.show()</span><br><span class="line"></span><br><span class="line">i = <span class="number">0</span></span><br><span class="line"><span class="keyword">for</span> x, y <span class="keyword">in</span> test_loader:</span><br><span class="line">  i += <span class="number">1</span></span><br><span class="line">  <span class="keyword">if</span> train_on_gpu:</span><br><span class="line">    x, y = x.cuda(), y.cuda()</span><br><span class="line">  output = model(x)</span><br><span class="line">  out = output.argmax(dim = <span class="number">1</span>)</span><br><span class="line">  out = out.to(<span class="string">&#x27;cpu&#x27;</span>).numpy()</span><br><span class="line">  <span class="comment"># print(out)</span></span><br><span class="line">  <span class="keyword">if</span> i % <span class="number">10</span> == <span class="number">0</span>:</span><br><span class="line">    plt.figure(i)</span><br><span class="line">    <span class="keyword">if</span> out[<span class="number">0</span>] == <span class="number">0</span>:</span><br><span class="line">      plt.title(<span class="string">&#x27;Predict: cat&#x27;</span>)</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">      plt.title(<span class="string">&#x27;Predict: dog&#x27;</span>)</span><br><span class="line">    mean = torch.tensor([<span class="number">0.485</span>, <span class="number">0.456</span>, <span class="number">0.406</span>])</span><br><span class="line">    std = torch.tensor([<span class="number">0.229</span>, <span class="number">0.224</span>, <span class="number">0.225</span>])</span><br><span class="line">    x = x.squeeze()</span><br><span class="line">    tmp = transforms.Normalize(-mean/std, <span class="number">1</span>/std)(x) <span class="comment"># denormalize</span></span><br><span class="line">    tmp = tmp.to(<span class="string">&#x27;cpu&#x27;</span>)</span><br><span class="line">    plt.imshow(tmp.permute(<span class="number">1</span>, <span class="number">2</span>, <span class="number">0</span>))</span><br><span class="line">    plt.show()</span><br></pre></td></tr></table></figure>
+<h5 id="by-中和高中-吳振榮">by 中和高中 吳振榮</h5>
+
+    </article>
+    <!-- license -->
+    
+    <!-- paginator -->
+    <ul class="post-paginator">
+        <li class="next">
+            
+                <div class="nextSlogan">Next Post</div>
+                <a href="/2021/08/29/%E5%8F%AF%E8%A7%A3%E9%87%8B%E4%BA%BA%E5%B7%A5%E6%99%BA%E6%85%A7-explainable-ai/" title="可解釋人工智慧_explainable_ai">
+                    <div class="nextTitle">可解釋人工智慧_explainable_ai</div>
+                </a>
+            
+        </li>
+        <li class="previous">
+            
+                <div class="prevSlogan">Previous Post</div>
+                <a href="/2021/08/28/C-%E7%89%A9%E4%BB%B6%E5%B0%8E%E5%90%91/" title="C++物件導向">
+                    <div class="prevTitle">C++物件導向</div>
+                </a>
+            
+        </li>
+    </ul>
+    <!-- comment -->
+    
+        <div class="post-comment">
+            <!-- 来必力 City 版安装代码 -->
+
+
+            
+
+            
+
+            
+
+            <!-- utteranc评论 -->
+
+
+            <!-- partial('_partial/comment/changyan') -->
+            <!--PC版-->
+
+
+            
+            
+
+            
+
+        </div>
+    
+    <!-- timeliness note -->
+    <!-- idea from: https://hexo.fluid-dev.com/posts/hexo-injector/#%E6%96%87%E7%AB%A0%E6%97%B6%E6%95%88%E6%80%A7%E6%8F%90%E7%A4%BA -->
+    
+    <!-- Mathjax -->
+    
+        
+    <script>
+        MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+            }
+        };
+    </script>
+
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3.2.0/es5/tex-mml-chtml.js"></script>
+
+
+    
+</main>
+
+                <!-- profile -->
+                
+            </div>
+            <footer class="footer footer-unloaded">
+    <!-- social  -->
+    
+        <div class="social">
+            
+    
+        
+            
+                <a href="mailto:WuMax13@gmail.com" class="iconfont-archer email" title=email ></a>
+            
+        
+    
+        
+            
+                <a href="https://github.com/MaxWutw" class="iconfont-archer github" target="_blank" title=github></a>
+            
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+            
+                <a href="https://www.facebook.com/profile.php?id=100020738000412" class="iconfont-archer facebook" target="_blank" title=facebook></a>
+            
+        
+    
+        
+    
+        
+            
+                <a href="https://www.instagram.com/_wuzhenlong/" class="iconfont-archer instagram" target="_blank" title=instagram></a>
+            
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+
+
+        </div>
+    
+    <!-- powered by Hexo  -->
+    <div class="copyright">
+        <span id="hexo-power">Powered by <a href="https://hexo.io/" target="_blank">Hexo</a></span><span class="iconfont-archer power">&#xe635;</span><span id="theme-info">theme <a href="https://github.com/fi3ework/hexo-theme-archer" target="_blank">Archer</a></span>
+    </div>
+    <!-- website approve for Chinese user -->
+    
+    <!-- 不蒜子  -->
+    
+        <div class="busuanzi-container">
+            
+             
+                <span id="busuanzi_container_site_pv">PV: <span id="busuanzi_value_site_pv"></span> :)</span>
+            
+        </div>
+    	
+</footer>
+
+        </div>
+        <!-- toc -->
+        
+            <div class="toc-wrapper toc-wrapper-loding" style=
+
+
+
+
+
+
+
+    top:50vh;
+
+>
+                <div class="toc-catalog">
+                    <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
+                </div>
+                <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%BA%96%E5%82%99%E8%B3%87%E6%96%99"><span class="toc-number">1.</span> <span class="toc-text">1. 準備資料</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BC%95%E5%85%A5%E5%87%BD%E5%BC%8F%E5%BA%AB"><span class="toc-number">2.</span> <span class="toc-text">2. 引入函式庫</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BC%95%E5%85%A5%E8%B3%87%E6%96%99"><span class="toc-number">3.</span> <span class="toc-text">3. 引入資料</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%9C%8B%E5%9C%96%E7%89%87"><span class="toc-number">4.</span> <span class="toc-text">4. 看圖片</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#cnn%E6%9E%B6%E6%A7%8B"><span class="toc-number">5.</span> <span class="toc-text">5. CNN架構</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%96%8B%E5%A7%8B%E8%A8%93%E7%B7%B4"><span class="toc-number">6.</span> <span class="toc-text">6. 開始訓練</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9F%A5%E7%9C%8B%E6%A8%A1%E5%9E%8B%E6%95%88%E8%83%BD"><span class="toc-number">7.</span> <span class="toc-text">7. 查看模型效能</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%B8%BD%E7%A8%8B%E5%BC%8F%E7%A2%BC"><span class="toc-number">8.</span> <span class="toc-text">總程式碼</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#by-%E4%B8%AD%E5%92%8C%E9%AB%98%E4%B8%AD-%E5%90%B3%E6%8C%AF%E6%A6%AE"><span class="toc-number">8.0.0.1.</span> <span class="toc-text">by 中和高中 吳振榮</span></a></li></ol></li></ol></li></ol></li></ol>
+            </div>
+        
+        <!-- sidebar -->
+        <div class="sidebar sidebar-hide">
+    <ul class="sidebar-tabs sidebar-tabs-active-0">
+        <li class="sidebar-tab-archives"><span class="iconfont-archer">&#xe67d;</span><span class="tab-name">Archive</span></li>
+        <li class="sidebar-tab-tags"><span class="iconfont-archer">&#xe61b;</span><span class="tab-name">Tag</span></li>
+        <li class="sidebar-tab-categories"><span class="iconfont-archer">&#xe666;</span><span class="tab-name">Cate</span></li>
+    </ul>
+    <div class="sidebar-content sidebar-content-show-archive">
+        <div class="sidebar-panel-archives">
+    <!-- 在 ejs 中将 archive 按照时间排序 -->
+    
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+    
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+    
+    
+    
+    
+    <div class="total-and-search">
+        <div class="total-archive">
+        Total : 31
+        </div>
+        <!-- search  -->
+        
+    </div>
+    
+    <div class="post-archive">
+    
+        
+            
+            
+            <div class="archive-year"> 2023 </div>
+            <ul class="year-list">
+            
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/10</span>
+            <a class="archive-post-title" href="/2023/05/10/%E5%9F%BA%E7%A4%8E%E6%95%B8%E8%AB%96/">基礎數論</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/05</span>
+            <a class="archive-post-title" href="/2023/04/05/GIT/">GIT</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/05</span>
+            <a class="archive-post-title" href="/2023/04/05/%E5%BF%AB%E9%80%9F%E5%86%AA%E5%92%8C%E7%9F%A9%E9%99%A3%E5%BF%AB%E9%80%9F%E5%86%AA/">快速冪和矩陣快速冪</a>
+        </li>
+    
+        
+            
+            
+                
+                </ul>
+            
+            <div class="archive-year"> 2021 </div>
+            <ul class="year-list">
+            
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/12</span>
+            <a class="archive-post-title" href="/2021/09/12/%E5%9C%A8Linux%E5%AE%89%E8%A3%9DCUDA/">在Linux安裝CUDA，並在Pytorch進行CUDA訓練</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/29</span>
+            <a class="archive-post-title" href="/2021/08/29/%E5%8F%AF%E8%A7%A3%E9%87%8B%E4%BA%BA%E5%B7%A5%E6%99%BA%E6%85%A7-explainable-ai/">可解釋人工智慧_explainable_ai</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/29</span>
+            <a class="archive-post-title" href="/2021/08/29/%E5%9F%BA%E6%96%BC%E6%B7%B1%E5%BA%A6%E5%AD%B8%E7%BF%92%E9%80%B2%E8%A1%8C%E8%B2%93%E8%88%87%E7%8B%97%E7%9A%84%E8%BE%A8%E8%AA%8D-Pytorch/">基於深度學習進行貓與狗的辨認(Pytorch)</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/28</span>
+            <a class="archive-post-title" href="/2021/08/28/C-%E7%89%A9%E4%BB%B6%E5%B0%8E%E5%90%91/">C++物件導向</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/28</span>
+            <a class="archive-post-title" href="/2021/08/28/%E5%9F%BA%E7%A4%8E%E6%BC%94%E7%AE%97%E6%B3%95-C/">基礎演算法(Algorithm)-C++</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/28</span>
+            <a class="archive-post-title" href="/2021/08/28/%E5%9F%BA%E7%A4%8E%E8%B3%87%E6%96%99%E7%B5%90%E6%A7%8B-C/">基礎資料結構(Data Structure)-C++</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/27</span>
+            <a class="archive-post-title" href="/2021/08/27/CSS/">CSS</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/27</span>
+            <a class="archive-post-title" href="/2021/08/27/HTML/">HTML</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/27</span>
+            <a class="archive-post-title" href="/2021/08/27/Linux%E5%9F%BA%E7%A4%8E%E4%BD%BF%E7%94%A8/">Linux基礎使用</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/27</span>
+            <a class="archive-post-title" href="/2021/08/27/MNIST%E6%89%8B%E5%AF%AB%E8%BE%A8%E8%AD%98-Pytorch-version/">MNIST手寫辨識(Pytorch version)</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/27</span>
+            <a class="archive-post-title" href="/2021/08/27/MNIST%E6%89%8B%E5%AF%AB%E8%BE%A8%E8%AD%98-TensorFlow-version/">MNIST手寫辨識(TensorFlow-version)</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/27</span>
+            <a class="archive-post-title" href="/2021/08/27/Numpy/">Numpy</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/27</span>
+            <a class="archive-post-title" href="/2021/08/27/Pandas/">Pandas</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/27</span>
+            <a class="archive-post-title" href="/2021/08/27/Scikit-Learn/">Scikit Learn</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/27</span>
+            <a class="archive-post-title" href="/2021/08/27/TensorFlow1%E5%9F%BA%E7%A4%8E%E4%BD%BF%E7%94%A8%E6%96%B9%E6%B3%95/">TensorFlow1基礎使用方法</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/27</span>
+            <a class="archive-post-title" href="/2021/08/27/%E9%81%B7%E7%A7%BB%E5%AD%B8%E7%BF%92-%E5%9C%96%E7%89%87%E8%BE%A8%E8%AD%98/">遷移學習-圖片辨識</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/27</span>
+            <a class="archive-post-title" href="/2021/08/27/APCS%E5%AF%A6%E4%BD%9C%E9%A1%8C/">APCS實作題</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/27</span>
+            <a class="archive-post-title" href="/2021/08/27/Matplotlib/">Matplotlib</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/27</span>
+            <a class="archive-post-title" href="/2021/08/27/%E5%9F%BA%E7%A4%8ETensorFlow2%E8%88%87%E6%A9%9F%E5%99%A8%E5%AD%B8%E7%BF%92/">基礎TensorFlow1和2與機器學習</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/27</span>
+            <a class="archive-post-title" href="/2021/08/27/%E5%9F%BA%E7%A4%8Epytorch%E8%88%87%E6%A9%9F%E5%99%A8%E5%AD%B8%E7%BF%92/">基礎pytorch與機器學習</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/24</span>
+            <a class="archive-post-title" href="/2021/08/24/OpenCV/">OpenCV</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/24</span>
+            <a class="archive-post-title" href="/2021/08/24/pipenv/">pipenv</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/24</span>
+            <a class="archive-post-title" href="/2021/06/24/Linked-List/">Linked_List</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/24</span>
+            <a class="archive-post-title" href="/2021/06/24/Stringstream/">Stringstream</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/24</span>
+            <a class="archive-post-title" href="/2021/06/24/Web/">Web</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/24</span>
+            <a class="archive-post-title" href="/2021/06/24/ctime/">ctime</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/24</span>
+            <a class="archive-post-title" href="/2021/06/24/%E6%8C%87%E6%A8%99/">指標</a>
+        </li>
+    
+        
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/24</span>
+            <a class="archive-post-title" href="/2021/06/24/%E9%81%8B%E7%AE%97%E5%AD%90%E9%87%8D%E8%BC%89/">運算子重載</a>
+        </li>
+    
+    </div>
+</div>
+
+        <div class="sidebar-panel-tags">
+    <div class="sidebar-tags-name">
+        
+            <span class="sidebar-tag-name" data-tags="C++">
+                <span class="iconfont-archer">&#xe606;</span>
+                C++
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="OOP">
+                <span class="iconfont-archer">&#xe606;</span>
+                OOP
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="CSS">
+                <span class="iconfont-archer">&#xe606;</span>
+                CSS
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="web dev">
+                <span class="iconfont-archer">&#xe606;</span>
+                web dev
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="HTML">
+                <span class="iconfont-archer">&#xe606;</span>
+                HTML
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="Linux">
+                <span class="iconfont-archer">&#xe606;</span>
+                Linux
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="Pytorch">
+                <span class="iconfont-archer">&#xe606;</span>
+                Pytorch
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="Machine Learning">
+                <span class="iconfont-archer">&#xe606;</span>
+                Machine Learning
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="TensorFlow2">
+                <span class="iconfont-archer">&#xe606;</span>
+                TensorFlow2
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="Python">
+                <span class="iconfont-archer">&#xe606;</span>
+                Python
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="Scikit Learn">
+                <span class="iconfont-archer">&#xe606;</span>
+                Scikit Learn
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="TensorFlow1">
+                <span class="iconfont-archer">&#xe606;</span>
+                TensorFlow1
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="Math theorem">
+                <span class="iconfont-archer">&#xe606;</span>
+                Math theorem
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="algorithm">
+                <span class="iconfont-archer">&#xe606;</span>
+                algorithm
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="Data structure">
+                <span class="iconfont-archer">&#xe606;</span>
+                Data structure
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="Transfer Learning">
+                <span class="iconfont-archer">&#xe606;</span>
+                Transfer Learning
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="APCS">
+                <span class="iconfont-archer">&#xe606;</span>
+                APCS
+            </span>
+        
+            <span class="sidebar-tag-name" data-tags="TensorFlow">
+                <span class="iconfont-archer">&#xe606;</span>
+                TensorFlow
+            </span>
+        
+    </div>
+    <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>
+    <div class="tag-load-fail" style="display: none; color: #ccc; font-size: 0.6rem;">
+        缺失模块，请参考主题文档进行安装配置：https://github.com/fi3ework/hexo-theme-archer#%E5%AE%89%E8%A3%85%E4%B8%BB%E9%A2%98
+    </div> 
+    <div class="sidebar-tags-list"></div>
+</div>
+
+        <div class="sidebar-panel-categories">
+    <div class="sidebar-categories-name">
+    
+    </div>
+    <div class="iconfont-archer sidebar-categories-empty">&#xe678;</div>
+    <div class="sidebar-categories-list"></div>
+</div>
+
+    </div>
+</div>
+
+        <!-- site-meta -->
+        <script>
+    var siteMetaRoot = "/"
+    if (siteMetaRoot === "undefined") {
+        siteMetaRoot = '/'
+    }
+    var siteMeta = {
+        url: "https://maxwutw.github.io",
+        root: siteMetaRoot,
+        author: "Max Wu"
+    }
+</script>
+
+        <!-- import experimental options here -->
+        <!-- Custom Font -->
+
+
+        <!-- main func -->
+        <script src="/scripts/main.js?v=20211217"></script>
+        <!-- dark mode -->
+        <script src="/scripts/dark.js?v=20211217"></script>
+        <!-- fancybox -->
+        <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js" defer></script>
+        <!-- algolia -->
+        
+        <!-- busuanzi -->
+        
+            <script src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" async></script>
+        
+        <!-- CNZZ -->
+        
+        <!-- async load share.js -->
+        
+            <script src="/scripts/share.js?v=20211217" async></script>
+        
+        <!-- mermaid -->
+        
+    </body>
+</html>
